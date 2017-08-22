@@ -11,6 +11,7 @@ import android.widget.TextView;
 import com.dmtaiwan.alexander.bitcointicker.R;
 import com.dmtaiwan.alexander.bitcointicker.data.BitcoinDBContract;
 
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.TimeZone;
@@ -32,10 +33,9 @@ public class CoinCursorAdapter extends CursorAdapter {
 
     @Override
     public void bindView(View view, Context context, Cursor cursor) {
-        TextView id = view.findViewById(R.id.text_view_coin_id);
+
         TextView name = view.findViewById(R.id.text_view_name);
         TextView symbol = view.findViewById(R.id.text_view_symbol);
-        TextView rank = view.findViewById(R.id.text_view_rank);
         TextView priceUSD = view.findViewById(R.id.text_view_price_usd);
         TextView priceBTC = view.findViewById(R.id.text_view_price_btc);
         TextView twentyFourHourVolumeUSD = view.findViewById(R.id.text_view_twenty_four_hour_volume_usd);
@@ -50,35 +50,98 @@ public class CoinCursorAdapter extends CursorAdapter {
         TextView twentyFourHourVolumeCAD = view.findViewById(R.id.text_view_twenty_four_hour_volume_cad);
         TextView marketCapCAD = view.findViewById(R.id.text_view_market_cap_cad);
 
-        id.setText(cursor.getString(cursor.getColumnIndexOrThrow(BitcoinDBContract.BitcoinEntry.COLUMN_COIN_ID)));
         name.setText(cursor.getString(cursor.getColumnIndexOrThrow(BitcoinDBContract.BitcoinEntry.COLUMN_NAME)));
         symbol.setText(cursor.getString(cursor.getColumnIndexOrThrow(BitcoinDBContract.BitcoinEntry.COLUMN_SYMBOL)));
-        rank.setText(cursor.getString(cursor.getColumnIndexOrThrow(BitcoinDBContract.BitcoinEntry.COLUMN_RANK)));
-        priceUSD.setText(cursor.getString(cursor.getColumnIndexOrThrow(BitcoinDBContract.BitcoinEntry.COLUMN_PRICE_USD)));
+
+        //Format priceUSD
+        String priceUsdString = cursor.getString(cursor.getColumnIndexOrThrow(BitcoinDBContract.BitcoinEntry.COLUMN_PRICE_USD));
+        priceUSD.setText(formatCurrency(priceUsdString));
+
+
         priceBTC.setText(cursor.getString(cursor.getColumnIndexOrThrow(BitcoinDBContract.BitcoinEntry.COLUMN_PRICE_BTC)));
-        twentyFourHourVolumeUSD.setText(cursor.getString(cursor.getColumnIndexOrThrow(BitcoinDBContract.BitcoinEntry.COLUMN_24H_VOLUME_USD)));
-        marketCapUSD.setText(cursor.getString(cursor.getColumnIndexOrThrow(BitcoinDBContract.BitcoinEntry.COLUMN_MARKET_CAP_USD)));
-        availableSupply.setText(cursor.getString(cursor.getColumnIndexOrThrow(BitcoinDBContract.BitcoinEntry.COLUMN_AVAILABLE_SUPPLY)));
-        totalSupply.setText(cursor.getString(cursor.getColumnIndexOrThrow(BitcoinDBContract.BitcoinEntry.COLUMN_TOTAL_SUPPLY)));
-        percentChangeOneHour.setText(cursor.getString(cursor.getColumnIndexOrThrow(BitcoinDBContract.BitcoinEntry.COLUMN_PERCENT_CHANGE_1H)));
-        percentChangeTwentyFourHour.setText(cursor.getString(cursor.getColumnIndexOrThrow(BitcoinDBContract.BitcoinEntry.COLUMN_PERCENT_CHANGE_24H)));
-        percentChangeSevenDays.setText(cursor.getString(cursor.getColumnIndexOrThrow(BitcoinDBContract.BitcoinEntry.COLUMN_PERCENT_CHANGE_7D)));
+
+        //Format 24HVolumeUSD
+        String twentyFourHourVolumeUSDString = cursor.getString(cursor.getColumnIndexOrThrow(BitcoinDBContract.BitcoinEntry.COLUMN_24H_VOLUME_USD));
+        twentyFourHourVolumeUSD.setText(formatCurrencyVolumeOrCap(twentyFourHourVolumeUSDString));
+
+        //Format marketCapUSD
+        String marketCapUsdString = cursor.getString(cursor.getColumnIndexOrThrow(BitcoinDBContract.BitcoinEntry.COLUMN_MARKET_CAP_USD));
+        marketCapUSD.setText(formatCurrencyVolumeOrCap(marketCapUsdString));
+
+        //Format availableSupply
+        String availableSupplyString = cursor.getString(cursor.getColumnIndexOrThrow(BitcoinDBContract.BitcoinEntry.COLUMN_AVAILABLE_SUPPLY));
+        availableSupply.setText(formatSupply(availableSupplyString));
+
+        //Format totalSupply
+        String totalSupplyString = cursor.getString(cursor.getColumnIndexOrThrow(BitcoinDBContract.BitcoinEntry.COLUMN_TOTAL_SUPPLY));
+        totalSupply.setText(formatSupply(totalSupplyString));
+
+
+        //Format percentChange1H
+        String percentChangeOneHourString = cursor.getString(cursor.getColumnIndexOrThrow(BitcoinDBContract.BitcoinEntry.COLUMN_PERCENT_CHANGE_1H));
+        percentChangeOneHour.setText(formatPercentage(percentChangeOneHourString));
+
+        //Format percentChange24H
+        String percentChangeTwentyFourHourString = cursor.getString(cursor.getColumnIndexOrThrow(BitcoinDBContract.BitcoinEntry.COLUMN_PERCENT_CHANGE_24H));
+        percentChangeTwentyFourHour.setText(formatPercentage(percentChangeTwentyFourHourString));
+
+        //Format percentChange7D
+        String percentChangeSevenDaysString = cursor.getString(cursor.getColumnIndexOrThrow(BitcoinDBContract.BitcoinEntry.COLUMN_PERCENT_CHANGE_7D));
+        percentChangeSevenDays.setText(formatPercentage(percentChangeSevenDaysString));
 
         //Parse date
         Long date = Long.parseLong(cursor.getString(cursor.getColumnIndexOrThrow(BitcoinDBContract.BitcoinEntry.COLUMN_LAST_UPDATED)));
         lastUpdated.setText(getDate(date));
-        priceCAD.setText(cursor.getString(cursor.getColumnIndexOrThrow(BitcoinDBContract.BitcoinEntry.COLUMN_PRICE_CAD)));
-        twentyFourHourVolumeCAD.setText(cursor.getString(cursor.getColumnIndexOrThrow(BitcoinDBContract.BitcoinEntry.COLUMN_24H_VOLUME_CAD)));
-        marketCapCAD.setText(cursor.getString(cursor.getColumnIndexOrThrow(BitcoinDBContract.BitcoinEntry.COLUMN_MARKET_CAP_CAD)));
+
+        //Parse priceCAD
+        String priceCadString = cursor.getString(cursor.getColumnIndexOrThrow(BitcoinDBContract.BitcoinEntry.COLUMN_PRICE_CAD));
+        priceCAD.setText(formatCurrency(priceCadString));
+
+        //Format 24HVolumeCAD
+        String twentyFourHourVolumeCADString = cursor.getString(cursor.getColumnIndexOrThrow(BitcoinDBContract.BitcoinEntry.COLUMN_24H_VOLUME_CAD));
+        twentyFourHourVolumeCAD.setText(formatCurrencyVolumeOrCap(twentyFourHourVolumeCADString));
+
+        //Format marketCapCad
+        String marketCapCad = cursor.getString(cursor.getColumnIndexOrThrow(BitcoinDBContract.BitcoinEntry.COLUMN_MARKET_CAP_CAD));
+        marketCapCAD.setText(formatCurrencyVolumeOrCap(marketCapCad));
 
 
     }
 
     private String getDate(long time) {
-        Date date = new Date(time*1000L);
-        SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
+        Date date = new Date(time * 1000L);
+        SimpleDateFormat sdf = new SimpleDateFormat("H:mm:ss a");
         sdf.setTimeZone(TimeZone.getTimeZone("America/Vancouver"));
         String formattedTime = sdf.format(date);
         return formattedTime;
+    }
+
+    public String formatCurrency(String input) {
+        float floatPrice = Float.parseFloat(input);
+        return DecimalFormat.getCurrencyInstance().format(floatPrice);
+    }
+
+    public String formatCurrencyVolumeOrCap(String input) {
+        float floatPrice = Float.parseFloat(input);
+        String formattedPrice = DecimalFormat.getCurrencyInstance().format(floatPrice);
+        return formattedPrice.replaceAll("\\.0*$", "");
+    }
+
+    private String formatPercentage(String input) {
+        float floatPercentage = Float.parseFloat(input);
+        DecimalFormat df2;
+        if (floatPercentage > 0) {
+            df2 = new DecimalFormat("+#,##0.00 '%'");
+        } else {
+            df2 = new DecimalFormat(" #,##0.00 '%'");
+        }
+
+        return df2.format(floatPercentage);
+    }
+
+    private String formatSupply(String input) {
+        float floatSupply = Float.parseFloat(input);
+        DecimalFormat decimalFormat = new DecimalFormat("#");
+        return decimalFormat.format(floatSupply);
     }
 }
