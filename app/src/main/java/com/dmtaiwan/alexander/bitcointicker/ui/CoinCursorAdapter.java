@@ -34,21 +34,21 @@ public class CoinCursorAdapter extends CursorAdapter {
     @Override
     public void bindView(View view, Context context, Cursor cursor) {
 
-        TextView name = view.findViewById(R.id.text_view_name);
-        TextView symbol = view.findViewById(R.id.text_view_symbol);
-        TextView priceUSD = view.findViewById(R.id.text_view_price_usd);
-        TextView priceBTC = view.findViewById(R.id.text_view_price_btc);
-        TextView twentyFourHourVolumeUSD = view.findViewById(R.id.text_view_twenty_four_hour_volume_usd);
-        TextView marketCapUSD = view.findViewById(R.id.text_view_market_cap_usd);
-        TextView availableSupply = view.findViewById(R.id.text_view_available_supply);
-        TextView totalSupply = view.findViewById(R.id.text_view_total_supply);
-        TextView percentChangeOneHour = view.findViewById(R.id.text_view_percent_change_one_hour);
-        TextView percentChangeTwentyFourHour = view.findViewById(R.id.text_view_percent_change_twenty_four_hour);
-        TextView percentChangeSevenDays = view.findViewById(R.id.text_view_percent_change_seven_days);
-        TextView lastUpdated = view.findViewById(R.id.text_view_last_updated);
-        TextView priceCAD = view.findViewById(R.id.text_view_price_cad);
-        TextView twentyFourHourVolumeCAD = view.findViewById(R.id.text_view_twenty_four_hour_volume_cad);
-        TextView marketCapCAD = view.findViewById(R.id.text_view_market_cap_cad);
+        TextView name = (TextView) view.findViewById(R.id.text_view_name);
+        TextView symbol = (TextView)view.findViewById(R.id.text_view_symbol);
+        TextView priceUSD = (TextView)view.findViewById(R.id.text_view_price_usd);
+        TextView priceBTC = (TextView)view.findViewById(R.id.text_view_price_btc);
+        TextView twentyFourHourVolumeUSD = (TextView)view.findViewById(R.id.text_view_twenty_four_hour_volume_usd);
+        TextView marketCapUSD = (TextView)view.findViewById(R.id.text_view_market_cap_usd);
+        TextView availableSupply = (TextView)view.findViewById(R.id.text_view_available_supply);
+        TextView totalSupply = (TextView)view.findViewById(R.id.text_view_total_supply);
+        TextView percentChangeOneHour = (TextView)view.findViewById(R.id.text_view_percent_change_one_hour);
+        TextView percentChangeTwentyFourHour = (TextView)view.findViewById(R.id.text_view_percent_change_twenty_four_hour);
+        TextView percentChangeSevenDays = (TextView)view.findViewById(R.id.text_view_percent_change_seven_days);
+        TextView lastUpdated = (TextView)view.findViewById(R.id.text_view_last_updated);
+        TextView priceCAD = (TextView)view.findViewById(R.id.text_view_price_cad);
+        TextView twentyFourHourVolumeCAD = (TextView)view.findViewById(R.id.text_view_twenty_four_hour_volume_cad);
+        TextView marketCapCAD = (TextView)view.findViewById(R.id.text_view_market_cap_cad);
 
         name.setText(cursor.getString(cursor.getColumnIndexOrThrow(BitcoinDBContract.BitcoinEntry.COLUMN_NAME)));
         symbol.setText(cursor.getString(cursor.getColumnIndexOrThrow(BitcoinDBContract.BitcoinEntry.COLUMN_SYMBOL)));
