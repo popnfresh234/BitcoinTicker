@@ -21,6 +21,8 @@ import com.dmtaiwan.alexander.bitcointicker.R;
 import com.dmtaiwan.alexander.bitcointicker.data.BitcoinDBHelper;
 import com.dmtaiwan.alexander.bitcointicker.networking.APIController;
 
+import net.cachapa.expandablelayout.ExpandableLayout;
+
 import java.util.ArrayList;
 import java.util.Map;
 
@@ -108,7 +110,7 @@ public class MainActivity extends AppCompatActivity implements CallbackInterface
 
         //otherwise query for everything
         else{
-            Cursor cursor = BitcoinDBHelper.readDb(this, null, null, selectionArgs, SORT_ORDER);
+            Cursor cursor = BitcoinDBHelper.readDb(this, null, null, selectionArgs, null);
             adapter.changeCursor(cursor);
         }
 

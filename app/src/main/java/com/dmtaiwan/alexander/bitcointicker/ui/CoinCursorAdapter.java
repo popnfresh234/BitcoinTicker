@@ -2,6 +2,7 @@ package com.dmtaiwan.alexander.bitcointicker.ui;
 
 import android.content.Context;
 import android.database.Cursor;
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,6 +11,8 @@ import android.widget.TextView;
 
 import com.dmtaiwan.alexander.bitcointicker.R;
 import com.dmtaiwan.alexander.bitcointicker.data.BitcoinDBContract;
+
+import net.cachapa.expandablelayout.ExpandableLayout;
 
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
@@ -33,6 +36,15 @@ public class CoinCursorAdapter extends CursorAdapter {
 
     @Override
     public void bindView(View view, Context context, Cursor cursor) {
+        final ExpandableLayout expandableLayout = (ExpandableLayout) view.findViewById(R.id.expandable_layout);
+        view.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (expandableLayout.isExpanded()) {
+                    expandableLayout.collapse();
+                }else expandableLayout.expand();
+            }
+        });
 
         TextView name = (TextView) view.findViewById(R.id.text_view_name);
         TextView symbol = (TextView)view.findViewById(R.id.text_view_symbol);
@@ -128,6 +140,9 @@ public class CoinCursorAdapter extends CursorAdapter {
     }
 
     private String formatPercentage(String input) {
+        if (input == null) {
+            return "";
+        }
         float floatPercentage = Float.parseFloat(input);
         DecimalFormat df2;
         if (floatPercentage > 0) {
@@ -135,6 +150,7 @@ public class CoinCursorAdapter extends CursorAdapter {
         } else {
             df2 = new DecimalFormat(" #,##0.00 '%'");
         }
+
 
         return df2.format(floatPercentage);
     }
