@@ -44,6 +44,11 @@
                 android:text="Price CAD: "
                 android:textColor="@color/accentText"/>
 
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Last Updated: "/>
+
 
         </LinearLayout>
 
@@ -78,6 +83,12 @@
                 android:layout_height="wrap_content"
                 android:textColor="@color/accentText"/>
 
+            <TextView
+                android:id="@+id/text_view_last_updated"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+
 
         </LinearLayout>
 
@@ -88,7 +99,7 @@
         android:id="@+id/expandable_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:el_duration="200"
+        app:el_duration="300"
         app:el_expanded="false"
         app:el_parallax="0.5">
 
@@ -156,10 +167,7 @@
                     android:layout_height="wrap_content"
                     android:text="Percent Change 7D: "/>
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Last Updated: "/>
+
 
 
             </LinearLayout>
@@ -222,10 +230,6 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"/>
 
-                <TextView
-                    android:id="@+id/text_view_last_updated"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
 
 
             </LinearLayout>

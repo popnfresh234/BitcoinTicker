@@ -36,6 +36,9 @@ public class CoinCursorAdapter extends CursorAdapter {
 
     @Override
     public void bindView(View view, Context context, Cursor cursor) {
+        if (cursor.getPosition() % 2 == 0) {
+            view.setBackgroundColor(context.getResources().getColor(R.color.colorListViewAlternate));
+        }
         final ExpandableLayout expandableLayout = (ExpandableLayout) view.findViewById(R.id.expandable_layout);
         view.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -129,11 +132,17 @@ public class CoinCursorAdapter extends CursorAdapter {
     }
 
     public String formatCurrency(String input) {
+        if (input == null) {
+            return "";
+        }
         float floatPrice = Float.parseFloat(input);
         return DecimalFormat.getCurrencyInstance().format(floatPrice);
     }
 
     public String formatCurrencyVolumeOrCap(String input) {
+        if (input == null) {
+            return "";
+        }
         float floatPrice = Float.parseFloat(input);
         String formattedPrice = DecimalFormat.getCurrencyInstance().format(floatPrice);
         return formattedPrice.replaceAll("\\.0*$", "");
@@ -156,6 +165,9 @@ public class CoinCursorAdapter extends CursorAdapter {
     }
 
     private String formatSupply(String input) {
+        if (input == null) {
+            return "";
+        }
         float floatSupply = Float.parseFloat(input);
         DecimalFormat decimalFormat = new DecimalFormat("#");
         return decimalFormat.format(floatSupply);
