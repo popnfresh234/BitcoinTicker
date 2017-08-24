@@ -98,7 +98,7 @@ public class BitcoinDBHelper extends SQLiteOpenHelper {
         }
     }
 
-    public static Cursor readDb(Context context, String[] projection, String selection, String[] selectionArgs) {
+    public static Cursor readDb(Context context, String[] projection, String selection, String[] selectionArgs, String sortOrder) {
         BitcoinDBHelper dbHelper = new BitcoinDBHelper(context);
         SQLiteDatabase db = dbHelper.getReadableDatabase();
         Cursor cursor = db.query(
@@ -108,7 +108,7 @@ public class BitcoinDBHelper extends SQLiteOpenHelper {
                 selectionArgs,
                 null,
                 null,
-                null);
+                sortOrder);
 
         return cursor;
     }

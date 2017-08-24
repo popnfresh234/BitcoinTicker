@@ -15,6 +15,7 @@ import android.view.View;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 
+import com.dmtaiwan.alexander.bitcointicker.data.BitcoinDBContract;
 import com.dmtaiwan.alexander.bitcointicker.model.Coin;
 import com.dmtaiwan.alexander.bitcointicker.R;
 import com.dmtaiwan.alexander.bitcointicker.data.BitcoinDBHelper;
@@ -28,6 +29,8 @@ public class MainActivity extends AppCompatActivity implements CallbackInterface
     private CoinCursorAdapter adapter;
     private ProgressBar progressBar;
     private APIController apiController;
+
+    private static final String SORT_ORDER = BitcoinDBContract.BitcoinEntry.COLUMN_NAME + " ASC";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -105,7 +108,7 @@ public class MainActivity extends AppCompatActivity implements CallbackInterface
 
         //otherwise query for everything
         else{
-            Cursor cursor = BitcoinDBHelper.readDb(this, null, null, selectionArgs);
+            Cursor cursor = BitcoinDBHelper.readDb(this, null, null, selectionArgs, SORT_ORDER);
             adapter.changeCursor(cursor);
         }
 

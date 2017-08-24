@@ -17,18 +17,23 @@ import com.dmtaiwan.alexander.bitcointicker.data.BitcoinDBHelper;
 
 public class PreferenceFragment extends android.preference.PreferenceFragment {
     private static final String[] PROJECTION = new String[]{BitcoinDBContract.BitcoinEntry.COLUMN_NAME, BitcoinDBContract.BitcoinEntry.COLUMN_COIN_ID};
+    private static final String SORT_ORDER = BitcoinDBContract.BitcoinEntry.COLUMN_NAME + " ASC";
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         addPreferencesFromResource(R.xml.preferences);
-        Cursor cursor = BitcoinDBHelper.readDb(getActivity(), PROJECTION, null, null);
 
+        //TODO Pass sort order later
+        Cursor cursor = BitcoinDBHelper.readDb(getActivity(), PROJECTION, null, null, null);
 
+        //Set up preferences
         PreferenceScreen screen = this.getPreferenceScreen();
         PreferenceCategory category = new PreferenceCategory(screen.getContext());
         category.setTitle("Coin Configuration");
         screen.addPreference(category);
+
+        //Create preferences from Cursor
         while (cursor.moveToNext()) {
             String coinName = cursor.getString(cursor.getColumnIndex(BitcoinDBContract.BitcoinEntry.COLUMN_NAME));
             String coinID = cursor.getString(cursor.getColumnIndex(BitcoinDBContract.BitcoinEntry.COLUMN_COIN_ID));
