@@ -2,7 +2,7 @@ package com.dmtaiwan.alexander.bitcointicker.ui;
 
 import android.content.Context;
 import android.database.Cursor;
-import android.os.Bundle;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -38,7 +38,7 @@ public class CoinCursorAdapter extends CursorAdapter {
     public void bindView(View view, Context context, Cursor cursor) {
         if (cursor.getPosition() % 2 == 0) {
             view.setBackgroundColor(context.getResources().getColor(R.color.colorListViewAlternate));
-        }
+        } else view.setBackgroundColor(Color.TRANSPARENT);
         final ExpandableLayout expandableLayout = (ExpandableLayout) view.findViewById(R.id.expandable_layout);
         view.setOnClickListener(new View.OnClickListener() {
             @Override

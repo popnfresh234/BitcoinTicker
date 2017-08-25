@@ -3,6 +3,7 @@ package com.dmtaiwan.alexander.bitcointicker.ui;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.database.Cursor;
+import android.graphics.Color;
 import android.preference.PreferenceManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -43,7 +44,7 @@ public class SettingsAdapter extends RecyclerView.Adapter<SettingsAdapter.ViewHo
         //set alternating colors
         if (position % 2 == 0) {
             holder.prefRootView.setBackgroundColor(context.getResources().getColor(R.color.colorListViewAlternate));
-        }
+        } else holder.prefRootView.setBackgroundColor(Color.TRANSPARENT);
         //get shared prefs for binding vales
         final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
         final SharedPreferences.Editor editor = prefs.edit();
