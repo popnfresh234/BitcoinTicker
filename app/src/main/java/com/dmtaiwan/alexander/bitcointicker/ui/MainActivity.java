@@ -5,23 +5,20 @@ import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
+import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ListView;
-import android.widget.ProgressBar;
 
-import com.dmtaiwan.alexander.bitcointicker.data.BitcoinDBContract;
-import com.dmtaiwan.alexander.bitcointicker.model.Coin;
 import com.dmtaiwan.alexander.bitcointicker.R;
+import com.dmtaiwan.alexander.bitcointicker.data.BitcoinDBContract;
 import com.dmtaiwan.alexander.bitcointicker.data.BitcoinDBHelper;
+import com.dmtaiwan.alexander.bitcointicker.model.Coin;
 import com.dmtaiwan.alexander.bitcointicker.networking.APIController;
-
-import net.cachapa.expandablelayout.ExpandableLayout;
+import com.github.ybq.android.spinkit.SpinKitView;
 
 import java.util.ArrayList;
 import java.util.Map;
@@ -29,8 +26,8 @@ import java.util.Map;
 public class MainActivity extends AppCompatActivity implements CallbackInterface {
 
     private CoinCursorAdapter adapter;
-    private ProgressBar progressBar;
     private APIController apiController;
+    private SpinKitView spinKitView;
 
     private static final String SORT_ORDER = BitcoinDBContract.BitcoinEntry.COLUMN_NAME + " ASC";
 
@@ -41,7 +38,12 @@ public class MainActivity extends AppCompatActivity implements CallbackInterface
 
         //Set up Views
         ListView coinListView = (ListView) findViewById(R.id.list_view_coin);
-        progressBar = (ProgressBar) findViewById(R.id.progress_bar);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        spinKitView = (SpinKitView) toolbar.findViewById(R.id.spin_kit);
+
+
+        //Set action bar
+        setSupportActionBar(toolbar);
 
         //Set up Adapter
         adapter = new CoinCursorAdapter(this, null, false);
@@ -71,8 +73,11 @@ public class MainActivity extends AppCompatActivity implements CallbackInterface
                 Intent intent = new Intent(this, PreferenceActivity.class);
                 startActivity(intent);
                 return true;
+
             case R.id.refresh:
                 startLoading();
+                return true;
+
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -113,14 +118,15 @@ public class MainActivity extends AppCompatActivity implements CallbackInterface
             Cursor cursor = BitcoinDBHelper.readDb(this, null, null, selectionArgs, null);
             adapter.changeCursor(cursor);
         }
+        //Hide loading
+        spinKitView.setVisibility(View.INVISIBLE);
 
-        //hide progress when done
-        progressBar.setVisibility(View.GONE);
+
     }
 
     private void startLoading() {
+        spinKitView.setVisibility(View.VISIBLE);
         apiController.start(this);
-        progressBar.setVisibility(View.VISIBLE);
     }
 }
 

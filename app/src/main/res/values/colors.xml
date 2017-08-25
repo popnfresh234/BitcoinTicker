@@ -7,6 +7,6 @@
     <color name="colorAccent">#304ffe</color>
     <color name="primaryTextColor">#ffffff</color>
     <color name="secondaryTextColor">#ffffff</color>
-    <color name="accentText">#FFEB3B</color>
+    <color name="colorAccentYellow">#FFEB3B</color>
 
 </resources>
