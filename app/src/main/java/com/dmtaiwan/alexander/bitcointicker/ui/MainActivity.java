@@ -9,6 +9,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -29,6 +30,7 @@ public class MainActivity extends AppCompatActivity implements CallbackInterface
     private CoinRecyclerAdapter adapter;
     private APIController apiController;
     private SpinKitView spinKitView;
+    private Cursor cursor;
 
     private static final String SORT_ORDER = BitcoinDBContract.BitcoinEntry.COLUMN_NAME + " ASC";
 
@@ -51,6 +53,30 @@ public class MainActivity extends AppCompatActivity implements CallbackInterface
         LinearLayoutManager llm = new LinearLayoutManager(this);
         coiRecyclerView.setLayoutManager(llm);
         coiRecyclerView.setAdapter(adapter);
+
+        //Set up swipe to delete
+        ItemTouchHelper.SimpleCallback simpleItemTouchCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
+
+            @Override
+            public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
+                return false;
+            }
+
+            @Override
+            public void onSwiped(RecyclerView.ViewHolder viewHolder, int swipeDir) {
+                //Remove item from shared prefs
+                int position = viewHolder.getAdapterPosition();
+                cursor.moveToPosition(position);
+                String coinId = cursor.getString(cursor.getColumnIndex(BitcoinDBContract.BitcoinEntry.COLUMN_COIN_ID));
+                SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(MainActivity.this);
+                SharedPreferences.Editor editor = prefs.edit();
+                editor.remove(coinId).commit();
+                queryDbForCoins();
+            }
+        };
+
+        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleItemTouchCallback);
+        itemTouchHelper.attachToRecyclerView(coiRecyclerView);
 
         //Set up API controller
         apiController = new APIController();
@@ -91,8 +117,16 @@ public class MainActivity extends AppCompatActivity implements CallbackInterface
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
         //Insert data into DB
         BitcoinDBHelper.bulkInsert(this, coins);
+        queryDbForCoins();
 
+
+        //Hide loading
+        spinKitView.setVisibility(View.INVISIBLE);
+    }
+
+    private void queryDbForCoins() {
         //Get all preferences and add them to an ArrayList
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(MainActivity.this);
         ArrayList<String> prefStrings = new ArrayList<>();
         if (prefs.getAll() != null) {
             Map<String, ?> keys = prefs.getAll();
@@ -112,19 +146,15 @@ public class MainActivity extends AppCompatActivity implements CallbackInterface
 
         //If our selectionArgs aren't null, query only for the user's preferred coins
         if (selectionArgs != null) {
-            Cursor cursor = BitcoinDBHelper.rawQuery(this, selectionArgs);
+            cursor = BitcoinDBHelper.rawQuery(this, selectionArgs);
             adapter.swapCursor(cursor);
         }
 
         //otherwise query for everything
         else{
-            Cursor cursor = BitcoinDBHelper.readDb(this, null, null, selectionArgs, null);
+            cursor = BitcoinDBHelper.readDb(this, null, null, selectionArgs, null);
             adapter.swapCursor(cursor);
         }
-        //Hide loading
-        spinKitView.setVisibility(View.INVISIBLE);
-
-
     }
 
     private void startLoading() {
