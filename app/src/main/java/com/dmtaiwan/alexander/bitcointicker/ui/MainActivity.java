@@ -6,12 +6,13 @@ import android.database.Cursor;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ListView;
 
 import com.dmtaiwan.alexander.bitcointicker.R;
 import com.dmtaiwan.alexander.bitcointicker.data.BitcoinDBContract;
@@ -25,7 +26,7 @@ import java.util.Map;
 
 public class MainActivity extends AppCompatActivity implements CallbackInterface {
 
-    private CoinCursorAdapter adapter;
+    private CoinRecyclerAdapter adapter;
     private APIController apiController;
     private SpinKitView spinKitView;
 
@@ -37,7 +38,7 @@ public class MainActivity extends AppCompatActivity implements CallbackInterface
         setContentView(R.layout.activity_main);
 
         //Set up Views
-        ListView coinListView = (ListView) findViewById(R.id.list_view_coin);
+        RecyclerView coiRecyclerView = (RecyclerView) findViewById(R.id.recycler_view_coin);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         spinKitView = (SpinKitView) toolbar.findViewById(R.id.spin_kit);
 
@@ -46,8 +47,10 @@ public class MainActivity extends AppCompatActivity implements CallbackInterface
         setSupportActionBar(toolbar);
 
         //Set up Adapter
-        adapter = new CoinCursorAdapter(this, null, false);
-        coinListView.setAdapter(adapter);
+        adapter = new CoinRecyclerAdapter(this, null);
+        LinearLayoutManager llm = new LinearLayoutManager(this);
+        coiRecyclerView.setLayoutManager(llm);
+        coiRecyclerView.setAdapter(adapter);
 
         //Set up API controller
         apiController = new APIController();
@@ -110,13 +113,13 @@ public class MainActivity extends AppCompatActivity implements CallbackInterface
         //If our selectionArgs aren't null, query only for the user's preferred coins
         if (selectionArgs != null) {
             Cursor cursor = BitcoinDBHelper.rawQuery(this, selectionArgs);
-            adapter.changeCursor(cursor);
+            adapter.swapCursor(cursor);
         }
 
         //otherwise query for everything
         else{
             Cursor cursor = BitcoinDBHelper.readDb(this, null, null, selectionArgs, null);
-            adapter.changeCursor(cursor);
+            adapter.swapCursor(cursor);
         }
         //Hide loading
         spinKitView.setVisibility(View.INVISIBLE);

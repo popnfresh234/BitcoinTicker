@@ -178,7 +178,7 @@ public class Coin
     public String toString() {
         return "Coin{" +
                 "id='" + id + '\'' +
-                ", name='" + name + '\'' +
+                ", coinName='" + name + '\'' +
                 ", symbol='" + symbol + '\'' +
                 ", rank='" + rank + '\'' +
                 ", price_usd='" + price_usd + '\'' +

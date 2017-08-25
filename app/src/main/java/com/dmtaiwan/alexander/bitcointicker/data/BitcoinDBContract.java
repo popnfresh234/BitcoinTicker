@@ -15,7 +15,7 @@ public class BitcoinDBContract {
         public static String TABLE_NAME = "coins";
 
         public static final String COLUMN_COIN_ID = "id";
-        public static final String COLUMN_NAME = "name";
+        public static final String COLUMN_NAME = "coinName";
         public static final String COLUMN_SYMBOL = "symbol";
         public static final String COLUMN_RANK = "rank";
         public static final String COLUMN_PRICE_USD = "price_usd";
