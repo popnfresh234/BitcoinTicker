@@ -17,6 +17,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".ui.PreferenceActivity"/>
+        <activity android:name=".ui.SettingsActivity"/>
     </application>
 
 </manifest>

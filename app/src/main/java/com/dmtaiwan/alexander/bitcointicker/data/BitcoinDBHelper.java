@@ -113,6 +113,16 @@ public class BitcoinDBHelper extends SQLiteOpenHelper {
         return cursor;
     }
 
+    public static Cursor querySimilar(Context context, String term) {
+        BitcoinDBHelper dbHelper = new BitcoinDBHelper(context);
+        SQLiteDatabase db = dbHelper.getReadableDatabase();
+        String[] args = new String[1];
+        args[0] = term + '%';
+        String query = "SELECT * FROM " + BitcoinDBContract.BitcoinEntry.TABLE_NAME
+                + " WHERE " + BitcoinDBContract.BitcoinEntry.COLUMN_COIN_ID + " LIKE ?";
+        return db.rawQuery(query, args);
+    }
+
     public static Cursor rawQuery(Context context, String[] selectionArgs) {
         BitcoinDBHelper dbHelper = new BitcoinDBHelper(context);
         SQLiteDatabase db = dbHelper.getReadableDatabase();
