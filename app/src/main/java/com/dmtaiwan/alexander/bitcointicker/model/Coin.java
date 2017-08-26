@@ -218,12 +218,12 @@ public class Coin {
     @Override
     public String toString() {
         return
-                        "Coin:                  " + name + "\n" +
-                        "Symbol:                " + symbol + "\n" +
-                        "Price USD:             " + Utils.formatCurrency(price_usd) + "\n" +
-                        "Price CAD:             " + Utils.formatCurrency(price_cad) + "\n" +
-                        "Percent Change 1H:     " + Utils.formatPercentage(percent_change_one_hour) + "\n" +
-                        "Percent Chagne 24H:    " + Utils.formatPercentage(percent_change_twenty_four_hour) + "\n" +
-                        "Percent Change 7D:     " + Utils.formatPercentage(percent_change_seven_days);
+                        "Coin: " + name + "\n" +
+                        "Symbol: " + symbol + "\n" +
+                        "Price USD: " + Utils.formatCurrency(price_usd) + "\n" +
+                        "Price CAD: " + Utils.formatCurrency(price_cad) + "\n" +
+                        "Percent Change 1H: " + Utils.formatPercentage(percent_change_one_hour) + "\n" +
+                        "Percent Chagne 24H: " + Utils.formatPercentage(percent_change_twenty_four_hour) + "\n" +
+                        "Percent Change 7D: " + Utils.formatPercentage(percent_change_seven_days);
     }
 }
