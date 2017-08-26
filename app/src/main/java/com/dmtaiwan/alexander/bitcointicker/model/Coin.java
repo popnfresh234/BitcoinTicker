@@ -2,6 +2,8 @@ package com.dmtaiwan.alexander.bitcointicker.model;
 
 import com.google.gson.annotations.SerializedName;
 
+import utility.Utils;
+
 /**
  * Created by Alexander on 8/20/2017.
  */
@@ -215,25 +217,13 @@ public class Coin {
 
     @Override
     public String toString() {
-        return "Coin{" +
-                "id='" + id + '\'' +
-                ", coinName='" + name + '\'' +
-                ", symbol='" + symbol + '\'' +
-                ", rank='" + rank + '\'' +
-                ", price_usd='" + price_usd + '\'' +
-                ", price_btc='" + price_btc + '\'' +
-                ", twenty_four_hour_volume_usd='" + twenty_four_hour_volume_usd + '\'' +
-                ", market_cap_usd='" + market_cap_usd + '\'' +
-                ", available_supply='" + available_supply + '\'' +
-                ", total_supply='" + total_supply + '\'' +
-                ", percent_change_one_hour='" + percent_change_one_hour + '\'' +
-                ", percent_change_twenty_four_hour='" + percent_change_twenty_four_hour + '\'' +
-                ", percent_change_seven_days='" + percent_change_seven_days + '\'' +
-                ", last_updated='" + last_updated + '\'' +
-                ", price_cad='" + price_cad + '\'' +
-                ", twenty_four_hour_volume_cad='" + twenty_four_hour_volume_cad + '\'' +
-                ", market_cap_cad='" + market_cap_cad + '\'' +
-                ", isExpanded='" + market_cap_cad + '\'' +
-                '}';
+        return
+                        "Coin:                  " + name + "\n" +
+                        "Symbol:                " + symbol + "\n" +
+                        "Price USD:             " + Utils.formatCurrency(price_usd) + "\n" +
+                        "Price CAD:             " + Utils.formatCurrency(price_cad) + "\n" +
+                        "Percent Change 1H:     " + Utils.formatPercentage(percent_change_one_hour) + "\n" +
+                        "Percent Chagne 24H:    " + Utils.formatPercentage(percent_change_twenty_four_hour) + "\n" +
+                        "Percent Change 7D:     " + Utils.formatPercentage(percent_change_seven_days);
     }
 }

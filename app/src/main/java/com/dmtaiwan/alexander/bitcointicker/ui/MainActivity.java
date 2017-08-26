@@ -71,6 +71,7 @@ public class MainActivity extends AppCompatActivity implements CallbackInterface
                 SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(MainActivity.this);
                 SharedPreferences.Editor editor = prefs.edit();
                 editor.remove(coinId).commit();
+                //requery to update adapter
                 queryDbForCoins();
             }
         };

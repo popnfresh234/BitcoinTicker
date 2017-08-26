@@ -1,6 +1,7 @@
 package com.dmtaiwan.alexander.bitcointicker.ui;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -14,11 +15,13 @@ import com.dmtaiwan.alexander.bitcointicker.model.Coin;
 
 import net.cachapa.expandablelayout.ExpandableLayout;
 
-import java.text.DecimalFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.TimeZone;
+
+import static utility.Utils.formatCurrency;
+import static utility.Utils.formatCurrencyVolumeOrCap;
+import static utility.Utils.formatPercentage;
+import static utility.Utils.formatSupply;
+import static utility.Utils.getDate;
 
 /**
  * Created by Alexander on 8/25/2017.
@@ -70,6 +73,16 @@ public class CoinRecyclerAdapter extends RecyclerView.Adapter<CoinRecyclerAdapte
                     coin.setIsExpanded(true);
                 }
             }
+        });
+
+        //Share on long press
+        holder.listRootView.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                buildShareIntent(position);
+                return true;
+            }
+
         });
 
         holder.coinName.setText(coin.getName());
@@ -179,54 +192,14 @@ public class CoinRecyclerAdapter extends RecyclerView.Adapter<CoinRecyclerAdapte
         }
     }
 
-    private String getDate(long time) {
-        Date date = new Date(time * 1000L);
-        SimpleDateFormat sdf = new SimpleDateFormat("H:mm:ss a");
-        sdf.setTimeZone(TimeZone.getTimeZone("America/Vancouver"));
-        String formattedTime = sdf.format(date);
-        return formattedTime;
-    }
-
-    public String formatCurrency(String input) {
-        if (input == null) {
-            return "";
-        }
-        float floatPrice = Float.parseFloat(input);
-        return DecimalFormat.getCurrencyInstance().format(floatPrice);
-    }
-
-    public String formatCurrencyVolumeOrCap(String input) {
-        if (input == null) {
-            return "";
-        }
-        float floatPrice = Float.parseFloat(input);
-        String formattedPrice = DecimalFormat.getCurrencyInstance().format(floatPrice);
-        return formattedPrice.replaceAll("\\.0*$", "");
-    }
-
-    private String formatPercentage(String input) {
-        if (input == null) {
-            return "";
-        }
-        float floatPercentage = Float.parseFloat(input);
-        DecimalFormat df2;
-        if (floatPercentage > 0) {
-            df2 = new DecimalFormat("+#,##0.00 '%'");
-        } else {
-            df2 = new DecimalFormat(" #,##0.00 '%'");
-        }
 
 
-        return df2.format(floatPercentage);
-    }
-
-    private String formatSupply(String input) {
-        if (input == null) {
-            return "";
-        }
-        float floatSupply = Float.parseFloat(input);
-        DecimalFormat decimalFormat = new DecimalFormat("#");
-        return decimalFormat.format(floatSupply);
+    private void buildShareIntent(int position) {
+        Intent sendIntent = new Intent();
+        sendIntent.setAction(Intent.ACTION_SEND);
+        sendIntent.putExtra(Intent.EXTRA_TEXT, coins.get(position).toString());
+        sendIntent.setType("text/plain");
+        context.startActivity(sendIntent);
     }
 
     public void swapData(ArrayList<Coin> coins) {
