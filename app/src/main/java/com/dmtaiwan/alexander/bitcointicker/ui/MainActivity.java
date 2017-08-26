@@ -30,7 +30,7 @@ public class MainActivity extends AppCompatActivity implements CallbackInterface
     private CoinRecyclerAdapter adapter;
     private APIController apiController;
     private SpinKitView spinKitView;
-    private Cursor cursor;
+    private ArrayList<Coin> coins;
 
     private static final String SORT_ORDER = BitcoinDBContract.BitcoinEntry.COLUMN_NAME + " ASC";
 
@@ -49,7 +49,7 @@ public class MainActivity extends AppCompatActivity implements CallbackInterface
         setSupportActionBar(toolbar);
 
         //Set up Adapter
-        adapter = new CoinRecyclerAdapter(this, null);
+        adapter = new CoinRecyclerAdapter(this, new ArrayList<Coin>());
         LinearLayoutManager llm = new LinearLayoutManager(this);
         coiRecyclerView.setLayoutManager(llm);
         coiRecyclerView.setAdapter(adapter);
@@ -66,8 +66,8 @@ public class MainActivity extends AppCompatActivity implements CallbackInterface
             public void onSwiped(RecyclerView.ViewHolder viewHolder, int swipeDir) {
                 //Remove item from shared prefs
                 int position = viewHolder.getAdapterPosition();
-                cursor.moveToPosition(position);
-                String coinId = cursor.getString(cursor.getColumnIndex(BitcoinDBContract.BitcoinEntry.COLUMN_COIN_ID));
+                Coin coin = coins.get(position);
+                String coinId = coin.getId();
                 SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(MainActivity.this);
                 SharedPreferences.Editor editor = prefs.edit();
                 editor.remove(coinId).commit();
@@ -146,15 +146,49 @@ public class MainActivity extends AppCompatActivity implements CallbackInterface
 
         //If our selectionArgs aren't null, query only for the user's preferred coins
         if (selectionArgs != null) {
-            cursor = BitcoinDBHelper.rawQuery(this, selectionArgs);
-            adapter.swapCursor(cursor);
+            Cursor cursor = BitcoinDBHelper.rawQuery(this, selectionArgs);
+            coins = stripCurosr(cursor);
+            cursor.close();
+            adapter.swapData(coins);
         }
 
         //otherwise query for everything
         else{
-            cursor = BitcoinDBHelper.readDb(this, null, null, selectionArgs, null);
-            adapter.swapCursor(cursor);
+            Cursor cursor = BitcoinDBHelper.readDb(this, null, null, selectionArgs, null);
+            coins = stripCurosr(cursor);
+            cursor.close();
+            adapter.swapData(coins);
         }
+    }
+
+    private ArrayList<Coin> stripCurosr(Cursor cursor) {
+        ArrayList<Coin> coinList = new ArrayList<>();
+        while (cursor.moveToNext()) {
+            String id = cursor.getString(cursor.getColumnIndex(BitcoinDBContract.BitcoinEntry.COLUMN_COIN_ID));
+            String name = cursor.getString(cursor.getColumnIndex(BitcoinDBContract.BitcoinEntry.COLUMN_NAME));
+            String symbol = cursor.getString(cursor.getColumnIndex(BitcoinDBContract.BitcoinEntry.COLUMN_SYMBOL));
+            String rank = cursor.getString(cursor.getColumnIndex(BitcoinDBContract.BitcoinEntry.COLUMN_RANK));
+            String priceUsd = cursor.getString(cursor.getColumnIndex(BitcoinDBContract.BitcoinEntry.COLUMN_PRICE_USD));
+            String priceBtc = cursor.getString(cursor.getColumnIndex(BitcoinDBContract.BitcoinEntry.COLUMN_PRICE_BTC));
+            String twentyFourHourVolumeUsd = cursor.getString(cursor.getColumnIndex(BitcoinDBContract.BitcoinEntry.COLUMN_24H_VOLUME_USD));
+            String marketCapUsd = cursor.getString(cursor.getColumnIndex(BitcoinDBContract.BitcoinEntry.COLUMN_MARKET_CAP_USD));
+            String availableSupply = cursor.getString(cursor.getColumnIndex(BitcoinDBContract.BitcoinEntry.COLUMN_AVAILABLE_SUPPLY));
+            String totalSupply = cursor.getString(cursor.getColumnIndex(BitcoinDBContract.BitcoinEntry.COLUMN_TOTAL_SUPPLY));
+            String percentChangeOneHour = cursor.getString(cursor.getColumnIndex(BitcoinDBContract.BitcoinEntry.COLUMN_PERCENT_CHANGE_1H));
+            String percentChangeTwentyFourHour = cursor.getString(cursor.getColumnIndex(BitcoinDBContract.BitcoinEntry.COLUMN_PERCENT_CHANGE_24H));
+            String percentChangeSevenDays = cursor.getString(cursor.getColumnIndex(BitcoinDBContract.BitcoinEntry.COLUMN_PERCENT_CHANGE_7D));
+            String lastUpdated = cursor.getString(cursor.getColumnIndex(BitcoinDBContract.BitcoinEntry.COLUMN_LAST_UPDATED));
+            String priceCad = cursor.getString(cursor.getColumnIndex(BitcoinDBContract.BitcoinEntry.COLUMN_PRICE_CAD));
+            String twentyFourHourVolumeCad = cursor.getString(cursor.getColumnIndex(BitcoinDBContract.BitcoinEntry.COLUMN_24H_VOLUME_CAD));
+            String marketCapCad = cursor.getString(cursor.getColumnIndex(BitcoinDBContract.BitcoinEntry.COLUMN_MARKET_CAP_CAD));
+
+            Coin coin = new Coin(id, name, symbol, rank, priceUsd, priceBtc, twentyFourHourVolumeUsd,
+                    marketCapUsd, availableSupply, totalSupply, percentChangeOneHour, percentChangeTwentyFourHour,
+                    percentChangeSevenDays, lastUpdated, priceCad, twentyFourHourVolumeCad, marketCapCad, false);
+
+            coinList.add(coin);
+        }
+        return coinList;
     }
 
     private void startLoading() {

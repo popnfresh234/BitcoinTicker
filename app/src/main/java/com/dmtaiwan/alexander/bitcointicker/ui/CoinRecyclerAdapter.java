@@ -1,7 +1,6 @@
 package com.dmtaiwan.alexander.bitcointicker.ui;
 
 import android.content.Context;
-import android.database.Cursor;
 import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -11,12 +10,13 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.dmtaiwan.alexander.bitcointicker.R;
-import com.dmtaiwan.alexander.bitcointicker.data.BitcoinDBContract;
+import com.dmtaiwan.alexander.bitcointicker.model.Coin;
 
 import net.cachapa.expandablelayout.ExpandableLayout;
 
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.TimeZone;
 
@@ -27,11 +27,11 @@ import java.util.TimeZone;
 public class CoinRecyclerAdapter extends RecyclerView.Adapter<CoinRecyclerAdapter.CoinHolder> {
 
     private Context context;
-    private Cursor cursor;
+    private ArrayList<Coin> coins;
 
-    public CoinRecyclerAdapter(Context context, Cursor cursor) {
+    public CoinRecyclerAdapter(Context context, ArrayList<Coin> coins) {
         this.context = context;
-        this.cursor = cursor;
+        this.coins = coins;
     }
 
     @Override
@@ -43,13 +43,18 @@ public class CoinRecyclerAdapter extends RecyclerView.Adapter<CoinRecyclerAdapte
     }
 
     @Override
-    public void onBindViewHolder(final CoinHolder holder, int position) {
+    public void onBindViewHolder(final CoinHolder holder, final int position) {
 
-        //Move cursor to position
-        cursor.moveToPosition(position);
+        //Get coin
+        final Coin coin = coins.get(position);
+
+        //handle expansion state
+        if (coin.getIsExpanded()) {
+            holder.expandableLayout.expand();
+        }else holder.expandableLayout.collapse();
 
         //Set colors
-        if (cursor.getPosition() % 2 == 0) {
+        if (position % 2 == 0) {
             holder.listRootView.setBackgroundColor(context.getResources().getColor(R.color.colorListViewAlternate));
         } else holder.listRootView.setBackgroundColor(Color.TRANSPARENT);
 
@@ -59,73 +64,77 @@ public class CoinRecyclerAdapter extends RecyclerView.Adapter<CoinRecyclerAdapte
             public void onClick(View v) {
                 if (holder.expandableLayout.isExpanded()) {
                     holder.expandableLayout.collapse();
-                } else holder.expandableLayout.expand();
+                    coin.setIsExpanded(false);
+                } else{
+                    holder.expandableLayout.expand();
+                    coin.setIsExpanded(true);
+                }
             }
         });
 
-        holder.coinName.setText(cursor.getString(cursor.getColumnIndexOrThrow(BitcoinDBContract.BitcoinEntry.COLUMN_NAME)));
-        holder.symbol.setText(cursor.getString(cursor.getColumnIndexOrThrow(BitcoinDBContract.BitcoinEntry.COLUMN_SYMBOL)));
+        holder.coinName.setText(coin.getName());
+        holder.symbol.setText(coin.getSymbol());
 
         //Format priceUSD
-        String priceUsdString = cursor.getString(cursor.getColumnIndexOrThrow(BitcoinDBContract.BitcoinEntry.COLUMN_PRICE_USD));
+        String priceUsdString = coin.getPrice_usd();
         holder.priceUSD.setText(formatCurrency(priceUsdString));
 
 
-        holder.priceBTC.setText(cursor.getString(cursor.getColumnIndexOrThrow(BitcoinDBContract.BitcoinEntry.COLUMN_PRICE_BTC)));
+        holder.priceBTC.setText(coin.getPrice_btc());
 
         //Format 24HVolumeUSD
-        String twentyFourHourVolumeUSDString = cursor.getString(cursor.getColumnIndexOrThrow(BitcoinDBContract.BitcoinEntry.COLUMN_24H_VOLUME_USD));
+        String twentyFourHourVolumeUSDString = coin.getTwenty_four_hour_volume_usd();
         holder.twentyFourHourVolumeUSD.setText(formatCurrencyVolumeOrCap(twentyFourHourVolumeUSDString));
 
         //Format marketCapUSD
-        String marketCapUsdString = cursor.getString(cursor.getColumnIndexOrThrow(BitcoinDBContract.BitcoinEntry.COLUMN_MARKET_CAP_USD));
+        String marketCapUsdString = coin.getMarket_cap_usd();
         holder.marketCapUSD.setText(formatCurrencyVolumeOrCap(marketCapUsdString));
 
         //Format availableSupply
-        String availableSupplyString = cursor.getString(cursor.getColumnIndexOrThrow(BitcoinDBContract.BitcoinEntry.COLUMN_AVAILABLE_SUPPLY));
+        String availableSupplyString = coin.getAvailable_supply();
         holder.availableSupply.setText(formatSupply(availableSupplyString));
 
         //Format totalSupply
-        String totalSupplyString = cursor.getString(cursor.getColumnIndexOrThrow(BitcoinDBContract.BitcoinEntry.COLUMN_TOTAL_SUPPLY));
+        String totalSupplyString = coin.getTotal_supply();
         holder.totalSupply.setText(formatSupply(totalSupplyString));
 
 
         //Format percentChange1H
-        String percentChangeOneHourString = cursor.getString(cursor.getColumnIndexOrThrow(BitcoinDBContract.BitcoinEntry.COLUMN_PERCENT_CHANGE_1H));
+        String percentChangeOneHourString = coin.getPercent_change_one_hour();
         holder.percentChangeOneHour.setText(formatPercentage(percentChangeOneHourString));
 
         //Format percentChange24H
-        String percentChangeTwentyFourHourString = cursor.getString(cursor.getColumnIndexOrThrow(BitcoinDBContract.BitcoinEntry.COLUMN_PERCENT_CHANGE_24H));
+        String percentChangeTwentyFourHourString = coin.getPercent_change_twenty_four_hour();
         holder.percentChangeTwentyFourHour.setText(formatPercentage(percentChangeTwentyFourHourString));
 
         //Format percentChange7D
-        String percentChangeSevenDaysString = cursor.getString(cursor.getColumnIndexOrThrow(BitcoinDBContract.BitcoinEntry.COLUMN_PERCENT_CHANGE_7D));
+        String percentChangeSevenDaysString = coin.getPercent_change_seven_days();
         holder.percentChangeSevenDays.setText(formatPercentage(percentChangeSevenDaysString));
 
         //Parse date
-        Long date = Long.parseLong(cursor.getString(cursor.getColumnIndexOrThrow(BitcoinDBContract.BitcoinEntry.COLUMN_LAST_UPDATED)));
+        Long date = Long.parseLong(coin.getLast_updated());
         holder.lastUpdated.setText(getDate(date));
 
         //Parse priceCAD
-        String priceCadString = cursor.getString(cursor.getColumnIndexOrThrow(BitcoinDBContract.BitcoinEntry.COLUMN_PRICE_CAD));
+        String priceCadString = coin.getPrice_cad();
         holder.priceCAD.setText(formatCurrency(priceCadString));
 
         //Format 24HVolumeCAD
-        String twentyFourHourVolumeCADString = cursor.getString(cursor.getColumnIndexOrThrow(BitcoinDBContract.BitcoinEntry.COLUMN_24H_VOLUME_CAD));
+        String twentyFourHourVolumeCADString =coin.getTwenty_four_hour_volume_cad();
         holder.twentyFourHourVolumeCAD.setText(formatCurrencyVolumeOrCap(twentyFourHourVolumeCADString));
 
         //Format marketCapCad
-        String marketCapCad = cursor.getString(cursor.getColumnIndexOrThrow(BitcoinDBContract.BitcoinEntry.COLUMN_MARKET_CAP_CAD));
+        String marketCapCad = coin.getMarket_cap_cad();
         holder.marketCapCAD.setText(formatCurrencyVolumeOrCap(marketCapCad));
 
     }
 
     @Override
     public int getItemCount() {
-        if (cursor == null) {
+        if (coins == null) {
             return 0;
         }
-        return cursor.getCount();
+        return coins.size();
     }
 
     public class CoinHolder extends RecyclerView.ViewHolder {
@@ -220,8 +229,8 @@ public class CoinRecyclerAdapter extends RecyclerView.Adapter<CoinRecyclerAdapte
         return decimalFormat.format(floatSupply);
     }
 
-    public void swapCursor(Cursor cursor) {
-        this.cursor = cursor;
+    public void swapData(ArrayList<Coin> coins) {
+        this.coins = coins;
         notifyDataSetChanged();
     }
 }

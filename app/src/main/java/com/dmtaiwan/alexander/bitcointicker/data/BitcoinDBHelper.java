@@ -45,6 +45,7 @@ public class BitcoinDBHelper extends SQLiteOpenHelper {
                 + BitcoinDBContract.BitcoinEntry.COLUMN_PRICE_CAD + " TEXT, "
                 + BitcoinDBContract.BitcoinEntry.COLUMN_24H_VOLUME_CAD + " TEXT, "
                 + BitcoinDBContract.BitcoinEntry.COLUMN_MARKET_CAP_CAD + " TEXT, "
+                + BitcoinDBContract.BitcoinEntry.COLUMN_EXPANDED + " TEXT, "
                 + "UNIQUE (" + BitcoinDBContract.BitcoinEntry.COLUMN_COIN_ID + ") on conflict replace" + ")";
 
         sqLiteDatabase.execSQL(SQL_CREATE_TABLE);

@@ -6,8 +6,7 @@ import com.google.gson.annotations.SerializedName;
  * Created by Alexander on 8/20/2017.
  */
 
-public class Coin
-{
+public class Coin {
 
     private String id;
     private String name;
@@ -37,6 +36,36 @@ public class Coin
     @SerializedName("24h_volume_cad")
     private String twenty_four_hour_volume_cad;
     private String market_cap_cad;
+
+    //boolean for marking whether or not the item has been expanded in the Adapter
+    private boolean isExpanded;
+
+    //constructor
+    public Coin(String id, String name, String symbol, String rank, String price_usd,
+                String price_btc, String twenty_four_hour_volume_usd, String market_cap_usd, String available_supply,
+                String total_supply, String percent_change_one_hour, String percent_change_twenty_four_hour, String percent_change_seven_days,
+                String last_updated, String price_cad, String twenty_four_hour_volume_cad, String market_cap_cad, boolean isExpanded) {
+
+        this.id = id;
+        this.name = name;
+        this.symbol = symbol;
+        this.rank = rank;
+        this.price_usd = price_usd;
+        this.price_btc = price_btc;
+        this.twenty_four_hour_volume_usd = twenty_four_hour_volume_usd;
+        this.market_cap_usd = market_cap_usd;
+        this.available_supply = available_supply;
+        this.total_supply = total_supply;
+        this.percent_change_one_hour = percent_change_one_hour;
+        this.percent_change_twenty_four_hour = percent_change_twenty_four_hour;
+        this.percent_change_seven_days = percent_change_seven_days;
+        this.last_updated = last_updated;
+        this.price_cad = price_cad;
+        this.twenty_four_hour_volume_cad = twenty_four_hour_volume_cad;
+        this.market_cap_cad = market_cap_cad;
+        this.isExpanded = isExpanded;
+    }
+
 
     public String getId() {
         return id;
@@ -89,6 +118,7 @@ public class Coin
     public String getTwenty_four_hour_volume_usd() {
         return twenty_four_hour_volume_usd;
     }
+
 
     public void setTwenty_four_hour_volume_usd(String twenty_four_hour_volume_usd) {
         this.twenty_four_hour_volume_usd = twenty_four_hour_volume_usd;
@@ -174,6 +204,15 @@ public class Coin
         this.market_cap_cad = market_cap_cad;
     }
 
+    public boolean getIsExpanded() {
+        return isExpanded;
+    }
+
+    public void setIsExpanded(boolean isExpanded) {
+        this.isExpanded = isExpanded;
+    }
+
+
     @Override
     public String toString() {
         return "Coin{" +
@@ -194,6 +233,7 @@ public class Coin
                 ", price_cad='" + price_cad + '\'' +
                 ", twenty_four_hour_volume_cad='" + twenty_four_hour_volume_cad + '\'' +
                 ", market_cap_cad='" + market_cap_cad + '\'' +
+                ", isExpanded='" + market_cap_cad + '\'' +
                 '}';
     }
 }
