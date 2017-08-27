@@ -65,8 +65,8 @@ public class CoinRecyclerAdapter extends RecyclerView.Adapter<CoinRecyclerAdapte
 
         //Set colors
         if (position % 2 == 0) {
-            holder.listRootView.setBackgroundColor(context.getResources().getColor(R.color.colorListViewAlternate));
-        } else holder.listRootView.setBackgroundColor(context.getResources().getColor(R.color.colorPrimaryLight));
+            holder.listRootView.setBackgroundDrawable(context.getResources().getDrawable(R.drawable.ripple_dark));
+        } else holder.listRootView.setBackgroundDrawable(context.getResources().getDrawable(R.drawable.ripple_light));
 
         //Handle expansion
         holder.listRootView.setOnClickListener(new View.OnClickListener() {
