@@ -199,7 +199,10 @@ public class CoinRecyclerAdapter extends RecyclerView.Adapter<CoinRecyclerAdapte
         sendIntent.setAction(Intent.ACTION_SEND);
         sendIntent.putExtra(Intent.EXTRA_TEXT, coins.get(position).toString());
         sendIntent.setType("text/plain");
-        context.startActivity(sendIntent);
+        Intent chooser = Intent.createChooser(sendIntent, "TEST");
+        if (sendIntent.resolveActivity(context.getPackageManager()) != null) {
+            context.startActivity(chooser);
+        }
     }
 
     public void swapData(ArrayList<Coin> coins) {
