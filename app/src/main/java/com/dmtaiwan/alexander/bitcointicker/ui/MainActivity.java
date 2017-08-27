@@ -3,6 +3,7 @@ package com.dmtaiwan.alexander.bitcointicker.ui;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
+import android.database.DatabaseUtils;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
@@ -18,6 +19,7 @@ import android.view.View;
 import com.dmtaiwan.alexander.bitcointicker.R;
 import com.dmtaiwan.alexander.bitcointicker.data.BitcoinDBContract;
 import com.dmtaiwan.alexander.bitcointicker.data.BitcoinDBHelper;
+import com.dmtaiwan.alexander.bitcointicker.helper.SimpleItemTouchHelperCallback;
 import com.dmtaiwan.alexander.bitcointicker.model.Coin;
 import com.dmtaiwan.alexander.bitcointicker.networking.APIController;
 import com.github.ybq.android.spinkit.SpinKitView;
@@ -25,7 +27,7 @@ import com.github.ybq.android.spinkit.SpinKitView;
 import java.util.ArrayList;
 import java.util.Map;
 
-public class MainActivity extends AppCompatActivity implements CallbackInterface {
+public class MainActivity extends AppCompatActivity implements CallbackInterface, CoinRecyclerAdapter.AdapterCallback {
 
     private CoinRecyclerAdapter adapter;
     private APIController apiController;
@@ -49,34 +51,14 @@ public class MainActivity extends AppCompatActivity implements CallbackInterface
         setSupportActionBar(toolbar);
 
         //Set up Adapter
-        adapter = new CoinRecyclerAdapter(this, new ArrayList<Coin>());
+        adapter = new CoinRecyclerAdapter(this, new ArrayList<Coin>(), this);
         LinearLayoutManager llm = new LinearLayoutManager(this);
         coiRecyclerView.setLayoutManager(llm);
         coiRecyclerView.setAdapter(adapter);
 
-        //Set up swipe to delete
-        ItemTouchHelper.SimpleCallback simpleItemTouchCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
+        ItemTouchHelper.Callback callback = new SimpleItemTouchHelperCallback(adapter);
 
-            @Override
-            public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
-                return false;
-            }
-
-            @Override
-            public void onSwiped(RecyclerView.ViewHolder viewHolder, int swipeDir) {
-                //Remove item from shared prefs
-                int position = viewHolder.getAdapterPosition();
-                Coin coin = coins.get(position);
-                String coinId = coin.getId();
-                SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(MainActivity.this);
-                SharedPreferences.Editor editor = prefs.edit();
-                editor.remove(coinId).commit();
-                //requery to update adapter
-                queryDbForCoins();
-            }
-        };
-
-        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleItemTouchCallback);
+        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(callback);
         itemTouchHelper.attachToRecyclerView(coiRecyclerView);
 
         //Set up API controller
@@ -148,6 +130,7 @@ public class MainActivity extends AppCompatActivity implements CallbackInterface
         //If our selectionArgs aren't null, query only for the user's preferred coins
         if (selectionArgs != null) {
             Cursor cursor = BitcoinDBHelper.rawQuery(this, selectionArgs);
+            DatabaseUtils.dumpCursor(cursor);
             coins = stripCurosr(cursor);
             cursor.close();
             adapter.swapData(coins);
@@ -156,6 +139,7 @@ public class MainActivity extends AppCompatActivity implements CallbackInterface
         //otherwise query for everything
         else{
             Cursor cursor = BitcoinDBHelper.readDb(this, null, null, selectionArgs, null);
+            DatabaseUtils.dumpCursor(cursor);
             coins = stripCurosr(cursor);
             cursor.close();
             adapter.swapData(coins);
@@ -195,6 +179,11 @@ public class MainActivity extends AppCompatActivity implements CallbackInterface
     private void startLoading() {
         spinKitView.setVisibility(View.VISIBLE);
         apiController.start(this);
+    }
+
+    @Override
+    public void queryData() {
+        queryDbForCoins();
     }
 }
 

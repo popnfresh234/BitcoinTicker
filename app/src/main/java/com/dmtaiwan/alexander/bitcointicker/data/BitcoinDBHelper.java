@@ -85,7 +85,7 @@ public class BitcoinDBHelper extends SQLiteOpenHelper {
                 values.put(BitcoinDBContract.BitcoinEntry.COLUMN_PERCENT_CHANGE_1H, coin.getPercent_change_one_hour());
                 values.put(BitcoinDBContract.BitcoinEntry.COLUMN_PERCENT_CHANGE_24H, coin.getPercent_change_twenty_four_hour());
                 values.put(BitcoinDBContract.BitcoinEntry.COLUMN_PERCENT_CHANGE_7D, coin.getPercent_change_seven_days());
-
+                values.put(BitcoinDBContract.BitcoinEntry.COLUMN_LAST_UPDATED, coin.getLast_updated());
                 values.put(BitcoinDBContract.BitcoinEntry.COLUMN_PRICE_CAD, coin.getPrice_cad());
                 values.put(BitcoinDBContract.BitcoinEntry.COLUMN_24H_VOLUME_CAD, coin.getTwenty_four_hour_volume_cad());
                 values.put(BitcoinDBContract.BitcoinEntry.COLUMN_MARKET_CAP_CAD, coin.getMarket_cap_cad());

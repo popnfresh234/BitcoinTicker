@@ -2,7 +2,7 @@ package com.dmtaiwan.alexander.bitcointicker.model;
 
 import com.google.gson.annotations.SerializedName;
 
-import utility.Utils;
+import com.dmtaiwan.alexander.bitcointicker.utility.Utils;
 
 /**
  * Created by Alexander on 8/20/2017.

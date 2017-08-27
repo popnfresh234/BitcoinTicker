@@ -23,6 +23,7 @@ public class APIController implements Callback<ArrayList<Coin>> {
 
     private static final String BASE_URL = " https://api.coinmarketcap.com/v1/";
     private CallbackInterface callbackInterface;
+
     public void start(CallbackInterface callbackInterface) {
         this.callbackInterface = callbackInterface;
         Gson gson = new GsonBuilder()
@@ -34,7 +35,7 @@ public class APIController implements Callback<ArrayList<Coin>> {
                 .addConverterFactory(GsonConverterFactory.create(gson))
                 .build();
         CoinMarketCapApi coinMarketCapApi = retrofit.create(CoinMarketCapApi.class);
-        Call<ArrayList<Coin>> call =coinMarketCapApi.getCoins("cad");
+        Call<ArrayList<Coin>> call = coinMarketCapApi.getCoins("cad");
         call.enqueue(this);
 
     }

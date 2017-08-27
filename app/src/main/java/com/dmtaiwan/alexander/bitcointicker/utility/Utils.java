@@ -1,4 +1,4 @@
-package utility;
+package com.dmtaiwan.alexander.bitcointicker.utility;
 
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
