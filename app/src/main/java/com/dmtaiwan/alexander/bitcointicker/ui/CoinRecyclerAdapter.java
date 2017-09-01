@@ -31,7 +31,7 @@ import static com.dmtaiwan.alexander.bitcointicker.utility.Utils.getDate;
  * Created by Alexander on 8/25/2017.
  */
 
-public class CoinRecyclerAdapter extends RecyclerView.Adapter<CoinRecyclerAdapter.CoinHolder> implements ItemTouchHelperAdapter {
+public class CoinRecyclerAdapter extends RecyclerView.Adapter<CoinRecyclerAdapter.CoinHolder> implements ItemTouchHelperAdapter{
 
     private Context context;
     private ArrayList<Coin> coins;
@@ -82,11 +82,21 @@ public class CoinRecyclerAdapter extends RecyclerView.Adapter<CoinRecyclerAdapte
             }
         });
 
-        //Share
+        //Handle share
         holder.shareIcon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 buildShareIntent(position);
+            }
+        });
+
+        //Handle Chart
+        holder.chartIcon.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(context, ChartActivity.class);
+                intent.putExtra(ChartActivity.KEY_COIN_ID, coin.getId());
+                context.startActivity(intent);
             }
         });
 
@@ -188,6 +198,7 @@ public class CoinRecyclerAdapter extends RecyclerView.Adapter<CoinRecyclerAdapte
         listener.queryData();
     }
 
+
     public class CoinHolder extends RecyclerView.ViewHolder {
 
         public LinearLayout listRootView;
@@ -208,7 +219,7 @@ public class CoinRecyclerAdapter extends RecyclerView.Adapter<CoinRecyclerAdapte
         public TextView twentyFourHourVolumeCAD;
         public TextView marketCapCAD;
         public ImageView shareIcon;
-
+        public ImageView chartIcon;
         public CoinHolder(View itemView) {
             super(itemView);
             listRootView = (LinearLayout) itemView.findViewById(R.id.coin_list_item_root_view);
@@ -229,6 +240,7 @@ public class CoinRecyclerAdapter extends RecyclerView.Adapter<CoinRecyclerAdapte
             twentyFourHourVolumeCAD = (TextView) itemView.findViewById(R.id.text_view_twenty_four_hour_volume_cad);
             marketCapCAD = (TextView) itemView.findViewById(R.id.text_view_market_cap_cad);
             shareIcon = (ImageView) itemView.findViewById(R.id.share_icon);
+            chartIcon = (ImageView) itemView.findViewById(R.id.chart_icon);
         }
     }
 

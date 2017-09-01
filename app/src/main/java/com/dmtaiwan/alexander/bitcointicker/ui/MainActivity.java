@@ -3,7 +3,6 @@ package com.dmtaiwan.alexander.bitcointicker.ui;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
-import android.database.DatabaseUtils;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
@@ -21,16 +20,17 @@ import com.dmtaiwan.alexander.bitcointicker.data.BitcoinDBContract;
 import com.dmtaiwan.alexander.bitcointicker.data.BitcoinDBHelper;
 import com.dmtaiwan.alexander.bitcointicker.helper.SimpleItemTouchHelperCallback;
 import com.dmtaiwan.alexander.bitcointicker.model.Coin;
-import com.dmtaiwan.alexander.bitcointicker.networking.APIController;
+import com.dmtaiwan.alexander.bitcointicker.model.HistoricalData;
+import com.dmtaiwan.alexander.bitcointicker.networking.CoinMarketCapApiController;
 import com.github.ybq.android.spinkit.SpinKitView;
 
 import java.util.ArrayList;
 import java.util.Map;
 
-public class MainActivity extends AppCompatActivity implements CallbackInterface, CoinRecyclerAdapter.AdapterCallback {
+public class MainActivity extends AppCompatActivity implements CoinMarketCapCallbackInterface, HistoricalDataCallback, CoinRecyclerAdapter.AdapterCallback {
 
     private CoinRecyclerAdapter adapter;
-    private APIController apiController;
+    private CoinMarketCapApiController coinMarketCapApiController;
     private SpinKitView spinKitView;
     private ArrayList<Coin> coins;
 
@@ -62,7 +62,8 @@ public class MainActivity extends AppCompatActivity implements CallbackInterface
         itemTouchHelper.attachToRecyclerView(coiRecyclerView);
 
         //Set up API controller
-        apiController = new APIController();
+        coinMarketCapApiController = new CoinMarketCapApiController();
+
     }
 
     @Override
@@ -107,6 +108,11 @@ public class MainActivity extends AppCompatActivity implements CallbackInterface
         spinKitView.setVisibility(View.INVISIBLE);
     }
 
+    @Override
+    public void returnHistoricalData(HistoricalData historicalData) {
+
+    }
+
     private void queryDbForCoins() {
         //Get all preferences and add them to an ArrayList
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(MainActivity.this);
@@ -130,7 +136,6 @@ public class MainActivity extends AppCompatActivity implements CallbackInterface
         //If our selectionArgs aren't null, query only for the user's preferred coins
         if (selectionArgs != null) {
             Cursor cursor = BitcoinDBHelper.rawQuery(this, selectionArgs);
-            DatabaseUtils.dumpCursor(cursor);
             coins = stripCurosr(cursor);
             cursor.close();
             adapter.swapData(coins);
@@ -139,7 +144,6 @@ public class MainActivity extends AppCompatActivity implements CallbackInterface
         //otherwise query for everything
         else{
             Cursor cursor = BitcoinDBHelper.readDb(this, null, null, selectionArgs, null);
-            DatabaseUtils.dumpCursor(cursor);
             coins = stripCurosr(cursor);
             cursor.close();
             adapter.swapData(coins);
@@ -178,12 +182,14 @@ public class MainActivity extends AppCompatActivity implements CallbackInterface
 
     private void startLoading() {
         spinKitView.setVisibility(View.VISIBLE);
-        apiController.start(this);
+        coinMarketCapApiController.start(this);
     }
 
     @Override
     public void queryData() {
         queryDbForCoins();
     }
+
+
 }
 

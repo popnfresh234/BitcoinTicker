@@ -3,7 +3,7 @@ package com.dmtaiwan.alexander.bitcointicker.networking;
 import android.util.Log;
 
 import com.dmtaiwan.alexander.bitcointicker.model.Coin;
-import com.dmtaiwan.alexander.bitcointicker.ui.CallbackInterface;
+import com.dmtaiwan.alexander.bitcointicker.ui.CoinMarketCapCallbackInterface;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -19,13 +19,13 @@ import retrofit2.converter.gson.GsonConverterFactory;
  * Created by Alexander on 8/20/2017.
  */
 
-public class APIController implements Callback<ArrayList<Coin>> {
+public class CoinMarketCapApiController implements Callback<ArrayList<Coin>> {
 
     private static final String BASE_URL = " https://api.coinmarketcap.com/v1/";
-    private CallbackInterface callbackInterface;
+    private CoinMarketCapCallbackInterface coinMarketCapCallbackInterface;
 
-    public void start(CallbackInterface callbackInterface) {
-        this.callbackInterface = callbackInterface;
+    public void start(CoinMarketCapCallbackInterface coinMarketCapCallbackInterface) {
+        this.coinMarketCapCallbackInterface = coinMarketCapCallbackInterface;
         Gson gson = new GsonBuilder()
                 .setLenient().
                         create();
@@ -42,7 +42,7 @@ public class APIController implements Callback<ArrayList<Coin>> {
 
     @Override
     public void onResponse(Call<ArrayList<Coin>> call, Response<ArrayList<Coin>> response) {
-        callbackInterface.returnResults(response.body());
+        coinMarketCapCallbackInterface.returnResults(response.body());
     }
 
     @Override
@@ -50,3 +50,5 @@ public class APIController implements Callback<ArrayList<Coin>> {
         Log.i("FAIL", t.toString());
     }
 }
+
+//https://min-api.cryptocompare.com/data/histoday?fsym=BTC&tsym=CAD&limit=6

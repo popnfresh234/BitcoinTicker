@@ -16,8 +16,8 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        <activity android:name=".ui.PreferenceActivity"/>
         <activity android:name=".ui.SettingsActivity"/>
+        <activity android:name=".ui.ChartActivity"/>
     </application>
 
 </manifest>

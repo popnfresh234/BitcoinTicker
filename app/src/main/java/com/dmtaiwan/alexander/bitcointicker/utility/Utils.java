@@ -19,6 +19,15 @@ public class Utils {
         return formattedTime;
     }
 
+    public static String getDateForChart(long time) {
+        Date date = new Date(time * 1000L);
+        SimpleDateFormat sdf = new SimpleDateFormat("MM/dd");
+        sdf.setTimeZone(TimeZone.getTimeZone("America/Vancouver"));
+        String formattedTime = sdf.format(date);
+        return formattedTime;
+    }
+
+
     public static String formatCurrency(String input) {
         if (input == null) {
             return "";
