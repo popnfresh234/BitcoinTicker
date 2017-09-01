@@ -31,6 +31,7 @@ public class CryptoCompareApiController{
         CryptoCompareApi cryptoCompareApi = buildRetrofitClient();
         Map<String, String> params = new HashMap<String, String>();
         params.put("fsym", symbol);
+        //TODO implement currency selection
         params.put("tsym", "CAD");
         params.put("limit", "6");
         Call<HistoricalData> call = cryptoCompareApi.getHistoricalData(params);

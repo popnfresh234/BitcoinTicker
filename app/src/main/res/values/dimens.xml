@@ -2,5 +2,5 @@
 <resources>
     <dimen name="text_size_heading">24dp</dimen>
     <dimen name="text_size_subheading">16sp</dimen>
-    <dimen name="text_size_chart_values">4sp</dimen>
+    <dimen name="text_size_chart_values">2sp</dimen>
 </resources>

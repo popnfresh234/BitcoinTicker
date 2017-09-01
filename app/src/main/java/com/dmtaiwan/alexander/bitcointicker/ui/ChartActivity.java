@@ -92,10 +92,14 @@ public class ChartActivity extends AppCompatActivity implements HistoricalDataCa
     public void returnHistoricalData(HistoricalData historicalData) {
         ArrayList<Entry> values = new ArrayList<Entry>();
         HistoricalData.Data[] dataList = historicalData.getData();
+
+        //Create entries for chart from historical data
         for (HistoricalData.Data data : dataList) {
             Entry entry = new Entry(Long.valueOf(data.getTime()), Float.valueOf(data.getClose()));
             values.add(entry);
         }
+
+        //Create a data set and format data
         LineDataSet dataSet = new LineDataSet(values, symbol);
         dataSet.setColor(getResources().getColor(R.color.colorAccentYellow));
         dataSet.setValueTextSize(getResources().getDimension(R.dimen.text_size_chart_values));
@@ -105,6 +109,7 @@ public class ChartActivity extends AppCompatActivity implements HistoricalDataCa
         dataSet.setFillColor(getResources().getColor(R.color.colorAccentYellow));
         LineData lineData = new LineData(dataSet);
 
+        //Set data to chart and format general chart
         priceChart.setData(lineData);
         priceChart.getLegend().setTextColor(getResources().getColor(R.color.primaryTextColor));
         Description description = new Description();
