@@ -10,6 +10,7 @@
 
 
     <TextView
+        android:gravity="top"
         android:id="@+id/text_view_detail_price_usd"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -65,6 +66,7 @@
     <TextView
         android:id="@+id/text_view_detail_percent_change_one_hour_label"
         android:layout_width="0dp"
+        android:layout_marginTop="4dp"
         android:layout_height="wrap_content"
         android:text="1H change: "
         app:layout_constraintHorizontal_weight="1"
@@ -75,6 +77,7 @@
     <TextView
         android:id="@+id/text_view_detail_percent_change_one_hour"
         android:layout_width="0dp"
+        android:layout_marginTop="4dp"
         android:layout_height="wrap_content"
         app:layout_constraintHorizontal_weight="1"
         app:layout_constraintLeft_toRightOf="@+id/text_view_detail_percent_change_one_hour_label"
