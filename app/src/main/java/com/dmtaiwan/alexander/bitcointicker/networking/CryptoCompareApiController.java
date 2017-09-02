@@ -26,19 +26,22 @@ public class CryptoCompareApiController{
     private static final String BASE_URL = "https://min-api.cryptocompare.com/data/";
 
 
-    public void getHistoricalData(final HistoricalDataCallback historicalDataCallback, String symbol) {
+    public void getHistoricalData(final HistoricalDataCallback historicalDataCallback, String symbol, final int periodInDays, String currency) {
 
         CryptoCompareApi cryptoCompareApi = buildRetrofitClient();
         Map<String, String> params = new HashMap<String, String>();
         params.put("fsym", symbol);
         //TODO implement currency selection
-        params.put("tsym", "CAD");
-        params.put("limit", "6");
+        params.put("tsym", currency);
+
+        //Convert int to String
+        String periodString = String.valueOf(periodInDays);
+        params.put("limit", periodString);
         Call<HistoricalData> call = cryptoCompareApi.getHistoricalData(params);
         call.enqueue(new Callback<HistoricalData>() {
             @Override
             public void onResponse(Call<HistoricalData> call, Response<HistoricalData> response) {
-                historicalDataCallback.returnHistoricalData(response.body());
+                historicalDataCallback.returnHistoricalData(response.body(), periodInDays);
             }
 
             @Override

@@ -7,5 +7,5 @@ package com.dmtaiwan.alexander.bitcointicker.ui;
  */
 
 public interface HistoricalDataCallback {
-    void returnHistoricalData(HistoricalData historicalData);
+    void returnHistoricalData(HistoricalData historicalData, int period);
 }

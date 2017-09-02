@@ -4,6 +4,7 @@ import android.database.Cursor;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.view.View;
 import android.widget.TextView;
 
 import com.dmtaiwan.alexander.bitcointicker.R;
@@ -28,11 +29,20 @@ import java.util.ArrayList;
  * Created by Alexander on 9/1/2017.
  */
 
-public class ChartActivity extends AppCompatActivity implements HistoricalDataCallback, PriceDataCallback{
+public class ChartActivity extends AppCompatActivity implements View.OnClickListener, HistoricalDataCallback, PriceDataCallback{
 
     public static final String KEY_COIN_ID = "com.dmtaiwan.alexander.bitcointicker.coin_id";
 
+    //values for chart periods
+    private static final int PERIOD_1Y = 364;
+    private static final int PERIOD_6M = 181;
+    private static final int PERIOD_3M = 89;
+    private static final int PERIOD_1M = 29;
+    private static final int PERIOD_1W = 6;
+
     private String symbol;
+    private CryptoCompareApiController cryptoCompareApiController;
+    private ArrayList<TextView> chartTextViews = new ArrayList<>();
 
     private TextView priceUSD;
     private TextView priceCAD;
@@ -42,6 +52,12 @@ public class ChartActivity extends AppCompatActivity implements HistoricalDataCa
     private TextView percentChange24H;
     private TextView percentChange7D;
     private LineChart priceChart;
+    //Chart listeners
+    private TextView oneYearChart;
+    private TextView sixMonthsChart;
+    private TextView threeMonthsChart;
+    private TextView oneMonthChart;
+    private TextView oneWeekChart;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -56,7 +72,21 @@ public class ChartActivity extends AppCompatActivity implements HistoricalDataCa
         percentChange1H = (TextView) findViewById(R.id.text_view_detail_percent_change_one_hour);
         percentChange24H = (TextView) findViewById(R.id.text_view_detail_percent_change_24_hour);
         percentChange7D = (TextView) findViewById(R.id.text_view_detail_percent_change_seven_day);
+
+        //setup TextViews for selecting charts
+        oneYearChart = (TextView) findViewById(R.id.text_view_detail_1Y);
+        sixMonthsChart = (TextView) findViewById(R.id.text_view_detail_6M);
+        threeMonthsChart = (TextView) findViewById(R.id.text_view_detail_3M);
+        oneMonthChart = (TextView) findViewById(R.id.text_view_detail_1M);
+        oneWeekChart = (TextView) findViewById(R.id.text_view_detail_1W);
         priceChart = (LineChart) findViewById(R.id.price_chart);
+
+        chartTextViews.add(oneYearChart);
+        chartTextViews.add(sixMonthsChart);
+        chartTextViews.add(threeMonthsChart);
+        chartTextViews.add(oneMonthChart);
+        chartTextViews.add(oneWeekChart);
+
 
         //Fetch data
         String coinId = getIntent().getStringExtra(KEY_COIN_ID);
@@ -74,11 +104,19 @@ public class ChartActivity extends AppCompatActivity implements HistoricalDataCa
         symbol = cursor.getString(cursor.getColumnIndex(BitcoinDBContract.BitcoinEntry.COLUMN_SYMBOL));
         cursor.close();
 
-        //fetch price data:
-        CryptoCompareApiController cryptoCompareApiController = new CryptoCompareApiController();
+        //fetch price data for default chart:
+        cryptoCompareApiController = new CryptoCompareApiController();
         String currencies = "BTC,USD,CAD,EUR";
         cryptoCompareApiController.getPriceData(this, symbol, currencies);
-        cryptoCompareApiController.getHistoricalData(this, symbol);
+        cryptoCompareApiController.getHistoricalData(this, symbol, PERIOD_1W, "CAD");
+        oneWeekChart.setTextColor(getResources().getColor(R.color.colorAccentYellow));
+
+        //Setup listeners for chart selection TextViews:
+        for (TextView textView : chartTextViews) {
+            textView.setOnClickListener(this);
+        }
+
+
     }
 
     @Override
@@ -89,7 +127,8 @@ public class ChartActivity extends AppCompatActivity implements HistoricalDataCa
     }
 
     @Override
-    public void returnHistoricalData(HistoricalData historicalData) {
+    public void returnHistoricalData(HistoricalData historicalData, int period) {
+
         ArrayList<Entry> values = new ArrayList<Entry>();
         HistoricalData.Data[] dataList = historicalData.getData();
 
@@ -130,5 +169,55 @@ public class ChartActivity extends AppCompatActivity implements HistoricalDataCa
         YAxis yAxisRight = priceChart.getAxisRight();
         yAxisRight.setTextColor(getResources().getColor(R.color.primaryTextColor));
         priceChart.invalidate();
+
+        //set chart selector TextView colors:
+        resetTextColors();
+        switch (period) {
+            case PERIOD_1Y:
+                oneYearChart.setTextColor(getResources().getColor(R.color.colorAccentYellow));
+                dataSet.setDrawCircles(false);
+                break;
+            case PERIOD_6M:
+                sixMonthsChart.setTextColor(getResources().getColor(R.color.colorAccentYellow));
+                dataSet.setDrawCircles(false);
+                break;
+            case PERIOD_3M:
+                threeMonthsChart.setTextColor(getResources().getColor(R.color.colorAccentYellow));
+                dataSet.setDrawCircles(false);
+                break;
+            case PERIOD_1M:
+                oneMonthChart.setTextColor(getResources().getColor(R.color.colorAccentYellow));
+                break;
+            case PERIOD_1W:
+                oneWeekChart.setTextColor(getResources().getColor(R.color.colorAccentYellow));
+                break;
+        }
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.text_view_detail_1Y:
+                cryptoCompareApiController.getHistoricalData(this, symbol, PERIOD_1Y, "CAD");
+                break;
+            case R.id.text_view_detail_6M:
+                cryptoCompareApiController.getHistoricalData(this, symbol, PERIOD_6M, "CAD");
+                break;
+            case R.id.text_view_detail_3M:
+                cryptoCompareApiController.getHistoricalData(this, symbol, PERIOD_3M, "CAD");
+                break;
+            case R.id.text_view_detail_1M:
+                cryptoCompareApiController.getHistoricalData(this, symbol, PERIOD_1M, "CAD");
+                break;
+            case R.id.text_view_detail_1W:
+                cryptoCompareApiController.getHistoricalData(this, symbol, PERIOD_1W, "CAD");
+                break;
+        }
+    }
+
+    private void resetTextColors() {
+        for (TextView textView : chartTextViews) {
+            textView.setTextColor(getResources().getColor(R.color.primaryTextColor));
+        }
     }
 }

@@ -60,7 +60,7 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         app:layout_constraintGuide_percent="0.5"
-        tools:layout_editor_absoluteX="192dp"
+        tools:layout_editor_absoluteX="176dp"
         tools:layout_editor_absoluteY="0dp"/>
 
     <TextView
@@ -70,9 +70,9 @@
         android:layout_height="wrap_content"
         android:text="1H change: "
         app:layout_constraintHorizontal_weight="1"
-        app:layout_constraintLeft_toRightOf="@+id/guideline3"
         app:layout_constraintRight_toLeftOf="@+id/guideline75"
-        app:layout_constraintTop_toTopOf="parent"/>
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintLeft_toLeftOf="@+id/guideline3"/>
 
     <TextView
         android:id="@+id/text_view_detail_percent_change_one_hour"
@@ -91,9 +91,9 @@
         android:layout_height="wrap_content"
         android:text="24H change: "
         app:layout_constraintHorizontal_weight="1"
-        app:layout_constraintLeft_toRightOf="@+id/guideline3"
         app:layout_constraintRight_toLeftOf="@+id/guideline75"
-        app:layout_constraintTop_toBottomOf="@+id/text_view_detail_percent_change_one_hour"/>
+        app:layout_constraintTop_toBottomOf="@+id/text_view_detail_percent_change_one_hour"
+        app:layout_constraintLeft_toLeftOf="@+id/guideline3"/>
 
     <TextView
         android:id="@+id/text_view_detail_percent_change_24_hour"
@@ -111,19 +111,69 @@
         android:layout_height="wrap_content"
         android:text="7D change: "
         app:layout_constraintHorizontal_weight="1"
-        app:layout_constraintLeft_toRightOf="@+id/guideline3"
         app:layout_constraintRight_toLeftOf="@+id/guideline75"
-        app:layout_constraintTop_toBottomOf="@+id/text_view_detail_percent_change_24_hour"/>
+        app:layout_constraintTop_toBottomOf="@+id/text_view_detail_percent_change_24_hour"
+        app:layout_constraintLeft_toLeftOf="@+id/guideline3"/>
 
     <TextView
         android:id="@+id/text_view_detail_percent_change_seven_day"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         app:layout_constraintHorizontal_weight="1"
-        app:layout_constraintLeft_toRightOf="@id/text_view_detail_percent_change_seven_day_label"
+        app:layout_constraintLeft_toRightOf="@+id/text_view_detail_percent_change_seven_day_label"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/text_view_detail_percent_change_24_hour"
         tools:text="3%"/>
+
+    <TextView
+        android:id="@+id/text_view_detail_1Y"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="1Y"
+        app:layout_constraintTop_toBottomOf="@+id/text_view_detail_coin_name"
+        app:layout_constraintRight_toLeftOf="@+id/text_view_detail_6M"
+        app:layout_constraintLeft_toLeftOf="parent"/>
+
+    <TextView
+        android:id="@+id/text_view_detail_6M"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="6M"
+        app:layout_constraintLeft_toRightOf="@+id/text_view_detail_1Y"
+        app:layout_constraintTop_toBottomOf="@+id/text_view_detail_coin_name"
+        app:layout_constraintRight_toLeftOf="@+id/text_view_detail_3M"/>
+
+    <TextView
+        android:id="@+id/text_view_detail_3M"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="3M"
+        app:layout_constraintLeft_toRightOf="@+id/text_view_detail_6M"
+        app:layout_constraintTop_toBottomOf="@+id/text_view_detail_coin_name"
+        app:layout_constraintRight_toLeftOf="@+id/text_view_detail_1M"/>
+
+    <TextView
+        android:id="@+id/text_view_detail_1M"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="1M"
+        app:layout_constraintLeft_toRightOf="@+id/text_view_detail_3M"
+        app:layout_constraintTop_toBottomOf="@+id/text_view_detail_coin_name"
+        app:layout_constraintRight_toLeftOf="@+id/text_view_detail_1W"/>
+
+    <TextView
+        android:id="@+id/text_view_detail_1W"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="1W"
+        app:layout_constraintLeft_toRightOf="@+id/text_view_detail_1M"
+        app:layout_constraintTop_toBottomOf="@+id/text_view_detail_coin_name"
+        app:layout_constraintRight_toRightOf="parent"/>
 
     <com.github.mikephil.charting.charts.LineChart
         android:id="@+id/price_chart"
@@ -135,14 +185,16 @@
         app:layout_constraintVertical_weight="1"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/text_view_detail_coin_name"/>
+        app:layout_constraintTop_toBottomOf="@+id/text_view_detail_1Y"/>
 
     <android.support.constraint.Guideline
         android:id="@+id/guideline75"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        app:layout_constraintGuide_percent="0.75"/>
+        app:layout_constraintGuide_percent="0.75"
+        tools:layout_editor_absoluteY="0dp"
+        tools:layout_editor_absoluteX="264dp"/>"/>
 
 
 </android.support.constraint.ConstraintLayout>

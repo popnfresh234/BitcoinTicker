@@ -20,14 +20,13 @@ import com.dmtaiwan.alexander.bitcointicker.data.BitcoinDBContract;
 import com.dmtaiwan.alexander.bitcointicker.data.BitcoinDBHelper;
 import com.dmtaiwan.alexander.bitcointicker.helper.SimpleItemTouchHelperCallback;
 import com.dmtaiwan.alexander.bitcointicker.model.Coin;
-import com.dmtaiwan.alexander.bitcointicker.model.HistoricalData;
 import com.dmtaiwan.alexander.bitcointicker.networking.CoinMarketCapApiController;
 import com.github.ybq.android.spinkit.SpinKitView;
 
 import java.util.ArrayList;
 import java.util.Map;
 
-public class MainActivity extends AppCompatActivity implements CoinMarketCapCallbackInterface, HistoricalDataCallback, CoinRecyclerAdapter.AdapterCallback {
+public class MainActivity extends AppCompatActivity implements CoinMarketCapCallbackInterface, CoinRecyclerAdapter.AdapterCallback {
 
     private CoinRecyclerAdapter adapter;
     private CoinMarketCapApiController coinMarketCapApiController;
@@ -108,10 +107,6 @@ public class MainActivity extends AppCompatActivity implements CoinMarketCapCall
         spinKitView.setVisibility(View.INVISIBLE);
     }
 
-    @Override
-    public void returnHistoricalData(HistoricalData historicalData) {
-
-    }
 
     private void queryDbForCoins() {
         //Get all preferences and add them to an ArrayList
