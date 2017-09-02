@@ -1,4 +1,4 @@
-package com.dmtaiwan.alexander.bitcointicker.ui;
+package com.dmtaiwan.alexander.bitcointicker.ui.settings;
 
 import android.content.SharedPreferences;
 import android.database.Cursor;
@@ -34,6 +34,7 @@ public class SettingsActivity extends AppCompatActivity {
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.pref_recycler_view);
         LinearLayoutManager llm = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(llm);
+
         //Default query to populate:
         Cursor cursor = BitcoinDBHelper.readDb(this, PROJECTION, null, null, null);
         settingsAdapter = new SettingsAdapter(this, cursor);

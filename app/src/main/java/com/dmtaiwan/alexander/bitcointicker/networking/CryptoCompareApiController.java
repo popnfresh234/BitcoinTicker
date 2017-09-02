@@ -4,8 +4,8 @@ import android.util.Log;
 
 import com.dmtaiwan.alexander.bitcointicker.model.HistoricalData;
 import com.dmtaiwan.alexander.bitcointicker.model.Price;
-import com.dmtaiwan.alexander.bitcointicker.ui.HistoricalDataCallback;
-import com.dmtaiwan.alexander.bitcointicker.ui.PriceDataCallback;
+import com.dmtaiwan.alexander.bitcointicker.ui.detail.HistoricalDataCallback;
+import com.dmtaiwan.alexander.bitcointicker.ui.detail.PriceDataCallback;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 

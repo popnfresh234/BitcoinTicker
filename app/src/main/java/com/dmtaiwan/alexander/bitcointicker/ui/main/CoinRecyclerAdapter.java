@@ -1,4 +1,4 @@
-package com.dmtaiwan.alexander.bitcointicker.ui;
+package com.dmtaiwan.alexander.bitcointicker.ui.main;
 
 import android.content.Context;
 import android.content.Intent;
@@ -15,6 +15,7 @@ import android.widget.TextView;
 import com.dmtaiwan.alexander.bitcointicker.R;
 import com.dmtaiwan.alexander.bitcointicker.helper.ItemTouchHelperAdapter;
 import com.dmtaiwan.alexander.bitcointicker.model.Coin;
+import com.dmtaiwan.alexander.bitcointicker.ui.detail.ChartActivity;
 
 import net.cachapa.expandablelayout.ExpandableLayout;
 

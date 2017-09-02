@@ -1,4 +1,4 @@
-package com.dmtaiwan.alexander.bitcointicker.ui;
+package com.dmtaiwan.alexander.bitcointicker.ui.detail;
 
 import android.database.Cursor;
 import android.os.Bundle;
@@ -19,11 +19,12 @@ import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.Description;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.YAxis;
-import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
-import com.github.mikephil.charting.data.LineDataSet;
+import com.github.ybq.android.spinkit.SpinKitView;
 
 import java.util.ArrayList;
+
+import static com.dmtaiwan.alexander.bitcointicker.utility.Utils.createChartLineData;
 
 /**
  * Created by Alexander on 9/1/2017.
@@ -51,7 +52,9 @@ public class ChartActivity extends AppCompatActivity implements View.OnClickList
     private TextView percentChange1H;
     private TextView percentChange24H;
     private TextView percentChange7D;
-    private LineChart priceChart;
+    private LineChart chartView;
+    private SpinKitView loadingViewChart;
+    private SpinKitView loadingViewInfo;
     //Chart listeners
     private TextView oneYearChart;
     private TextView sixMonthsChart;
@@ -63,6 +66,7 @@ public class ChartActivity extends AppCompatActivity implements View.OnClickList
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chart);
+
 
         //setup views
         priceUSD = (TextView) findViewById(R.id.text_view_detail_price_usd);
@@ -79,7 +83,9 @@ public class ChartActivity extends AppCompatActivity implements View.OnClickList
         threeMonthsChart = (TextView) findViewById(R.id.text_view_detail_3M);
         oneMonthChart = (TextView) findViewById(R.id.text_view_detail_1M);
         oneWeekChart = (TextView) findViewById(R.id.text_view_detail_1W);
-        priceChart = (LineChart) findViewById(R.id.price_chart);
+        chartView = (LineChart) findViewById(R.id.price_chart);
+        loadingViewChart = (SpinKitView) findViewById(R.id.detail_spin_kit_chart);
+        loadingViewInfo = (SpinKitView) findViewById(R.id.detail_spin_kit_info);
 
         chartTextViews.add(oneYearChart);
         chartTextViews.add(sixMonthsChart);
@@ -108,7 +114,9 @@ public class ChartActivity extends AppCompatActivity implements View.OnClickList
         cryptoCompareApiController = new CryptoCompareApiController();
         String currencies = "BTC,USD,CAD,EUR";
         cryptoCompareApiController.getPriceData(this, symbol, currencies);
+        toggleInfoLoadingOn();
         cryptoCompareApiController.getHistoricalData(this, symbol, PERIOD_1W, "CAD");
+        toggleChartLoadingOn();
         oneWeekChart.setTextColor(getResources().getColor(R.color.colorAccentYellow));
 
         //Setup listeners for chart selection TextViews:
@@ -121,6 +129,7 @@ public class ChartActivity extends AppCompatActivity implements View.OnClickList
 
     @Override
     public void returnPriceData(Price price) {
+        toggleInfoLoadingOff();
         priceUSD.setText(Utils.formatCurrency(price.getUSD()) + " USD");
         priceCAD.setText(Utils.formatCurrency(price.getCAD()) + " CAD");
         priceBTC.setText(price.getBTC()+" BTC");
@@ -128,62 +137,26 @@ public class ChartActivity extends AppCompatActivity implements View.OnClickList
 
     @Override
     public void returnHistoricalData(HistoricalData historicalData, int period) {
+        toggleChartLoadingOff();
 
-        ArrayList<Entry> values = new ArrayList<Entry>();
-        HistoricalData.Data[] dataList = historicalData.getData();
-
-        //Create entries for chart from historical data
-        for (HistoricalData.Data data : dataList) {
-            Entry entry = new Entry(Long.valueOf(data.getTime()), Float.valueOf(data.getClose()));
-            values.add(entry);
-        }
-
-        //Create a data set and format data
-        LineDataSet dataSet = new LineDataSet(values, symbol);
-        dataSet.setColor(getResources().getColor(R.color.colorAccentYellow));
-        dataSet.setValueTextSize(getResources().getDimension(R.dimen.text_size_chart_values));
-        dataSet.setCircleColor(getResources().getColor(R.color.primaryTextColor));
-        dataSet.setValueTextColor(getResources().getColor(R.color.primaryTextColor));
-        dataSet.setDrawFilled(true);
-        dataSet.setFillColor(getResources().getColor(R.color.colorAccentYellow));
-        LineData lineData = new LineData(dataSet);
+        //Create chart data
+        LineData lineData = createChartLineData(ChartActivity.this, historicalData, symbol);
 
         //Set data to chart and format general chart
-        priceChart.setData(lineData);
-        priceChart.getLegend().setTextColor(getResources().getColor(R.color.primaryTextColor));
-        Description description = new Description();
-        description.setText("7D Price History for " + symbol);
-        description.setTextColor(getResources().getColor(R.color.primaryTextColor));
-        priceChart.setDescription(description);
+        setupChart(lineData);
 
-        //Format xAxis
-        XAxis xAxis = priceChart.getXAxis();
-        xAxis.setValueFormatter(new XAxisValueFormatter());
-        xAxis.setLabelCount(7, true);
-        xAxis.setTextColor(getResources().getColor(R.color.primaryTextColor));
-
-        //format yAxis color
-        YAxis yAxisLeft = priceChart.getAxisLeft();
-        yAxisLeft.setTextColor(getResources().getColor(R.color.primaryTextColor));
-
-        YAxis yAxisRight = priceChart.getAxisRight();
-        yAxisRight.setTextColor(getResources().getColor(R.color.primaryTextColor));
-        priceChart.invalidate();
-
-        //set chart selector TextView colors:
+        //set chart selector TextView colors based on period user selected:
         resetTextColors();
         switch (period) {
             case PERIOD_1Y:
                 oneYearChart.setTextColor(getResources().getColor(R.color.colorAccentYellow));
-                dataSet.setDrawCircles(false);
                 break;
             case PERIOD_6M:
                 sixMonthsChart.setTextColor(getResources().getColor(R.color.colorAccentYellow));
-                dataSet.setDrawCircles(false);
+
                 break;
             case PERIOD_3M:
                 threeMonthsChart.setTextColor(getResources().getColor(R.color.colorAccentYellow));
-                dataSet.setDrawCircles(false);
                 break;
             case PERIOD_1M:
                 oneMonthChart.setTextColor(getResources().getColor(R.color.colorAccentYellow));
@@ -194,8 +167,13 @@ public class ChartActivity extends AppCompatActivity implements View.OnClickList
         }
     }
 
+
+
+
     @Override
     public void onClick(View v) {
+        toggleChartLoadingOn();
+
         switch (v.getId()) {
             case R.id.text_view_detail_1Y:
                 cryptoCompareApiController.getHistoricalData(this, symbol, PERIOD_1Y, "CAD");
@@ -219,5 +197,46 @@ public class ChartActivity extends AppCompatActivity implements View.OnClickList
         for (TextView textView : chartTextViews) {
             textView.setTextColor(getResources().getColor(R.color.primaryTextColor));
         }
+    }
+
+    private void toggleChartLoadingOn() {
+        loadingViewChart.setVisibility(View.VISIBLE);
+        chartView.setVisibility(View.INVISIBLE);
+    }
+
+    private void toggleChartLoadingOff() {
+        loadingViewChart.setVisibility(View.INVISIBLE);
+        chartView.setVisibility(View.VISIBLE);
+    }
+
+    private void toggleInfoLoadingOn() {
+        loadingViewInfo.setVisibility(View.VISIBLE);
+    }
+
+    private void toggleInfoLoadingOff() {
+        loadingViewInfo.setVisibility(View.GONE);
+    }
+
+    private void setupChart(LineData lineData) {
+        chartView.setData(lineData);
+        chartView.getLegend().setTextColor(getResources().getColor(R.color.primaryTextColor));
+        Description description = new Description();
+        description.setText("7D Price History for " + symbol);
+        description.setTextColor(getResources().getColor(R.color.primaryTextColor));
+        chartView.setDescription(description);
+
+        //Format xAxis
+        XAxis xAxis = chartView.getXAxis();
+        xAxis.setValueFormatter(new XAxisValueFormatter());
+        xAxis.setLabelCount(7, true);
+        xAxis.setTextColor(getResources().getColor(R.color.primaryTextColor));
+
+        //format yAxis color
+        YAxis yAxisLeft = chartView.getAxisLeft();
+        yAxisLeft.setTextColor(getResources().getColor(R.color.primaryTextColor));
+
+        YAxis yAxisRight = chartView.getAxisRight();
+        yAxisRight.setTextColor(getResources().getColor(R.color.primaryTextColor));
+        chartView.invalidate();
     }
 }

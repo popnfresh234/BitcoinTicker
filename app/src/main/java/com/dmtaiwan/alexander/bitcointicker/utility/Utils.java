@@ -1,8 +1,23 @@
 package com.dmtaiwan.alexander.bitcointicker.utility;
 
+import android.content.Context;
+import android.content.SharedPreferences;
+import android.database.Cursor;
+import android.preference.PreferenceManager;
+
+import com.dmtaiwan.alexander.bitcointicker.R;
+import com.dmtaiwan.alexander.bitcointicker.data.BitcoinDBContract;
+import com.dmtaiwan.alexander.bitcointicker.model.Coin;
+import com.dmtaiwan.alexander.bitcointicker.model.HistoricalData;
+import com.github.mikephil.charting.data.Entry;
+import com.github.mikephil.charting.data.LineData;
+import com.github.mikephil.charting.data.LineDataSet;
+
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.Map;
 import java.util.TimeZone;
 
 /**
@@ -68,5 +83,75 @@ public class Utils {
         float floatSupply = Float.parseFloat(input);
         DecimalFormat decimalFormat = new DecimalFormat("#");
         return decimalFormat.format(floatSupply);
+    }
+
+    //Extract an ArrayList<Coins> from a Cursor
+    public static ArrayList<Coin> stripCursor(Cursor cursor) {
+        ArrayList<Coin> coinList = new ArrayList<>();
+        while (cursor.moveToNext()) {
+            String id = cursor.getString(cursor.getColumnIndex(BitcoinDBContract.BitcoinEntry.COLUMN_COIN_ID));
+            String name = cursor.getString(cursor.getColumnIndex(BitcoinDBContract.BitcoinEntry.COLUMN_NAME));
+            String symbol = cursor.getString(cursor.getColumnIndex(BitcoinDBContract.BitcoinEntry.COLUMN_SYMBOL));
+            String rank = cursor.getString(cursor.getColumnIndex(BitcoinDBContract.BitcoinEntry.COLUMN_RANK));
+            String priceUsd = cursor.getString(cursor.getColumnIndex(BitcoinDBContract.BitcoinEntry.COLUMN_PRICE_USD));
+            String priceBtc = cursor.getString(cursor.getColumnIndex(BitcoinDBContract.BitcoinEntry.COLUMN_PRICE_BTC));
+            String twentyFourHourVolumeUsd = cursor.getString(cursor.getColumnIndex(BitcoinDBContract.BitcoinEntry.COLUMN_24H_VOLUME_USD));
+            String marketCapUsd = cursor.getString(cursor.getColumnIndex(BitcoinDBContract.BitcoinEntry.COLUMN_MARKET_CAP_USD));
+            String availableSupply = cursor.getString(cursor.getColumnIndex(BitcoinDBContract.BitcoinEntry.COLUMN_AVAILABLE_SUPPLY));
+            String totalSupply = cursor.getString(cursor.getColumnIndex(BitcoinDBContract.BitcoinEntry.COLUMN_TOTAL_SUPPLY));
+            String percentChangeOneHour = cursor.getString(cursor.getColumnIndex(BitcoinDBContract.BitcoinEntry.COLUMN_PERCENT_CHANGE_1H));
+            String percentChangeTwentyFourHour = cursor.getString(cursor.getColumnIndex(BitcoinDBContract.BitcoinEntry.COLUMN_PERCENT_CHANGE_24H));
+            String percentChangeSevenDays = cursor.getString(cursor.getColumnIndex(BitcoinDBContract.BitcoinEntry.COLUMN_PERCENT_CHANGE_7D));
+            String lastUpdated = cursor.getString(cursor.getColumnIndex(BitcoinDBContract.BitcoinEntry.COLUMN_LAST_UPDATED));
+            String priceCad = cursor.getString(cursor.getColumnIndex(BitcoinDBContract.BitcoinEntry.COLUMN_PRICE_CAD));
+            String twentyFourHourVolumeCad = cursor.getString(cursor.getColumnIndex(BitcoinDBContract.BitcoinEntry.COLUMN_24H_VOLUME_CAD));
+            String marketCapCad = cursor.getString(cursor.getColumnIndex(BitcoinDBContract.BitcoinEntry.COLUMN_MARKET_CAP_CAD));
+
+            Coin coin = new Coin(id, name, symbol, rank, priceUsd, priceBtc, twentyFourHourVolumeUsd,
+                    marketCapUsd, availableSupply, totalSupply, percentChangeOneHour, percentChangeTwentyFourHour,
+                    percentChangeSevenDays, lastUpdated, priceCad, twentyFourHourVolumeCad, marketCapCad, false);
+
+            coinList.add(coin);
+        }
+        return coinList;
+    }
+
+    //Get array list of coin names user has selected
+    public static ArrayList<String> getStrings(Context context) {
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+        ArrayList<String> prefStrings = new ArrayList<>();
+        if (prefs.getAll() != null) {
+            Map<String, ?> keys = prefs.getAll();
+            for (Map.Entry<String, ?> entry : keys.entrySet()) {
+                boolean value = Boolean.valueOf(entry.getValue().toString());
+                if (value) {
+                    prefStrings.add(entry.getKey());
+                }
+            }
+        }
+        return prefStrings;
+    }
+
+    //Create data for chart
+    public static LineData createChartLineData(Context context, HistoricalData historicalData, String symbol) {
+        ArrayList<Entry> values = new ArrayList<Entry>();
+        HistoricalData.Data[] dataList = historicalData.getData();
+
+        //Create entries for chart from historical data
+        for (HistoricalData.Data data : dataList) {
+            Entry entry = new Entry(Long.valueOf(data.getTime()), Float.valueOf(data.getClose()));
+            values.add(entry);
+        }
+
+        //Create a data set and format data
+        LineDataSet dataSet = new LineDataSet(values, symbol);
+        dataSet.setColor(context.getResources().getColor(R.color.colorAccentYellow));
+        dataSet.setValueTextSize(context.getResources().getDimension(R.dimen.text_size_chart_values));
+        dataSet.setDrawCircles(false);
+        dataSet.setValueTextColor(context.getResources().getColor(R.color.primaryTextColor));
+        dataSet.setDrawFilled(true);
+        dataSet.setFillColor(context.getResources().getColor(R.color.colorAccentYellow));
+        LineData lineData = new LineData(dataSet);
+        return lineData;
     }
 }

@@ -1,4 +1,4 @@
-package com.dmtaiwan.alexander.bitcointicker.ui;
+package com.dmtaiwan.alexander.bitcointicker.ui.settings;
 
 import android.content.Context;
 import android.content.SharedPreferences;

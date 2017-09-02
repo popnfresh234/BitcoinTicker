@@ -1,10 +1,8 @@
-package com.dmtaiwan.alexander.bitcointicker.ui;
+package com.dmtaiwan.alexander.bitcointicker.ui.main;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -21,10 +19,13 @@ import com.dmtaiwan.alexander.bitcointicker.data.BitcoinDBHelper;
 import com.dmtaiwan.alexander.bitcointicker.helper.SimpleItemTouchHelperCallback;
 import com.dmtaiwan.alexander.bitcointicker.model.Coin;
 import com.dmtaiwan.alexander.bitcointicker.networking.CoinMarketCapApiController;
+import com.dmtaiwan.alexander.bitcointicker.ui.settings.SettingsActivity;
 import com.github.ybq.android.spinkit.SpinKitView;
 
 import java.util.ArrayList;
-import java.util.Map;
+
+import static com.dmtaiwan.alexander.bitcointicker.utility.Utils.getStrings;
+import static com.dmtaiwan.alexander.bitcointicker.utility.Utils.stripCursor;
 
 public class MainActivity extends AppCompatActivity implements CoinMarketCapCallbackInterface, CoinRecyclerAdapter.AdapterCallback {
 
@@ -56,7 +57,6 @@ public class MainActivity extends AppCompatActivity implements CoinMarketCapCall
         coiRecyclerView.setAdapter(adapter);
 
         ItemTouchHelper.Callback callback = new SimpleItemTouchHelperCallback(adapter);
-
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(callback);
         itemTouchHelper.attachToRecyclerView(coiRecyclerView);
 
@@ -97,7 +97,7 @@ public class MainActivity extends AppCompatActivity implements CoinMarketCapCall
 
     @Override
     public void returnResults(ArrayList<Coin> coins) {
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+
         //Insert data into DB
         BitcoinDBHelper.bulkInsert(this, coins);
         queryDbForCoins();
@@ -110,17 +110,7 @@ public class MainActivity extends AppCompatActivity implements CoinMarketCapCall
 
     private void queryDbForCoins() {
         //Get all preferences and add them to an ArrayList
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(MainActivity.this);
-        ArrayList<String> prefStrings = new ArrayList<>();
-        if (prefs.getAll() != null) {
-            Map<String, ?> keys = prefs.getAll();
-            for (Map.Entry<String, ?> entry : keys.entrySet()) {
-                boolean value = Boolean.valueOf(entry.getValue().toString());
-                if (value) {
-                    prefStrings.add(entry.getKey());
-                }
-            }
-        }
+        ArrayList<String> prefStrings = getStrings(MainActivity.this);
 
         //Create selectionAgs from ArrayList
         String[] selectionArgs = null;
@@ -131,7 +121,8 @@ public class MainActivity extends AppCompatActivity implements CoinMarketCapCall
         //If our selectionArgs aren't null, query only for the user's preferred coins
         if (selectionArgs != null) {
             Cursor cursor = BitcoinDBHelper.rawQuery(this, selectionArgs);
-            coins = stripCurosr(cursor);
+            //extract list of coins from cursor
+            coins = stripCursor(cursor);
             cursor.close();
             adapter.swapData(coins);
         }
@@ -139,41 +130,14 @@ public class MainActivity extends AppCompatActivity implements CoinMarketCapCall
         //otherwise query for everything
         else{
             Cursor cursor = BitcoinDBHelper.readDb(this, null, null, selectionArgs, null);
-            coins = stripCurosr(cursor);
+            //extract list of coins from cursor
+            coins = stripCursor(cursor);
             cursor.close();
             adapter.swapData(coins);
         }
     }
 
-    private ArrayList<Coin> stripCurosr(Cursor cursor) {
-        ArrayList<Coin> coinList = new ArrayList<>();
-        while (cursor.moveToNext()) {
-            String id = cursor.getString(cursor.getColumnIndex(BitcoinDBContract.BitcoinEntry.COLUMN_COIN_ID));
-            String name = cursor.getString(cursor.getColumnIndex(BitcoinDBContract.BitcoinEntry.COLUMN_NAME));
-            String symbol = cursor.getString(cursor.getColumnIndex(BitcoinDBContract.BitcoinEntry.COLUMN_SYMBOL));
-            String rank = cursor.getString(cursor.getColumnIndex(BitcoinDBContract.BitcoinEntry.COLUMN_RANK));
-            String priceUsd = cursor.getString(cursor.getColumnIndex(BitcoinDBContract.BitcoinEntry.COLUMN_PRICE_USD));
-            String priceBtc = cursor.getString(cursor.getColumnIndex(BitcoinDBContract.BitcoinEntry.COLUMN_PRICE_BTC));
-            String twentyFourHourVolumeUsd = cursor.getString(cursor.getColumnIndex(BitcoinDBContract.BitcoinEntry.COLUMN_24H_VOLUME_USD));
-            String marketCapUsd = cursor.getString(cursor.getColumnIndex(BitcoinDBContract.BitcoinEntry.COLUMN_MARKET_CAP_USD));
-            String availableSupply = cursor.getString(cursor.getColumnIndex(BitcoinDBContract.BitcoinEntry.COLUMN_AVAILABLE_SUPPLY));
-            String totalSupply = cursor.getString(cursor.getColumnIndex(BitcoinDBContract.BitcoinEntry.COLUMN_TOTAL_SUPPLY));
-            String percentChangeOneHour = cursor.getString(cursor.getColumnIndex(BitcoinDBContract.BitcoinEntry.COLUMN_PERCENT_CHANGE_1H));
-            String percentChangeTwentyFourHour = cursor.getString(cursor.getColumnIndex(BitcoinDBContract.BitcoinEntry.COLUMN_PERCENT_CHANGE_24H));
-            String percentChangeSevenDays = cursor.getString(cursor.getColumnIndex(BitcoinDBContract.BitcoinEntry.COLUMN_PERCENT_CHANGE_7D));
-            String lastUpdated = cursor.getString(cursor.getColumnIndex(BitcoinDBContract.BitcoinEntry.COLUMN_LAST_UPDATED));
-            String priceCad = cursor.getString(cursor.getColumnIndex(BitcoinDBContract.BitcoinEntry.COLUMN_PRICE_CAD));
-            String twentyFourHourVolumeCad = cursor.getString(cursor.getColumnIndex(BitcoinDBContract.BitcoinEntry.COLUMN_24H_VOLUME_CAD));
-            String marketCapCad = cursor.getString(cursor.getColumnIndex(BitcoinDBContract.BitcoinEntry.COLUMN_MARKET_CAP_CAD));
 
-            Coin coin = new Coin(id, name, symbol, rank, priceUsd, priceBtc, twentyFourHourVolumeUsd,
-                    marketCapUsd, availableSupply, totalSupply, percentChangeOneHour, percentChangeTwentyFourHour,
-                    percentChangeSevenDays, lastUpdated, priceCad, twentyFourHourVolumeCad, marketCapCad, false);
-
-            coinList.add(coin);
-        }
-        return coinList;
-    }
 
     private void startLoading() {
         spinKitView.setVisibility(View.VISIBLE);

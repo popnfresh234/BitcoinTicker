@@ -3,7 +3,7 @@ package com.dmtaiwan.alexander.bitcointicker.networking;
 import android.util.Log;
 
 import com.dmtaiwan.alexander.bitcointicker.model.Coin;
-import com.dmtaiwan.alexander.bitcointicker.ui.CoinMarketCapCallbackInterface;
+import com.dmtaiwan.alexander.bitcointicker.ui.main.CoinMarketCapCallbackInterface;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
