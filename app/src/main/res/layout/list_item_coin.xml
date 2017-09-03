@@ -25,32 +25,33 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Name: "
+                android:text="@string/name"
                 android:textSize="@dimen/text_size_heading"/>
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Symbol: "/>
+                android:text="@string/symbol"/>
 
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Price USD: "
+                android:text="@string/price_usd"
                 android:textColor="@color/colorAccentYellow"/>
 
 
             <TextView
+                android:id="@+id/text_view_price_secondary_currency_label"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Price CAD: "
+                android:text="@string/price_cad"
                 android:textColor="@color/colorAccentYellow"/>
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Last Updated: "/>
+                android:text="@string/last_updated"/>
 
 
         </LinearLayout>
@@ -82,7 +83,7 @@
                 android:textColor="@color/colorAccentYellow"/>
 
             <TextView
-                android:id="@+id/text_view_price_cad"
+                android:id="@+id/text_view_price_secondary_currency"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="@color/colorAccentYellow"/>
@@ -126,54 +127,56 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Price BTC: "/>
+                        android:text="@string/price_btc"/>
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="24H Volume USD: "/>
+                        android:text="@string/twenty_four_hour_volume_usd"/>
 
                     <TextView
+                        android:id="@+id/text_view_twenty_four_hour_volume_secondary_currency_label"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="24H Volume CAD: "/>
-
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Market Cap USD: "/>
+                        android:text="@string/twenty_four_hour_volume_cad"/>
 
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Market Cap CAD: "/>
+                        android:text="@string/market_cap_usd"/>
+
+
+                    <TextView
+                        android:id="@+id/text_view_market_cap_secondary_currency_label"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/market_cap_cad"/>
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Available Supply: "/>
+                        android:text="@string/available_supply"/>
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Total Supply: "/>
+                        android:text="@string/total_supply"/>
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Percent Chagne 1H: "/>
+                        android:text="@string/percent_chagne_1h"/>
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Percent Chagne 24H: "/>
+                        android:text="@string/percent_chagne_24h"/>
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Percent Change 7D: "/>
+                        android:text="@string/percent_change_7d"/>
 
 
                 </LinearLayout>
@@ -196,7 +199,7 @@
                         android:layout_height="wrap_content"/>
 
                     <TextView
-                        android:id="@+id/text_view_twenty_four_hour_volume_cad"
+                        android:id="@+id/text_view_twenty_four_hour_volume_secondary_currency"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"/>
 
@@ -207,7 +210,7 @@
 
 
                     <TextView
-                        android:id="@+id/text_view_market_cap_cad"
+                        android:id="@+id/text_view_market_cap_secondary_currency"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"/>
 
@@ -252,7 +255,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:paddingTop="8dp"
-                    android:src="@drawable/ic_action_share"/>
+                    android:src="@drawable/ic_share"/>
 
                 <ImageView
                     android:id="@+id/chart_icon"
@@ -261,7 +264,16 @@
                     android:paddingLeft="8dp"
                     android:paddingStart="8dp"
                     android:paddingTop="8dp"
-                    android:src="@drawable/ic_action_insert_chart"/>
+                    android:src="@drawable/ic_insert_chart"/>
+
+                <ImageView
+                    android:id="@+id/pie_chart_icon"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="8dp"
+                    android:paddingStart="8dp"
+                    android:paddingTop="8dp"
+                    android:src="@drawable/ic_pie_chart_outlined"/>
 
             </LinearLayout>
 

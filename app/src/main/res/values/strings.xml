@@ -1,3 +1,43 @@
 <resources>
+
+    <!--ListItem Strings-->
     <string name="app_name">Crypto Ticker</string>
+
+
+    <string name="name">Name:</string>
+    <string name="symbol">Symbol:</string>
+
+    <string name="price_usd">Price USD:</string>
+    <string name="twenty_four_hour_volume_usd">24H Volume USD:</string>
+    <string name="market_cap_usd">Market Cap USD:</string>
+
+    <string name="price_btc">Price BTC:</string>
+
+    <string name="available_supply">Available Supply:</string>
+    <string name="total_supply">Total Supply:</string>
+
+    <string name="percent_chagne_1h">Percent Chagne 1H:</string>
+    <string name="percent_chagne_24h">Percent Chagne 24H:</string>
+    <string name="percent_change_7d">Percent Change 7D:</string>
+
+
+
+    <string name="price_cad">Price CAD:</string>
+    <string name="twenty_four_hour_volume_cad">24H Volume CAD:</string>
+    <string name="market_cap_cad">Market Cap CAD:</string>
+
+    <string name="price_eur">Price EUR:</string>
+    <string name="twenty_four_hour_volume_eur">24H Volume EUR:</string>
+    <string name="market_cap_eur">Market Cap EUR:</string>
+
+
+    <string name="last_updated">Last Updated:</string>
+
+    <string name="small_cap_label">Market Cap &lt; 2%</string>
+
+    <string-array name="currency_array">
+        <item>USD</item>
+        <item>CAD</item>
+        <item>EUR</item>
+    </string-array>
 </resources>

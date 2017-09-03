@@ -1,5 +1,6 @@
 package com.dmtaiwan.alexander.bitcointicker.model;
 
+import com.dmtaiwan.alexander.bitcointicker.ui.settings.SettingsActivity;
 import com.google.gson.annotations.SerializedName;
 
 import com.dmtaiwan.alexander.bitcointicker.utility.Utils;
@@ -33,20 +34,29 @@ public class Coin {
     private String percent_change_seven_days;
 
     private String last_updated;
-    private String price_cad;
 
+
+    //CAD_STRING values
+    private String price_cad;
     @SerializedName("24h_volume_cad")
     private String twenty_four_hour_volume_cad;
     private String market_cap_cad;
 
+    //EUR_STRING values
+    private String price_eur;
+    @SerializedName("24H_volume_eur")
+    private String twenty_four_hour_volume_eur;
+    private String market_cap_eur;
+
     //boolean for marking whether or not the item has been expanded in the Adapter
     private boolean isExpanded;
+
 
     //constructor
     public Coin(String id, String name, String symbol, String rank, String price_usd,
                 String price_btc, String twenty_four_hour_volume_usd, String market_cap_usd, String available_supply,
                 String total_supply, String percent_change_one_hour, String percent_change_twenty_four_hour, String percent_change_seven_days,
-                String last_updated, String price_cad, String twenty_four_hour_volume_cad, String market_cap_cad, boolean isExpanded) {
+                String last_updated, String price_cad, String twenty_four_hour_volume_cad, String market_cap_cad, String price_eur, String twenty_four_hour_volume_eur, String market_cap_eur, boolean isExpanded) {
 
         this.id = id;
         this.name = name;
@@ -65,6 +75,9 @@ public class Coin {
         this.price_cad = price_cad;
         this.twenty_four_hour_volume_cad = twenty_four_hour_volume_cad;
         this.market_cap_cad = market_cap_cad;
+        this.price_eur = price_eur;
+        this.twenty_four_hour_volume_eur = twenty_four_hour_volume_eur;
+        this.market_cap_eur = market_cap_eur;
         this.isExpanded = isExpanded;
     }
 
@@ -206,6 +219,30 @@ public class Coin {
         this.market_cap_cad = market_cap_cad;
     }
 
+    public String getPrice_eur() {
+        return price_eur;
+    }
+
+    public void setPrice_eur(String price_eur) {
+        this.price_eur = price_eur;
+    }
+
+    public String getTwenty_four_hour_volume_eur() {
+        return twenty_four_hour_volume_eur;
+    }
+
+    public void setTwenty_four_hour_volume_eur(String twenty_four_hour_volume_eur) {
+        this.twenty_four_hour_volume_eur = twenty_four_hour_volume_eur;
+    }
+
+    public String getMarket_cap_eur() {
+        return market_cap_eur;
+    }
+
+    public void setMarket_cap_eur(String market_cap_eur) {
+        this.market_cap_eur = market_cap_eur;
+    }
+
     public boolean getIsExpanded() {
         return isExpanded;
     }
@@ -220,8 +257,8 @@ public class Coin {
         return
                         "Coin: " + name + "\n" +
                         "Symbol: " + symbol + "\n" +
-                        "Price USD: " + Utils.formatCurrency(price_usd) + "\n" +
-                        "Price CAD: " + Utils.formatCurrency(price_cad) + "\n" +
+                        "Price USD_STRING: " + Utils.formatCurrency(price_usd, SettingsActivity.USD) + "\n" +
+                        "Price CAD_STRING: " + Utils.formatCurrency(price_cad, SettingsActivity.CAD) + "\n" +
                         "Percent Change 1H: " + Utils.formatPercentage(percent_change_one_hour) + "\n" +
                         "Percent Chagne 24H: " + Utils.formatPercentage(percent_change_twenty_four_hour) + "\n" +
                         "Percent Change 7D: " + Utils.formatPercentage(percent_change_seven_days);

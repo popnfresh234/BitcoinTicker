@@ -9,4 +9,10 @@
     <color name="secondaryTextColor">#ffffff</color>
     <color name="colorAccentYellow">#FFEB3B</color>
 
+    <!--Chart Color Palette-->
+    <color name="chartRed">#ffb3ba</color>
+    <color name="chartOrange">#ffdfba</color>
+    <color name="chartYellow">#ffffba</color>
+    <color name="chartGreen">#baffc9</color>
+    <color name="chartBlue">#bae1ff</color>
 </resources>

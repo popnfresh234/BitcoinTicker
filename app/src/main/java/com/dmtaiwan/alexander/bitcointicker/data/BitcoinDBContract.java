@@ -31,6 +31,9 @@ public class BitcoinDBContract {
         public static final String COLUMN_PRICE_CAD = "price_cad";
         public static final String COLUMN_24H_VOLUME_CAD = "twenty_four_hour_volume_cad";
         public static final String COLUMN_MARKET_CAP_CAD = "market_cap_cad";
+        public static final String COLUMN_PRICE_EUR = "price_eur";
+        public static final String COLUMN_24H_VOLUME_EUR = "twenty_four_hour_volume_eur";
+        public static final String COLUMN_MARKET_CAP_EUR = "market_cap_eur";
         public static final String COLUMN_EXPANDED = "expanded";
     }
 }

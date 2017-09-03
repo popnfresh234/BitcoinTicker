@@ -45,6 +45,9 @@ public class BitcoinDBHelper extends SQLiteOpenHelper {
                 + BitcoinDBContract.BitcoinEntry.COLUMN_PRICE_CAD + " TEXT, "
                 + BitcoinDBContract.BitcoinEntry.COLUMN_24H_VOLUME_CAD + " TEXT, "
                 + BitcoinDBContract.BitcoinEntry.COLUMN_MARKET_CAP_CAD + " TEXT, "
+                + BitcoinDBContract.BitcoinEntry.COLUMN_PRICE_EUR + " TEXT, "
+                + BitcoinDBContract.BitcoinEntry.COLUMN_24H_VOLUME_EUR + " TEXT, "
+                + BitcoinDBContract.BitcoinEntry.COLUMN_MARKET_CAP_EUR + " TEXT, "
                 + BitcoinDBContract.BitcoinEntry.COLUMN_EXPANDED + " TEXT, "
                 + "UNIQUE (" + BitcoinDBContract.BitcoinEntry.COLUMN_COIN_ID + ") on conflict replace" + ")";
 
@@ -89,6 +92,9 @@ public class BitcoinDBHelper extends SQLiteOpenHelper {
                 values.put(BitcoinDBContract.BitcoinEntry.COLUMN_PRICE_CAD, coin.getPrice_cad());
                 values.put(BitcoinDBContract.BitcoinEntry.COLUMN_24H_VOLUME_CAD, coin.getTwenty_four_hour_volume_cad());
                 values.put(BitcoinDBContract.BitcoinEntry.COLUMN_MARKET_CAP_CAD, coin.getMarket_cap_cad());
+                values.put(BitcoinDBContract.BitcoinEntry.COLUMN_PRICE_EUR, coin.getPrice_eur());
+                values.put(BitcoinDBContract.BitcoinEntry.COLUMN_24H_VOLUME_EUR, coin.getTwenty_four_hour_volume_eur());
+                values.put(BitcoinDBContract.BitcoinEntry.COLUMN_MARKET_CAP_EUR, coin.getMarket_cap_eur());
                 db.insert(BitcoinDBContract.BitcoinEntry.TABLE_NAME, null, values);
             }
             db.setTransactionSuccessful();
@@ -148,5 +154,4 @@ public class BitcoinDBHelper extends SQLiteOpenHelper {
             return sb.toString();
         }
     }
-
 }

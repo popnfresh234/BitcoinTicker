@@ -9,14 +9,17 @@ import com.dmtaiwan.alexander.bitcointicker.R;
 import com.dmtaiwan.alexander.bitcointicker.data.BitcoinDBContract;
 import com.dmtaiwan.alexander.bitcointicker.model.Coin;
 import com.dmtaiwan.alexander.bitcointicker.model.HistoricalData;
+import com.dmtaiwan.alexander.bitcointicker.ui.settings.SettingsActivity;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
 
 import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Locale;
 import java.util.Map;
 import java.util.TimeZone;
 
@@ -43,20 +46,39 @@ public class Utils {
     }
 
 
-    public static String formatCurrency(String input) {
+    public static String formatCurrency(String input, int preferredCurrency) {
         if (input == null) {
             return "";
         }
         float floatPrice = Float.parseFloat(input);
-        return DecimalFormat.getCurrencyInstance().format(floatPrice);
+        NumberFormat formatter;
+        //Get proper currency formatter
+        switch (preferredCurrency) {
+            case SettingsActivity.EUR:
+                formatter = DecimalFormat.getCurrencyInstance(Locale.GERMANY);
+                break;
+            default:
+                formatter = DecimalFormat.getCurrencyInstance();
+        }
+        return formatter.format(floatPrice);
     }
 
-    public static String formatCurrencyVolumeOrCap(String input) {
+    public static String formatCurrencyVolumeOrCap(String input, int preferredCurrency) {
         if (input == null) {
             return "";
         }
         float floatPrice = Float.parseFloat(input);
-        String formattedPrice = DecimalFormat.getCurrencyInstance().format(floatPrice);
+
+        NumberFormat formatter;
+        //Get proper currency formatter
+        switch (preferredCurrency) {
+            case SettingsActivity.EUR:
+                formatter = DecimalFormat.getCurrencyInstance(Locale.GERMANY);
+                break;
+            default:
+                formatter = DecimalFormat.getCurrencyInstance();
+        }
+        String formattedPrice =  formatter.format(floatPrice);
         return formattedPrice.replaceAll("\\.0*$", "");
     }
 
@@ -106,10 +128,13 @@ public class Utils {
             String priceCad = cursor.getString(cursor.getColumnIndex(BitcoinDBContract.BitcoinEntry.COLUMN_PRICE_CAD));
             String twentyFourHourVolumeCad = cursor.getString(cursor.getColumnIndex(BitcoinDBContract.BitcoinEntry.COLUMN_24H_VOLUME_CAD));
             String marketCapCad = cursor.getString(cursor.getColumnIndex(BitcoinDBContract.BitcoinEntry.COLUMN_MARKET_CAP_CAD));
+            String priceEur = cursor.getString(cursor.getColumnIndex(BitcoinDBContract.BitcoinEntry.COLUMN_PRICE_EUR));
+            String twentyFourHourVolumeEur = cursor.getString(cursor.getColumnIndex(BitcoinDBContract.BitcoinEntry.COLUMN_24H_VOLUME_EUR));
+            String marketCapEur = cursor.getString(cursor.getColumnIndex(BitcoinDBContract.BitcoinEntry.COLUMN_MARKET_CAP_EUR));
 
             Coin coin = new Coin(id, name, symbol, rank, priceUsd, priceBtc, twentyFourHourVolumeUsd,
                     marketCapUsd, availableSupply, totalSupply, percentChangeOneHour, percentChangeTwentyFourHour,
-                    percentChangeSevenDays, lastUpdated, priceCad, twentyFourHourVolumeCad, marketCapCad, false);
+                    percentChangeSevenDays, lastUpdated, priceCad, twentyFourHourVolumeCad, marketCapCad, priceEur, twentyFourHourVolumeEur, marketCapEur, false);
 
             coinList.add(coin);
         }
@@ -146,7 +171,7 @@ public class Utils {
         //Create a data set and format data
         LineDataSet dataSet = new LineDataSet(values, symbol);
         dataSet.setColor(context.getResources().getColor(R.color.colorAccentYellow));
-        dataSet.setValueTextSize(context.getResources().getDimension(R.dimen.text_size_chart_values));
+        dataSet.setValueTextSize(context.getResources().getDimension(R.dimen.text_size_line_chart_values));
         dataSet.setDrawCircles(false);
         dataSet.setValueTextColor(context.getResources().getColor(R.color.primaryTextColor));
         dataSet.setDrawFilled(true);

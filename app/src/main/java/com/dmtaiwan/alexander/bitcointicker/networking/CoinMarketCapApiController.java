@@ -3,7 +3,10 @@ package com.dmtaiwan.alexander.bitcointicker.networking;
 import android.util.Log;
 
 import com.dmtaiwan.alexander.bitcointicker.model.Coin;
-import com.dmtaiwan.alexander.bitcointicker.ui.main.CoinMarketCapCallbackInterface;
+import com.dmtaiwan.alexander.bitcointicker.model.GlobalData;
+import com.dmtaiwan.alexander.bitcointicker.ui.piechart.GlobalDataCallback;
+import com.dmtaiwan.alexander.bitcointicker.ui.main.TickerCallback;
+import com.dmtaiwan.alexander.bitcointicker.ui.settings.SettingsActivity;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -19,35 +22,90 @@ import retrofit2.converter.gson.GsonConverterFactory;
  * Created by Alexander on 8/20/2017.
  */
 
-public class CoinMarketCapApiController implements Callback<ArrayList<Coin>> {
+public class CoinMarketCapApiController{
+
+    private static final String USD = "usd";
+    private static final String CAD = "cad";
+    private static final String EUR = "eur";
 
     private static final String BASE_URL = " https://api.coinmarketcap.com/v1/";
-    private CoinMarketCapCallbackInterface coinMarketCapCallbackInterface;
+    private TickerCallback tickerListener;
+    private GlobalDataCallback globalDataListener;
 
-    public void start(CoinMarketCapCallbackInterface coinMarketCapCallbackInterface) {
-        this.coinMarketCapCallbackInterface = coinMarketCapCallbackInterface;
+    public void getTickerData(TickerCallback tickerCallback, int preferredCurrency) {
+        String currency = getPreferredCurrencyString(preferredCurrency);
+
+        this.tickerListener = tickerCallback;
         Gson gson = new GsonBuilder()
-                .setLenient().
-                        create();
+                .setLenient()
+                .create();
 
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(BASE_URL)
                 .addConverterFactory(GsonConverterFactory.create(gson))
                 .build();
         CoinMarketCapApi coinMarketCapApi = retrofit.create(CoinMarketCapApi.class);
-        Call<ArrayList<Coin>> call = coinMarketCapApi.getCoins("cad");
-        call.enqueue(this);
+        Call<ArrayList<Coin>> call = coinMarketCapApi.getCoins(currency);
+        call.enqueue(new Callback<ArrayList<Coin>>() {
+            @Override
+            public void onResponse(Call<ArrayList<Coin>> call, Response<ArrayList<Coin>> response) {
+                tickerListener.returnResults(response.body());
+            }
+
+            @Override
+            public void onFailure(Call<ArrayList<Coin>> call, Throwable t) {
+                Log.e("Price failed: ", t.toString());
+            }
+        });
 
     }
 
-    @Override
-    public void onResponse(Call<ArrayList<Coin>> call, Response<ArrayList<Coin>> response) {
-        coinMarketCapCallbackInterface.returnResults(response.body());
+    public void getGlobalData(GlobalDataCallback globalDataCallback, int preferredCurrency) {
+        this.globalDataListener = globalDataCallback;
+        String currency = getPreferredCurrencyString(preferredCurrency);
+        Gson gson = new GsonBuilder()
+                .setLenient()
+                .create();
+
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(BASE_URL)
+                .addConverterFactory(GsonConverterFactory.create(gson))
+                .build();
+        CoinMarketCapApi coinMarketCapApi = retrofit.create(CoinMarketCapApi.class);
+        Call<GlobalData> call = coinMarketCapApi.getGlobalData(currency);
+        call.enqueue(new Callback<GlobalData>() {
+            @Override
+            public void onResponse(Call<GlobalData> call, Response<GlobalData> response) {
+                globalDataListener.returnGlobalData(response.body());
+            }
+
+            @Override
+            public void onFailure(Call<GlobalData> call, Throwable t) {
+                Log.e("Global Data Failed: ", t.toString());
+            }
+        });
+
     }
 
-    @Override
-    public void onFailure(Call<ArrayList<Coin>> call, Throwable t) {
-        Log.i("FAIL", t.toString());
+
+
+
+    public String getPreferredCurrencyString(int preferredCurrency) {
+        String currency;
+        switch (preferredCurrency) {
+            case SettingsActivity.USD:
+                currency = USD;
+                break;
+            case SettingsActivity.CAD:
+                currency = CAD;
+                break;
+            case SettingsActivity.EUR:
+                currency = EUR;
+                break;
+            default:
+                currency = USD;
+        }
+        return currency;
     }
 }
 

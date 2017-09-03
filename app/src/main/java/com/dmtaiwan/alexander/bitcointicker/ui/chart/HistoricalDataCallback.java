@@ -1,4 +1,4 @@
-package com.dmtaiwan.alexander.bitcointicker.ui.detail;
+package com.dmtaiwan.alexander.bitcointicker.ui.chart;
 
         import com.dmtaiwan.alexander.bitcointicker.model.HistoricalData;
 

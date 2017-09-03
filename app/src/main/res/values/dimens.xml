@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <dimen name="text_size_heading">24dp</dimen>
+    <dimen name="text_size_heading">24sp</dimen>
     <dimen name="text_size_subheading">16sp</dimen>
-    <dimen name="text_size_chart_values">2sp</dimen>
+    <dimen name="text_size_line_chart_values">2sp</dimen>
+    <dimen name="text_size_pie_chart_values">4sp</dimen>
 </resources>

@@ -1,8 +1,10 @@
 package com.dmtaiwan.alexander.bitcointicker.ui.main;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -16,7 +18,7 @@ import android.view.View;
 import com.dmtaiwan.alexander.bitcointicker.R;
 import com.dmtaiwan.alexander.bitcointicker.data.BitcoinDBContract;
 import com.dmtaiwan.alexander.bitcointicker.data.BitcoinDBHelper;
-import com.dmtaiwan.alexander.bitcointicker.helper.SimpleItemTouchHelperCallback;
+import com.dmtaiwan.alexander.bitcointicker.utility.helper.SimpleItemTouchHelperCallback;
 import com.dmtaiwan.alexander.bitcointicker.model.Coin;
 import com.dmtaiwan.alexander.bitcointicker.networking.CoinMarketCapApiController;
 import com.dmtaiwan.alexander.bitcointicker.ui.settings.SettingsActivity;
@@ -27,7 +29,7 @@ import java.util.ArrayList;
 import static com.dmtaiwan.alexander.bitcointicker.utility.Utils.getStrings;
 import static com.dmtaiwan.alexander.bitcointicker.utility.Utils.stripCursor;
 
-public class MainActivity extends AppCompatActivity implements CoinMarketCapCallbackInterface, CoinRecyclerAdapter.AdapterCallback {
+public class MainActivity extends AppCompatActivity implements TickerCallback, CoinRecyclerAdapter.AdapterCallback {
 
     private CoinRecyclerAdapter adapter;
     private CoinMarketCapApiController coinMarketCapApiController;
@@ -140,8 +142,11 @@ public class MainActivity extends AppCompatActivity implements CoinMarketCapCall
 
 
     private void startLoading() {
+        //Get preferred secondary currency
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(MainActivity.this);
+        int secondaryCurrency = prefs.getInt(SettingsActivity.KEY_PREF_CURRENCY, SettingsActivity.USD);
         spinKitView.setVisibility(View.VISIBLE);
-        coinMarketCapApiController.start(this);
+        coinMarketCapApiController.getTickerData(this, secondaryCurrency);
     }
 
     @Override

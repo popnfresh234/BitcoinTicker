@@ -1,4 +1,4 @@
-package com.dmtaiwan.alexander.bitcointicker.helper;
+package com.dmtaiwan.alexander.bitcointicker.utility.helper;
 
 /**
  * Created by Alexander on 8/27/2017.

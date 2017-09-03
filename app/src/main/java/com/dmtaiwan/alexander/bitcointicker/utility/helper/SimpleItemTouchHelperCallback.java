@@ -1,4 +1,4 @@
-package com.dmtaiwan.alexander.bitcointicker.helper;
+package com.dmtaiwan.alexander.bitcointicker.utility.helper;
 
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;

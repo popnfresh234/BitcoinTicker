@@ -13,9 +13,11 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.dmtaiwan.alexander.bitcointicker.R;
-import com.dmtaiwan.alexander.bitcointicker.helper.ItemTouchHelperAdapter;
 import com.dmtaiwan.alexander.bitcointicker.model.Coin;
-import com.dmtaiwan.alexander.bitcointicker.ui.detail.ChartActivity;
+import com.dmtaiwan.alexander.bitcointicker.ui.chart.ChartActivity;
+import com.dmtaiwan.alexander.bitcointicker.ui.piechart.PieChartActivity;
+import com.dmtaiwan.alexander.bitcointicker.ui.settings.SettingsActivity;
+import com.dmtaiwan.alexander.bitcointicker.utility.helper.ItemTouchHelperAdapter;
 
 import net.cachapa.expandablelayout.ExpandableLayout;
 
@@ -55,6 +57,10 @@ public class CoinRecyclerAdapter extends RecyclerView.Adapter<CoinRecyclerAdapte
 
     @Override
     public void onBindViewHolder(final CoinHolder holder, final int position) {
+
+        //Get secondary currency
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+        int secondaryCurrency = prefs.getInt(SettingsActivity.KEY_PREF_CURRENCY, SettingsActivity.USD);
 
         //Get coin
         final Coin coin = coins.get(position);
@@ -101,23 +107,33 @@ public class CoinRecyclerAdapter extends RecyclerView.Adapter<CoinRecyclerAdapte
             }
         });
 
+        //Handle PieChart
+        holder.pieChartIcon.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(context, PieChartActivity.class);
+                intent.putExtra(ChartActivity.KEY_COIN_ID, coin.getId());
+                context.startActivity(intent);
+            }
+        });
+
         holder.coinName.setText(coin.getName());
         holder.symbol.setText(coin.getSymbol());
 
         //Format priceUSD
         String priceUsdString = coin.getPrice_usd();
-        holder.priceUSD.setText(formatCurrency(priceUsdString));
+        holder.priceUSD.setText(formatCurrency(priceUsdString, SettingsActivity.USD));
 
 
         holder.priceBTC.setText(coin.getPrice_btc());
 
         //Format 24HVolumeUSD
         String twentyFourHourVolumeUSDString = coin.getTwenty_four_hour_volume_usd();
-        holder.twentyFourHourVolumeUSD.setText(formatCurrencyVolumeOrCap(twentyFourHourVolumeUSDString));
+        holder.twentyFourHourVolumeUSD.setText(formatCurrencyVolumeOrCap(twentyFourHourVolumeUSDString, SettingsActivity.USD));
 
         //Format marketCapUSD
         String marketCapUsdString = coin.getMarket_cap_usd();
-        holder.marketCapUSD.setText(formatCurrencyVolumeOrCap(marketCapUsdString));
+        holder.marketCapUSD.setText(formatCurrencyVolumeOrCap(marketCapUsdString, SettingsActivity.USD));
 
         //Format availableSupply
         String availableSupplyString = coin.getAvailable_supply();
@@ -144,17 +160,68 @@ public class CoinRecyclerAdapter extends RecyclerView.Adapter<CoinRecyclerAdapte
         Long date = Long.parseLong(coin.getLast_updated());
         holder.lastUpdated.setText(getDate(date));
 
-        //Parse priceCAD
-        String priceCadString = coin.getPrice_cad();
-        holder.priceCAD.setText(formatCurrency(priceCadString));
+        //Parse priceSecondaryCurrency
+        String priceSecondaryString;
+        switch (secondaryCurrency) {
+            case SettingsActivity.USD:
+                priceSecondaryString = coin.getPrice_usd();
+                holder.priceSecondaryCurrencyLabel.setText(context.getResources().getString(R.string.price_usd));
+                break;
+            case SettingsActivity.CAD:
+                priceSecondaryString = coin.getPrice_cad();
+                holder.priceSecondaryCurrencyLabel.setText(context.getResources().getString(R.string.price_cad));
+                break;
+            case SettingsActivity.EUR:
+                priceSecondaryString = coin.getPrice_eur();
+                holder.priceSecondaryCurrencyLabel.setText(context.getResources().getString(R.string.price_eur));
+                break;
+            default:
+                priceSecondaryString = coin.getPrice_usd();
+                holder.priceSecondaryCurrencyLabel.setText(context.getResources().getString(R.string.price_usd));
+        }
+        holder.priceSecondaryCurrency.setText(formatCurrency(priceSecondaryString, secondaryCurrency));
 
-        //Format 24HVolumeCAD
-        String twentyFourHourVolumeCADString =coin.getTwenty_four_hour_volume_cad();
-        holder.twentyFourHourVolumeCAD.setText(formatCurrencyVolumeOrCap(twentyFourHourVolumeCADString));
+        //Format 24HVolumeSecondary
+        String twentyFourHourVolumeSecondaryString;
+        switch (secondaryCurrency) {
+            case SettingsActivity.USD:
+                twentyFourHourVolumeSecondaryString = coin.getTwenty_four_hour_volume_usd();
+                holder.twentyFourHourVoulumeSecondaryCurrencyLabel.setText(context.getResources().getString(R.string.twenty_four_hour_volume_usd));
+                break;
+            case SettingsActivity.CAD:
+                twentyFourHourVolumeSecondaryString = coin.getTwenty_four_hour_volume_cad();
+                holder.twentyFourHourVoulumeSecondaryCurrencyLabel.setText(context.getResources().getString(R.string.twenty_four_hour_volume_cad));
+                break;
+            case SettingsActivity.EUR:
+                twentyFourHourVolumeSecondaryString = coin.getTwenty_four_hour_volume_eur();
+                holder.twentyFourHourVoulumeSecondaryCurrencyLabel.setText(context.getResources().getString(R.string.twenty_four_hour_volume_eur));
+                break;
+            default:
+                twentyFourHourVolumeSecondaryString = coin.getTwenty_four_hour_volume_usd();
+                holder.twentyFourHourVoulumeSecondaryCurrencyLabel.setText(context.getResources().getString(R.string.twenty_four_hour_volume_usd));
+        }
+        holder.twentyFourHourVolumeSecondaryCurrency.setText(formatCurrencyVolumeOrCap(twentyFourHourVolumeSecondaryString, secondaryCurrency));
 
-        //Format marketCapCad
-        String marketCapCad = coin.getMarket_cap_cad();
-        holder.marketCapCAD.setText(formatCurrencyVolumeOrCap(marketCapCad));
+        //Format marketCapSecondary
+        String marketCapSecondary;
+        switch (secondaryCurrency) {
+            case SettingsActivity.USD:
+                marketCapSecondary = coin.getMarket_cap_usd();
+                holder.marketCapSecondaryCurrencyLabel.setText(context.getString(R.string.market_cap_usd));
+                break;
+            case SettingsActivity.CAD:
+                marketCapSecondary = coin.getMarket_cap_cad();
+                holder.marketCapSecondaryCurrencyLabel.setText(context.getString(R.string.market_cap_cad));
+                break;
+            case SettingsActivity.EUR:
+                marketCapSecondary = coin.getMarket_cap_eur();
+                holder.marketCapSecondaryCurrencyLabel.setText(context.getString(R.string.market_cap_eur));
+                break;
+            default:
+                marketCapSecondary = coin.getMarket_cap_usd();
+                holder.marketCapSecondaryCurrencyLabel.setText(context.getString(R.string.market_cap_usd));
+        }
+        holder.marketCapSecondaryCurrency.setText(formatCurrencyVolumeOrCap(marketCapSecondary, secondaryCurrency));
 
     }
 
@@ -216,11 +283,17 @@ public class CoinRecyclerAdapter extends RecyclerView.Adapter<CoinRecyclerAdapte
         public TextView percentChangeTwentyFourHour;
         public TextView percentChangeSevenDays;
         public TextView lastUpdated;
-        public TextView priceCAD;
-        public TextView twentyFourHourVolumeCAD;
-        public TextView marketCapCAD;
+        public TextView priceSecondaryCurrency;
+        public TextView priceSecondaryCurrencyLabel;
+        public TextView twentyFourHourVolumeSecondaryCurrency;
+        public TextView twentyFourHourVoulumeSecondaryCurrencyLabel;
+        public TextView marketCapSecondaryCurrency;
+        public TextView marketCapSecondaryCurrencyLabel;
+
         public ImageView shareIcon;
         public ImageView chartIcon;
+        public ImageView pieChartIcon;
+
         public CoinHolder(View itemView) {
             super(itemView);
             listRootView = (LinearLayout) itemView.findViewById(R.id.coin_list_item_root_view);
@@ -237,11 +310,15 @@ public class CoinRecyclerAdapter extends RecyclerView.Adapter<CoinRecyclerAdapte
             percentChangeTwentyFourHour = (TextView) itemView.findViewById(R.id.text_view_percent_change_twenty_four_hour);
             percentChangeSevenDays = (TextView) itemView.findViewById(R.id.text_view_percent_change_seven_days);
             lastUpdated = (TextView) itemView.findViewById(R.id.text_view_last_updated);
-            priceCAD = (TextView) itemView.findViewById(R.id.text_view_price_cad);
-            twentyFourHourVolumeCAD = (TextView) itemView.findViewById(R.id.text_view_twenty_four_hour_volume_cad);
-            marketCapCAD = (TextView) itemView.findViewById(R.id.text_view_market_cap_cad);
+            priceSecondaryCurrency = (TextView) itemView.findViewById(R.id.text_view_price_secondary_currency);
+            priceSecondaryCurrencyLabel = (TextView) itemView.findViewById(R.id.text_view_price_secondary_currency_label);
+            twentyFourHourVolumeSecondaryCurrency = (TextView) itemView.findViewById(R.id.text_view_twenty_four_hour_volume_secondary_currency);
+            twentyFourHourVoulumeSecondaryCurrencyLabel = (TextView) itemView.findViewById(R.id.text_view_twenty_four_hour_volume_secondary_currency_label);
+            marketCapSecondaryCurrency = (TextView) itemView.findViewById(R.id.text_view_market_cap_secondary_currency);
+            marketCapSecondaryCurrencyLabel = (TextView) itemView.findViewById(R.id.text_view_market_cap_secondary_currency_label);
             shareIcon = (ImageView) itemView.findViewById(R.id.share_icon);
             chartIcon = (ImageView) itemView.findViewById(R.id.chart_icon);
+            pieChartIcon = (ImageView) itemView.findViewById(R.id.pie_chart_icon);
         }
     }
 

@@ -4,8 +4,10 @@ import android.util.Log;
 
 import com.dmtaiwan.alexander.bitcointicker.model.HistoricalData;
 import com.dmtaiwan.alexander.bitcointicker.model.Price;
-import com.dmtaiwan.alexander.bitcointicker.ui.detail.HistoricalDataCallback;
-import com.dmtaiwan.alexander.bitcointicker.ui.detail.PriceDataCallback;
+import com.dmtaiwan.alexander.bitcointicker.ui.chart.ChartActivity;
+import com.dmtaiwan.alexander.bitcointicker.ui.chart.HistoricalDataCallback;
+import com.dmtaiwan.alexander.bitcointicker.ui.chart.PriceDataCallback;
+import com.dmtaiwan.alexander.bitcointicker.ui.settings.SettingsActivity;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -26,13 +28,28 @@ public class CryptoCompareApiController{
     private static final String BASE_URL = "https://min-api.cryptocompare.com/data/";
 
 
-    public void getHistoricalData(final HistoricalDataCallback historicalDataCallback, String symbol, final int periodInDays, String currency) {
+    public void getHistoricalData(final HistoricalDataCallback historicalDataCallback, String symbol, final int periodInDays, int preferredCurrency) {
+
+        String secondaryCurrencyString;
+        switch (preferredCurrency) {
+            case SettingsActivity.USD:
+                secondaryCurrencyString = ChartActivity.USD_STRING;
+                break;
+            case SettingsActivity.CAD:
+                secondaryCurrencyString = ChartActivity.CAD_STRING;
+                break;
+            case SettingsActivity.EUR:
+                secondaryCurrencyString = ChartActivity.EUR_STRING;
+                break;
+            default:
+                secondaryCurrencyString = ChartActivity.USD_STRING;
+        }
 
         CryptoCompareApi cryptoCompareApi = buildRetrofitClient();
         Map<String, String> params = new HashMap<String, String>();
         params.put("fsym", symbol);
         //TODO implement currency selection
-        params.put("tsym", currency);
+        params.put("tsym", secondaryCurrencyString);
 
         //Convert int to String
         String periodString = String.valueOf(periodInDays);

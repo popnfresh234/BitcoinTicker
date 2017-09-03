@@ -7,7 +7,9 @@ import com.github.mikephil.charting.formatter.IAxisValueFormatter;
  * Created by Alexander on 9/1/2017.
  */
 
-public class XAxisValueFormatter implements IAxisValueFormatter {
+public class LineChartXAxisValueFormatter implements IAxisValueFormatter {
+
+
     @Override
     public String getFormattedValue(float value, AxisBase axis) {
 

@@ -8,7 +8,7 @@ import java.util.ArrayList;
  * Created by Alexander on 8/20/2017.
  */
 
-public interface CoinMarketCapCallbackInterface {
+public interface TickerCallback {
     void returnResults(ArrayList<Coin> coins);
 
 }

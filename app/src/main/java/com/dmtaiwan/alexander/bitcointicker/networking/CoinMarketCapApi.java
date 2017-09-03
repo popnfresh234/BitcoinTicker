@@ -1,6 +1,7 @@
 package com.dmtaiwan.alexander.bitcointicker.networking;
 
 import com.dmtaiwan.alexander.bitcointicker.model.Coin;
+import com.dmtaiwan.alexander.bitcointicker.model.GlobalData;
 
 import java.util.ArrayList;
 
@@ -15,4 +16,7 @@ import retrofit2.http.Query;
 public interface CoinMarketCapApi {
     @GET("ticker/")
     Call<ArrayList<Coin>> getCoins(@Query("convert") String currency);
+
+    @GET("global/")
+    Call<GlobalData> getGlobalData(@Query("convert") String currency);
 }

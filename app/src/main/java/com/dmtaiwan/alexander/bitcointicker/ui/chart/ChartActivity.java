@@ -1,7 +1,9 @@
-package com.dmtaiwan.alexander.bitcointicker.ui.detail;
+package com.dmtaiwan.alexander.bitcointicker.ui.chart;
 
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -13,8 +15,9 @@ import com.dmtaiwan.alexander.bitcointicker.data.BitcoinDBHelper;
 import com.dmtaiwan.alexander.bitcointicker.model.HistoricalData;
 import com.dmtaiwan.alexander.bitcointicker.model.Price;
 import com.dmtaiwan.alexander.bitcointicker.networking.CryptoCompareApiController;
+import com.dmtaiwan.alexander.bitcointicker.ui.settings.SettingsActivity;
 import com.dmtaiwan.alexander.bitcointicker.utility.Utils;
-import com.dmtaiwan.alexander.bitcointicker.utility.XAxisValueFormatter;
+import com.dmtaiwan.alexander.bitcointicker.utility.LineChartXAxisValueFormatter;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.Description;
 import com.github.mikephil.charting.components.XAxis;
@@ -30,7 +33,7 @@ import static com.dmtaiwan.alexander.bitcointicker.utility.Utils.createChartLine
  * Created by Alexander on 9/1/2017.
  */
 
-public class ChartActivity extends AppCompatActivity implements View.OnClickListener, HistoricalDataCallback, PriceDataCallback{
+public class ChartActivity extends AppCompatActivity implements View.OnClickListener, HistoricalDataCallback, PriceDataCallback {
 
     public static final String KEY_COIN_ID = "com.dmtaiwan.alexander.bitcointicker.coin_id";
 
@@ -41,12 +44,17 @@ public class ChartActivity extends AppCompatActivity implements View.OnClickList
     private static final int PERIOD_1M = 29;
     private static final int PERIOD_1W = 6;
 
+    public static final String USD_STRING = "USD";
+    public static final String CAD_STRING = "CAD";
+    public static final String EUR_STRING = "EUR";
+
     private String symbol;
     private CryptoCompareApiController cryptoCompareApiController;
     private ArrayList<TextView> chartTextViews = new ArrayList<>();
+    private int secondaryCurrency;
 
     private TextView priceUSD;
-    private TextView priceCAD;
+    private TextView priceSecondary;
     private TextView priceBTC;
     private TextView coinName;
     private TextView percentChange1H;
@@ -67,10 +75,14 @@ public class ChartActivity extends AppCompatActivity implements View.OnClickList
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chart);
 
+        //Get preferred secondary currency
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ChartActivity.this);
+        secondaryCurrency = prefs.getInt(SettingsActivity.KEY_PREF_CURRENCY, SettingsActivity.USD);
+
 
         //setup views
         priceUSD = (TextView) findViewById(R.id.text_view_detail_price_usd);
-        priceCAD = (TextView) findViewById(R.id.text_view_detail_price_cad);
+        priceSecondary = (TextView) findViewById(R.id.text_view_detail_price_secondary);
         priceBTC = (TextView) findViewById(R.id.text_view_detail_price_btc);
         coinName = (TextView) findViewById(R.id.text_view_detail_coin_name);
         percentChange1H = (TextView) findViewById(R.id.text_view_detail_percent_change_one_hour);
@@ -78,8 +90,8 @@ public class ChartActivity extends AppCompatActivity implements View.OnClickList
         percentChange7D = (TextView) findViewById(R.id.text_view_detail_percent_change_seven_day);
 
         //setup TextViews for selecting charts
-        oneYearChart = (TextView) findViewById(R.id.text_view_detail_1Y);
-        sixMonthsChart = (TextView) findViewById(R.id.text_view_detail_6M);
+        oneYearChart = (TextView) findViewById(R.id.text_view_detail_show_small_cap);
+        sixMonthsChart = (TextView) findViewById(R.id.text_view_detail_hide_small_cap);
         threeMonthsChart = (TextView) findViewById(R.id.text_view_detail_3M);
         oneMonthChart = (TextView) findViewById(R.id.text_view_detail_1M);
         oneWeekChart = (TextView) findViewById(R.id.text_view_detail_1W);
@@ -97,7 +109,7 @@ public class ChartActivity extends AppCompatActivity implements View.OnClickList
         //Fetch data
         String coinId = getIntent().getStringExtra(KEY_COIN_ID);
         String[] selectionArgs = new String[]{coinId};
-        Cursor cursor = BitcoinDBHelper.readDb(this, null, BitcoinDBContract.BitcoinEntry.COLUMN_COIN_ID+ "=?", selectionArgs, null);
+        Cursor cursor = BitcoinDBHelper.readDb(this, null, BitcoinDBContract.BitcoinEntry.COLUMN_COIN_ID + "=?", selectionArgs, null);
         cursor.moveToFirst();
 
         //bind data from cursor
@@ -112,10 +124,10 @@ public class ChartActivity extends AppCompatActivity implements View.OnClickList
 
         //fetch price data for default chart:
         cryptoCompareApiController = new CryptoCompareApiController();
-        String currencies = "BTC,USD,CAD,EUR";
+        String currencies = "BTC,USD_STRING,CAD_STRING,EUR_STRING";
         cryptoCompareApiController.getPriceData(this, symbol, currencies);
         toggleInfoLoadingOn();
-        cryptoCompareApiController.getHistoricalData(this, symbol, PERIOD_1W, "CAD");
+        cryptoCompareApiController.getHistoricalData(this, symbol, PERIOD_1W, secondaryCurrency);
         toggleChartLoadingOn();
         oneWeekChart.setTextColor(getResources().getColor(R.color.colorAccentYellow));
 
@@ -130,9 +142,23 @@ public class ChartActivity extends AppCompatActivity implements View.OnClickList
     @Override
     public void returnPriceData(Price price) {
         toggleInfoLoadingOff();
-        priceUSD.setText(Utils.formatCurrency(price.getUSD()) + " USD");
-        priceCAD.setText(Utils.formatCurrency(price.getCAD()) + " CAD");
-        priceBTC.setText(price.getBTC()+" BTC");
+        //Pass USD_STRING constant here for preferred currency since this will always display USD_STRING
+        priceUSD.setText(Utils.formatCurrency(price.getUSD(), SettingsActivity.USD) + " USD_STRING");
+        switch (secondaryCurrency) {
+            case SettingsActivity.USD:
+                priceSecondary.setText(Utils.formatCurrency(price.getUSD(), secondaryCurrency) + " " + USD_STRING);
+                break;
+            case SettingsActivity.CAD:
+                priceSecondary.setText(Utils.formatCurrency(price.getCAD(), secondaryCurrency) + " " + CAD_STRING);
+                break;
+            case SettingsActivity.EUR:
+                priceSecondary.setText(Utils.formatCurrency(price.getEUR(),secondaryCurrency) + " " + EUR_STRING);
+                break;
+            default:
+                priceSecondary.setText(Utils.formatCurrency(price.getUSD(),SettingsActivity.USD) + " " + USD_STRING);
+
+        }
+        priceBTC.setText(price.getBTC() + " BTC");
     }
 
     @Override
@@ -168,27 +194,25 @@ public class ChartActivity extends AppCompatActivity implements View.OnClickList
     }
 
 
-
-
     @Override
     public void onClick(View v) {
         toggleChartLoadingOn();
 
         switch (v.getId()) {
-            case R.id.text_view_detail_1Y:
-                cryptoCompareApiController.getHistoricalData(this, symbol, PERIOD_1Y, "CAD");
+            case R.id.text_view_detail_show_small_cap:
+                cryptoCompareApiController.getHistoricalData(this, symbol, PERIOD_1Y, secondaryCurrency);
                 break;
-            case R.id.text_view_detail_6M:
-                cryptoCompareApiController.getHistoricalData(this, symbol, PERIOD_6M, "CAD");
+            case R.id.text_view_detail_hide_small_cap:
+                cryptoCompareApiController.getHistoricalData(this, symbol, PERIOD_6M, secondaryCurrency);
                 break;
             case R.id.text_view_detail_3M:
-                cryptoCompareApiController.getHistoricalData(this, symbol, PERIOD_3M, "CAD");
+                cryptoCompareApiController.getHistoricalData(this, symbol, PERIOD_3M, secondaryCurrency);
                 break;
             case R.id.text_view_detail_1M:
-                cryptoCompareApiController.getHistoricalData(this, symbol, PERIOD_1M, "CAD");
+                cryptoCompareApiController.getHistoricalData(this, symbol, PERIOD_1M, secondaryCurrency);
                 break;
             case R.id.text_view_detail_1W:
-                cryptoCompareApiController.getHistoricalData(this, symbol, PERIOD_1W, "CAD");
+                cryptoCompareApiController.getHistoricalData(this, symbol, PERIOD_1W, secondaryCurrency);
                 break;
         }
     }
@@ -227,7 +251,7 @@ public class ChartActivity extends AppCompatActivity implements View.OnClickList
 
         //Format xAxis
         XAxis xAxis = chartView.getXAxis();
-        xAxis.setValueFormatter(new XAxisValueFormatter());
+        xAxis.setValueFormatter(new LineChartXAxisValueFormatter());
         xAxis.setLabelCount(7, true);
         xAxis.setTextColor(getResources().getColor(R.color.primaryTextColor));
 
