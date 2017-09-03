@@ -20,7 +20,6 @@ import com.dmtaiwan.alexander.bitcointicker.utility.Utils;
 import com.github.mikephil.charting.animation.Easing;
 import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.components.Description;
-import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
@@ -130,7 +129,6 @@ public class PieChartActivity extends AppCompatActivity {
         PieData data = getPieData(dataSet);
         data.setValueFormatter(new PieChartValueFormatter());
         pieChart.setData(data);
-        pieChart.getLegend().setWordWrapEnabled(true);
         pieChart.invalidate();
     }
 
@@ -201,7 +199,6 @@ public class PieChartActivity extends AppCompatActivity {
             }
         }
         entries.add(new PieEntry(smallCapCoins, getResources().getString(R.string.small_cap_label)));
-        pieChart.getLegend().setEnabled(true);
         allCoins.close();
         return entries;
     }
@@ -231,7 +228,6 @@ public class PieChartActivity extends AppCompatActivity {
 
 
         }
-        pieChart.getLegend().setEnabled(false);
         cursor.close();
         return entries;
     }
@@ -252,12 +248,11 @@ public class PieChartActivity extends AppCompatActivity {
     private void setupChart() {
         pieChart.animateY(1400, Easing.EasingOption.EaseInOutQuad);
         pieChart.setDrawHoleEnabled(false);
-        Legend legend = pieChart.getLegend();
-        legend.setTextColor(getResources().getColor(R.color.primaryTextColor));
         Description description = new Description();
         description.setText("Market Capitlization for All Cryptocurrencies");
         description.setTextColor(getResources().getColor(R.color.primaryTextColor));
         pieChart.setDescription(description);
         pieChart.setEntryLabelColor(getResources().getColor(R.color.colorPrimary));
+        pieChart.getLegend().setEnabled(false);
     }
 }

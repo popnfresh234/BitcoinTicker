@@ -44,6 +44,7 @@ public class ChartActivity extends AppCompatActivity implements View.OnClickList
     private static final int PERIOD_1M = 29;
     private static final int PERIOD_1W = 6;
 
+    public static final String BTC_STRING = "BTC";
     public static final String USD_STRING = "USD";
     public static final String CAD_STRING = "CAD";
     public static final String EUR_STRING = "EUR";
@@ -124,7 +125,7 @@ public class ChartActivity extends AppCompatActivity implements View.OnClickList
 
         //fetch price data for default chart:
         cryptoCompareApiController = new CryptoCompareApiController();
-        String currencies = "BTC,USD_STRING,CAD_STRING,EUR_STRING";
+        String currencies = BTC_STRING + "," + USD_STRING + "," + CAD_STRING + "," + EUR_STRING;
         cryptoCompareApiController.getPriceData(this, symbol, currencies);
         toggleInfoLoadingOn();
         cryptoCompareApiController.getHistoricalData(this, symbol, PERIOD_1W, secondaryCurrency);
@@ -143,7 +144,7 @@ public class ChartActivity extends AppCompatActivity implements View.OnClickList
     public void returnPriceData(Price price) {
         toggleInfoLoadingOff();
         //Pass USD_STRING constant here for preferred currency since this will always display USD_STRING
-        priceUSD.setText(Utils.formatCurrency(price.getUSD(), SettingsActivity.USD) + " USD_STRING");
+        priceUSD.setText(Utils.formatCurrency(price.getUSD(), SettingsActivity.USD) +  " " + USD_STRING);
         switch (secondaryCurrency) {
             case SettingsActivity.USD:
                 priceSecondary.setText(Utils.formatCurrency(price.getUSD(), secondaryCurrency) + " " + USD_STRING);
@@ -152,10 +153,10 @@ public class ChartActivity extends AppCompatActivity implements View.OnClickList
                 priceSecondary.setText(Utils.formatCurrency(price.getCAD(), secondaryCurrency) + " " + CAD_STRING);
                 break;
             case SettingsActivity.EUR:
-                priceSecondary.setText(Utils.formatCurrency(price.getEUR(),secondaryCurrency) + " " + EUR_STRING);
+                priceSecondary.setText(Utils.formatCurrency(price.getEUR(), secondaryCurrency) + " " + EUR_STRING);
                 break;
             default:
-                priceSecondary.setText(Utils.formatCurrency(price.getUSD(),SettingsActivity.USD) + " " + USD_STRING);
+                priceSecondary.setText(Utils.formatCurrency(price.getUSD(), SettingsActivity.USD) + " " + USD_STRING);
 
         }
         priceBTC.setText(price.getBTC() + " BTC");
