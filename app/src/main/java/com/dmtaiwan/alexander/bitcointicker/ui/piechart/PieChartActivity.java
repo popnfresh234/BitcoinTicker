@@ -63,6 +63,8 @@ public class PieChartActivity extends AppCompatActivity {
         secondaryCurrency = prefs.getInt(SettingsActivity.KEY_PREF_CURRENCY, SettingsActivity.USD);
 
 
+
+
         //setup views
         priceUSD = (TextView) findViewById(R.id.text_view_detail_price_usd);
         priceSecondary = (TextView) findViewById(R.id.text_view_detail_price_secondary);
@@ -207,26 +209,30 @@ public class PieChartActivity extends AppCompatActivity {
     @NonNull
     private ArrayList<PieEntry> getPieEntries(float totalMarketCap) {
         ArrayList<PieEntry> entries = new ArrayList<>();
-        Cursor allCoins = BitcoinDBHelper.readDb(this, null, null, null, null);
-        while (allCoins.moveToNext()) {
+        Cursor cursor = BitcoinDBHelper.readDb(this, null, null, null, null);
+        while (cursor.moveToNext()) {
             float marketCapFloat = 0f;
-            String marketCap = allCoins.getString(allCoins.getColumnIndex(BitcoinDBContract.BitcoinEntry.COLUMN_MARKET_CAP_USD));
+            String marketCap = cursor.getString(cursor.getColumnIndex(BitcoinDBContract.BitcoinEntry.COLUMN_MARKET_CAP_USD));
             if (marketCap != null) {
                 marketCapFloat = Float.parseFloat(marketCap);
             }
             float percentage = marketCapFloat / totalMarketCap * 100;
-            String symbol = allCoins.getString(allCoins.getColumnIndex(BitcoinDBContract.BitcoinEntry.COLUMN_NAME));
-            PieEntry pieEntry;
-            if (percentage >= 2f) {
-                pieEntry = new PieEntry(percentage, symbol);
-            }else {
-                pieEntry = new PieEntry(percentage, "");
+            String symbol = cursor.getString(cursor.getColumnIndex(BitcoinDBContract.BitcoinEntry.COLUMN_NAME));
+            //Cut out very small values, not useful for chart
+            if (percentage > 0.1) {
+                PieEntry pieEntry;
+                if (percentage >= 2f) {
+                    pieEntry = new PieEntry(percentage, symbol);
+                }else {
+                    pieEntry = new PieEntry(percentage, "");
+                }
+                entries.add(pieEntry);
             }
-            entries.add(pieEntry);
+
 
         }
         pieChart.getLegend().setEnabled(false);
-        allCoins.close();
+        cursor.close();
         return entries;
     }
 
