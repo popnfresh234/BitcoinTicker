@@ -254,11 +254,24 @@ public class Coin {
 
     @Override
     public String toString() {
+
+        String cadString;
+        if (price_cad != null) {
+            cadString ="Price CAD: " + Utils.formatCurrency(price_cad, SettingsActivity.CAD) + "\n";
+        } else cadString = "";
+
+        String eurString;
+        if (price_eur != null) {
+            eurString = "Price EUR: " + Utils.formatCurrency(price_eur, SettingsActivity.CAD) + "\n";
+        } else eurString = "";
+
         return
                         "Coin: " + name + "\n" +
                         "Symbol: " + symbol + "\n" +
-                        "Price USD_STRING: " + Utils.formatCurrency(price_usd, SettingsActivity.USD) + "\n" +
-                        "Price CAD_STRING: " + Utils.formatCurrency(price_cad, SettingsActivity.CAD) + "\n" +
+                        "Price USD: " + Utils.formatCurrency(price_usd, SettingsActivity.USD) + "\n" +
+                         cadString +
+                         eurString +
+                        "Price BTC: " + price_btc + "\n" +
                         "Percent Change 1H: " + Utils.formatPercentage(percent_change_one_hour) + "\n" +
                         "Percent Chagne 24H: " + Utils.formatPercentage(percent_change_twenty_four_hour) + "\n" +
                         "Percent Change 7D: " + Utils.formatPercentage(percent_change_seven_days);
