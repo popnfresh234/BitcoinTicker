@@ -18,10 +18,10 @@ import android.view.View;
 import com.dmtaiwan.alexander.bitcointicker.R;
 import com.dmtaiwan.alexander.bitcointicker.data.BitcoinDBContract;
 import com.dmtaiwan.alexander.bitcointicker.data.BitcoinDBHelper;
-import com.dmtaiwan.alexander.bitcointicker.utility.helper.SimpleItemTouchHelperCallback;
 import com.dmtaiwan.alexander.bitcointicker.model.Coin;
 import com.dmtaiwan.alexander.bitcointicker.networking.CoinMarketCapApiController;
 import com.dmtaiwan.alexander.bitcointicker.ui.settings.SettingsActivity;
+import com.dmtaiwan.alexander.bitcointicker.utility.helper.SimpleItemTouchHelperCallback;
 import com.github.ybq.android.spinkit.SpinKitView;
 
 import java.util.ArrayList;
@@ -29,12 +29,13 @@ import java.util.ArrayList;
 import static com.dmtaiwan.alexander.bitcointicker.utility.Utils.getStrings;
 import static com.dmtaiwan.alexander.bitcointicker.utility.Utils.stripCursor;
 
-public class MainActivity extends AppCompatActivity implements TickerCallback, CoinRecyclerAdapter.AdapterCallback {
+public class MainActivity extends AppCompatActivity implements TickerCallback, CoinRecyclerAdapter.AdapterCallback, SharedPreferences.OnSharedPreferenceChangeListener {
 
     private CoinRecyclerAdapter adapter;
     private CoinMarketCapApiController coinMarketCapApiController;
     private SpinKitView spinKitView;
     private ArrayList<Coin> coins;
+    private int currencyCount;
 
     private static final String SORT_ORDER = BitcoinDBContract.BitcoinEntry.COLUMN_NAME + " ASC";
 
@@ -64,13 +65,15 @@ public class MainActivity extends AppCompatActivity implements TickerCallback, C
 
         //Set up API controller
         coinMarketCapApiController = new CoinMarketCapApiController();
+        startLoading();
 
+      PreferenceManager.getDefaultSharedPreferences(this).registerOnSharedPreferenceChangeListener(this);
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        startLoading();
+
     }
 
     @Override
@@ -155,5 +158,15 @@ public class MainActivity extends AppCompatActivity implements TickerCallback, C
     }
 
 
+    @Override
+    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+        startLoading();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        PreferenceManager.getDefaultSharedPreferences(this).unregisterOnSharedPreferenceChangeListener(this);
+    }
 }
 
