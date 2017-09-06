@@ -104,7 +104,7 @@ public class MainActivity extends AppCompatActivity implements TickerCallback, C
     public void returnResults(ArrayList<Coin> coins) {
 
         //Insert data into DB
-        BitcoinDBHelper.bulkInsert(this, coins);
+        BitcoinDBHelper.bulkInsertCoins(this, coins);
         queryDbForCoins();
 
 
@@ -125,7 +125,7 @@ public class MainActivity extends AppCompatActivity implements TickerCallback, C
 
         //If our selectionArgs aren't null, query only for the user's preferred coins
         if (selectionArgs != null) {
-            Cursor cursor = BitcoinDBHelper.rawQuery(this, selectionArgs);
+            Cursor cursor = BitcoinDBHelper.rawQueryCoins(this, selectionArgs);
             //extract list of coins from cursor
             coins = stripCursor(cursor);
             cursor.close();
@@ -134,7 +134,7 @@ public class MainActivity extends AppCompatActivity implements TickerCallback, C
 
         //otherwise query for everything
         else{
-            Cursor cursor = BitcoinDBHelper.readDb(this, null, null, selectionArgs, null);
+            Cursor cursor = BitcoinDBHelper.readDbCoins(this, null, null, selectionArgs, null);
             //extract list of coins from cursor
             coins = stripCursor(cursor);
             cursor.close();

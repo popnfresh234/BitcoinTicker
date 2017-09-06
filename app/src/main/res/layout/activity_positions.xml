@@ -5,8 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="16dp"
-    >
+    android:padding="16dp">
 
     <android.support.constraint.Guideline
         android:id="@+id/guideline50"
@@ -18,12 +17,11 @@
         tools:layout_editor_absoluteY="0dp"/>
 
 
-
     <TextView
-        android:gravity="top"
         android:id="@+id/text_view_detail_price_usd"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:gravity="top"
         android:textSize="@dimen/text_size_heading"
         app:layout_constraintHorizontal_weight="1"
         app:layout_constraintLeft_toLeftOf="parent"
@@ -64,36 +62,23 @@
         app:layout_constraintTop_toBottomOf="@+id/text_view_detail_price_btc"
         tools:text="Bitcoin"/>
 
-    <com.github.ybq.android.spinkit.SpinKitView
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        android:id="@+id/detail_spin_kit_info"
-        style="@style/SpinKitView.Small.Wave"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="right"
-        app:SpinKit_Color="@color/colorAccentYellow"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintRight_toRightOf="@+id/guideline50"
-        app:layout_constraintBottom_toBottomOf="@id/text_view_detail_coin_name"/>
-
 
     <TextView
         android:id="@+id/text_view_detail_percent_change_one_hour_label"
         android:layout_width="0dp"
-        android:layout_marginTop="4dp"
         android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
         android:text="1H change: "
         app:layout_constraintHorizontal_weight="1"
+        app:layout_constraintLeft_toLeftOf="@+id/guideline50"
         app:layout_constraintRight_toLeftOf="@+id/guideline75"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintLeft_toLeftOf="@+id/guideline50"/>
+        app:layout_constraintTop_toTopOf="parent"/>
 
     <TextView
         android:id="@+id/text_view_detail_percent_change_one_hour"
         android:layout_width="0dp"
-        android:layout_marginTop="4dp"
         android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
         app:layout_constraintHorizontal_weight="1"
         app:layout_constraintLeft_toRightOf="@+id/text_view_detail_percent_change_one_hour_label"
         app:layout_constraintRight_toRightOf="parent"
@@ -106,9 +91,9 @@
         android:layout_height="wrap_content"
         android:text="24H change: "
         app:layout_constraintHorizontal_weight="1"
+        app:layout_constraintLeft_toLeftOf="@+id/guideline50"
         app:layout_constraintRight_toLeftOf="@+id/guideline75"
-        app:layout_constraintTop_toBottomOf="@+id/text_view_detail_percent_change_one_hour"
-        app:layout_constraintLeft_toLeftOf="@+id/guideline50"/>
+        app:layout_constraintTop_toBottomOf="@+id/text_view_detail_percent_change_one_hour"/>
 
     <TextView
         android:id="@+id/text_view_detail_percent_change_24_hour"
@@ -126,9 +111,9 @@
         android:layout_height="wrap_content"
         android:text="7D change: "
         app:layout_constraintHorizontal_weight="1"
+        app:layout_constraintLeft_toLeftOf="@+id/guideline50"
         app:layout_constraintRight_toLeftOf="@+id/guideline75"
-        app:layout_constraintTop_toBottomOf="@+id/text_view_detail_percent_change_24_hour"
-        app:layout_constraintLeft_toLeftOf="@+id/guideline50"/>
+        app:layout_constraintTop_toBottomOf="@+id/text_view_detail_percent_change_24_hour"/>
 
     <TextView
         android:id="@+id/text_view_detail_percent_change_seven_day"
@@ -138,92 +123,115 @@
         app:layout_constraintLeft_toRightOf="@+id/text_view_detail_percent_change_seven_day_label"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/text_view_detail_percent_change_24_hour"
-        tools:text="3%"/>
+        tools:text="3%"
+        android:layout_marginTop="0dp"
+        app:layout_constraintHorizontal_bias="0.0"/>
 
     <TextView
-        android:id="@+id/text_view_detail_show_small_cap"
-        android:gravity="center_vertical"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
-        android:text="1Y"
-        app:layout_constraintTop_toBottomOf="@+id/text_view_detail_coin_name"
-        app:layout_constraintRight_toLeftOf="@+id/text_view_detail_hide_small_cap"
-        app:layout_constraintLeft_toLeftOf="parent"/>
-
-    <TextView
-        android:id="@+id/text_view_detail_hide_small_cap"
-        android:gravity="center_vertical"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
-        android:text="6M"
-        app:layout_constraintLeft_toRightOf="@+id/text_view_detail_show_small_cap"
-        app:layout_constraintTop_toBottomOf="@+id/text_view_detail_coin_name"
-        app:layout_constraintRight_toLeftOf="@+id/text_view_detail_3M"/>
-
-    <TextView
-        android:id="@+id/text_view_detail_3M"
-        android:gravity="center_vertical"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
-        android:text="3M"
-        app:layout_constraintLeft_toRightOf="@+id/text_view_detail_hide_small_cap"
-        app:layout_constraintTop_toBottomOf="@+id/text_view_detail_coin_name"
-        app:layout_constraintRight_toLeftOf="@+id/text_view_detail_1M"/>
-
-    <TextView
-        android:id="@+id/text_view_detail_1M"
-        android:gravity="center_vertical"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
-        android:text="1M"
-        app:layout_constraintLeft_toRightOf="@+id/text_view_detail_3M"
-        app:layout_constraintTop_toBottomOf="@+id/text_view_detail_coin_name"
-        app:layout_constraintRight_toLeftOf="@+id/text_view_detail_1W"/>
-
-    <TextView
-        android:id="@+id/text_view_detail_1W"
-        android:gravity="center_vertical"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
-        android:text="1W"
-        app:layout_constraintLeft_toRightOf="@+id/text_view_detail_1M"
-        app:layout_constraintTop_toBottomOf="@+id/text_view_detail_coin_name"
-        app:layout_constraintRight_toRightOf="parent"/>
-
-    <com.github.mikephil.charting.charts.LineChart
-        android:id="@+id/price_chart"
+        android:id="@+id/text_view_position_profit_label"
         android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_marginTop="32dp"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_height="wrap_content"
+        android:textColor="@color/colorAccentYellow"
+        android:text="Profit: "
         app:layout_constraintHorizontal_weight="1"
-        app:layout_constraintVertical_weight="1"
-        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintLeft_toLeftOf="@+id/guideline50"
+        app:layout_constraintRight_toLeftOf="@+id/guideline75"
+        app:layout_constraintTop_toBottomOf="@+id/text_view_detail_percent_change_seven_day"/>
+
+    <TextView
+        android:id="@+id/text_view_position_profit"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintHorizontal_weight="1"
+        app:layout_constraintLeft_toRightOf="@+id/text_view_position_profit_label"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/text_view_detail_show_small_cap"
-        app:layout_constraintVertical_bias="1.0"/>
+        app:layout_constraintTop_toBottomOf="@+id/text_view_detail_percent_change_seven_day"
+        tools:text="50000"
+        android:layout_marginTop="0dp"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="Position"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toLeftOf="@+id/guideline33"
+        app:layout_constraintTop_toBottomOf="@id/text_view_detail_coin_name"/>
+
+    <TextView
+        android:id="@+id/text_view_position_price_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="Price"
+        app:layout_constraintLeft_toLeftOf="@+id/guideline33"
+        app:layout_constraintRight_toLeftOf="@+id/guideline66"
+        app:layout_constraintTop_toBottomOf="@id/text_view_detail_coin_name"/>
+
+    <EditText
+        android:id="@+id/edit_text_position_position"
+        android:layout_width="wrap_content"
+        android:layout_height="48dp"
+        android:gravity="center_horizontal"
+        android:hint="Enter position"
+        android:inputType="numberDecimal"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toLeftOf="@+id/guideline33"
+        app:layout_constraintTop_toBottomOf="@id/text_view_position_price_label"/>
+
+    <EditText
+        android:id="@+id/edit_text_position_price"
+        android:layout_width="wrap_content"
+        android:layout_height="48dp"
+        android:gravity="center_horizontal"
+        android:inputType="numberDecimal"
+        android:hint="Enter Price"
+        app:layout_constraintHorizontal_bias="0.538"
+        app:layout_constraintLeft_toLeftOf="@+id/guideline33"
+        app:layout_constraintRight_toLeftOf="@+id/guideline66"
+        app:layout_constraintTop_toBottomOf="@id/text_view_position_price_label"/>
+
+    <Button
+        android:id="@+id/button_position_add"
+        android:layout_width="wrap_content"
+        android:layout_height="48dp"
+        android:textSize="@dimen/text_size_heading"
+        android:background="@drawable/ripple_light"
+
+        android:text="+"
+        style="@style/Widget.AppCompat.Button.Borderless"
+        app:layout_constraintLeft_toLeftOf="@+id/guideline66"
+        app:layout_constraintLeft_toRightOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/text_view_position_price_label"/>
 
     <android.support.constraint.Guideline
-        android:id="@+id/guideline75"
+        android:id="@+id/guideline33"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        app:layout_constraintGuide_percent="0.75"
-        tools:layout_editor_absoluteY="0dp"
-        tools:layout_editor_absoluteX="264dp"/>"/>
+        app:layout_constraintGuide_percent="0.33"/>
 
-    <com.github.ybq.android.spinkit.SpinKitView
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        android:id="@+id/detail_spin_kit_chart"
-        style="@style/SpinKitView.Large.Wave"
+    <android.support.constraint.Guideline
+        android:id="@+id/guideline66"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="right"
-        app:SpinKit_Color="@color/colorAccentYellow"
-        app:layout_constraintLeft_toLeftOf="@id/price_chart"
-        app:layout_constraintTop_toTopOf="@id/price_chart"
-        app:layout_constraintRight_toRightOf="@id/price_chart"
-        app:layout_constraintBottom_toBottomOf="@id/price_chart"/>
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.66"/>
 
+    <android.support.v7.widget.RecyclerView
+        android:layout_marginTop="16dp"
+        android:id="@+id/recycler_view_position"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintHorizontal_weight="1"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/edit_text_position_position"
+        app:layout_constraintVertical_weight="1"
+        tools:listitem="@layout/list_item_position">
+
+    </android.support.v7.widget.RecyclerView>
 
 </android.support.constraint.ConstraintLayout>

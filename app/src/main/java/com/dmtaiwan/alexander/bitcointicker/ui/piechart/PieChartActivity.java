@@ -94,7 +94,7 @@ public class PieChartActivity extends AppCompatActivity {
         //Fetch data
         String coinId = getIntent().getStringExtra(KEY_COIN_ID);
         String[] selectionArgs = new String[]{coinId};
-        Cursor cursor = BitcoinDBHelper.readDb(this, null, BitcoinDBContract.BitcoinEntry.COLUMN_COIN_ID + "=?", selectionArgs, null);
+        Cursor cursor = BitcoinDBHelper.readDbCoins(this, null, BitcoinDBContract.BitcoinEntry.COLUMN_COIN_ID + "=?", selectionArgs, null);
         cursor.moveToFirst();
 
         //bind data from cursor
@@ -179,7 +179,7 @@ public class PieChartActivity extends AppCompatActivity {
     @NonNull
     private ArrayList<PieEntry> getPieEntriesHideSmallCap(float totalMarketCap) {
         ArrayList<PieEntry> entries = new ArrayList<>();
-        Cursor allCoins = BitcoinDBHelper.readDb(this, null, null, null, null);
+        Cursor allCoins = BitcoinDBHelper.readDbCoins(this, null, null, null, null);
         float smallCapCoins = 0f;
         while (allCoins.moveToNext()) {
             float marketCapFloat = 0f;
@@ -206,7 +206,7 @@ public class PieChartActivity extends AppCompatActivity {
     @NonNull
     private ArrayList<PieEntry> getPieEntries(float totalMarketCap) {
         ArrayList<PieEntry> entries = new ArrayList<>();
-        Cursor cursor = BitcoinDBHelper.readDb(this, null, null, null, null);
+        Cursor cursor = BitcoinDBHelper.readDbCoins(this, null, null, null, null);
         while (cursor.moveToNext()) {
             float marketCapFloat = 0f;
             String marketCap = cursor.getString(cursor.getColumnIndex(BitcoinDBContract.BitcoinEntry.COLUMN_MARKET_CAP_USD));
@@ -233,7 +233,7 @@ public class PieChartActivity extends AppCompatActivity {
     }
 
     private float getTotalMarketCap() {
-        Cursor cursor = BitcoinDBHelper.readDb(this, null, null, null, null);
+        Cursor cursor = BitcoinDBHelper.readDbCoins(this, null, null, null, null);
         float totalMarketCap = 0f;
         while (cursor.moveToNext()) {
             String marketCapString = cursor.getString(cursor.getColumnIndex(BitcoinDBContract.BitcoinEntry.COLUMN_MARKET_CAP_USD));

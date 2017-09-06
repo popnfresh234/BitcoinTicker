@@ -8,6 +8,7 @@
     <color name="primaryTextColor">#ffffff</color>
     <color name="secondaryTextColor">#ffffff</color>
     <color name="colorAccentYellow">#FFEB3B</color>
+    <color name="colorTextLoss">#d50000</color>
 
     <!--Chart Color Palette-->
     <color name="chartRed">#ffb3ba</color>

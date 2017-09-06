@@ -16,6 +16,7 @@ import com.dmtaiwan.alexander.bitcointicker.R;
 import com.dmtaiwan.alexander.bitcointicker.model.Coin;
 import com.dmtaiwan.alexander.bitcointicker.ui.chart.ChartActivity;
 import com.dmtaiwan.alexander.bitcointicker.ui.piechart.PieChartActivity;
+import com.dmtaiwan.alexander.bitcointicker.ui.positions.PositionsActivity;
 import com.dmtaiwan.alexander.bitcointicker.ui.settings.SettingsActivity;
 import com.dmtaiwan.alexander.bitcointicker.utility.helper.ItemTouchHelperAdapter;
 
@@ -107,11 +108,22 @@ public class CoinRecyclerAdapter extends RecyclerView.Adapter<CoinRecyclerAdapte
             }
         });
 
+
         //Handle PieChart
         holder.pieChartIcon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(context, PieChartActivity.class);
+                intent.putExtra(ChartActivity.KEY_COIN_ID, coin.getId());
+                context.startActivity(intent);
+            }
+        });
+
+        //Handle positions
+        holder.positionsIcon.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(context, PositionsActivity.class);
                 intent.putExtra(ChartActivity.KEY_COIN_ID, coin.getId());
                 context.startActivity(intent);
             }
@@ -293,6 +305,7 @@ public class CoinRecyclerAdapter extends RecyclerView.Adapter<CoinRecyclerAdapte
         public ImageView shareIcon;
         public ImageView chartIcon;
         public ImageView pieChartIcon;
+        public ImageView positionsIcon;
 
         public CoinHolder(View itemView) {
             super(itemView);
@@ -319,6 +332,7 @@ public class CoinRecyclerAdapter extends RecyclerView.Adapter<CoinRecyclerAdapte
             shareIcon = (ImageView) itemView.findViewById(R.id.share_icon);
             chartIcon = (ImageView) itemView.findViewById(R.id.chart_icon);
             pieChartIcon = (ImageView) itemView.findViewById(R.id.pie_chart_icon);
+            positionsIcon = (ImageView) itemView.findViewById(R.id.position_icon);
         }
     }
 

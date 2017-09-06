@@ -36,6 +36,15 @@ public class BitcoinDBContract {
         public static final String COLUMN_MARKET_CAP_EUR = "market_cap_eur";
         public static final String COLUMN_EXPANDED = "expanded";
     }
+
+
+    public static final class PositionEntry implements BaseColumns{
+        public static String TABLE_NAME = "positions";
+
+        public static final String COLUMN_POSITION = "position";
+        public static final String COLUMN_PRICE = "price";
+        public static final String COLUMN_SYMBOL = "symbol";
+    }
 }
 
 

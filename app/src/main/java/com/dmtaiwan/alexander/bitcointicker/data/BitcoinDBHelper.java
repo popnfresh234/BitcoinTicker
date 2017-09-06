@@ -5,6 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.provider.BaseColumns;
 import android.util.Log;
 
 import com.dmtaiwan.alexander.bitcointicker.model.Coin;
@@ -18,7 +19,7 @@ import java.util.ArrayList;
 public class BitcoinDBHelper extends SQLiteOpenHelper {
 
     private static final String DB_NAME = "bitcoin_ticker.db";
-    private static final int DB_VERSION = 1;
+    private static final int DB_VERSION = 4;
 
     public BitcoinDBHelper(Context context) {
         super(context, DB_NAME, null, DB_VERSION);
@@ -26,8 +27,8 @@ public class BitcoinDBHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
-        String SQL_CREATE_TABLE = "CREATE TABLE " + BitcoinDBContract.BitcoinEntry.TABLE_NAME + " ("
-                + BitcoinDBContract.BitcoinEntry._ID + " INTEGER, "
+        String SQL_CREATE_BITCOIN_TABLE = "CREATE TABLE " + BitcoinDBContract.BitcoinEntry.TABLE_NAME + " ("
+                + BitcoinDBContract.BitcoinEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
                 + BitcoinDBContract.BitcoinEntry.COLUMN_COIN_ID + " TEXT, "
                 + BitcoinDBContract.BitcoinEntry.COLUMN_NAME + " TEXT, "
                 + BitcoinDBContract.BitcoinEntry.COLUMN_SYMBOL + " TEXT, "
@@ -51,14 +52,23 @@ public class BitcoinDBHelper extends SQLiteOpenHelper {
                 + BitcoinDBContract.BitcoinEntry.COLUMN_EXPANDED + " TEXT, "
                 + "UNIQUE (" + BitcoinDBContract.BitcoinEntry.COLUMN_COIN_ID + ") on conflict replace" + ")";
 
-        sqLiteDatabase.execSQL(SQL_CREATE_TABLE);
+        String SQL_CREATE_POSITION_TABLE = "CREATE TABLE " + BitcoinDBContract.PositionEntry.TABLE_NAME + " ("
+                + BitcoinDBContract.PositionEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
+                + BitcoinDBContract.PositionEntry.COLUMN_SYMBOL + " TEXT, "
+                + BitcoinDBContract.PositionEntry.COLUMN_POSITION + " TEXT, "
+                + BitcoinDBContract.PositionEntry.COLUMN_PRICE + " TEXT)";
+
+        sqLiteDatabase.execSQL(SQL_CREATE_BITCOIN_TABLE);
+        sqLiteDatabase.execSQL(SQL_CREATE_POSITION_TABLE);
 
     }
 
 
     @Override
-    public void onUpgrade(SQLiteDatabase sqLiteDatabase, int i, int i1) {
-
+    public void onUpgrade(SQLiteDatabase db, int i, int i1) {
+        db.execSQL("DROP TABLE IF EXISTS " + BitcoinDBContract.BitcoinEntry.TABLE_NAME);
+        db.execSQL("DROP TABLE IF EXISTS " + BitcoinDBContract.PositionEntry.TABLE_NAME);
+        onCreate(db);
     }
 
 
@@ -68,7 +78,40 @@ public class BitcoinDBHelper extends SQLiteOpenHelper {
         db.insert(BitcoinDBContract.BitcoinEntry.TABLE_NAME, null, contentValues);
     }
 
-    public static void bulkInsert(Context context, ArrayList<Coin> coins) {
+    public static Cursor readDbPositions(Context context, String[] projection, String selection, String[] selectionArgs, String sortOrder) {
+        BitcoinDBHelper dbHelper = new BitcoinDBHelper(context);
+        SQLiteDatabase db = dbHelper.getReadableDatabase();
+        Cursor cursor = db.query(
+                BitcoinDBContract.PositionEntry.TABLE_NAME,
+                null,
+                selection,
+                selectionArgs,
+                null,
+                null,
+                sortOrder);
+
+        return cursor;
+    }
+
+
+    public static void insertPositionData(Context context, String symbol, String position, String price) {
+        BitcoinDBHelper dbHelper = new BitcoinDBHelper(context);
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(BitcoinDBContract.PositionEntry.COLUMN_SYMBOL, symbol);
+        contentValues.put(BitcoinDBContract.PositionEntry.COLUMN_POSITION, position);
+        contentValues.put(BitcoinDBContract.PositionEntry.COLUMN_PRICE, price);
+        db.insert(BitcoinDBContract.PositionEntry.TABLE_NAME, null, contentValues);
+    }
+
+    public static void removePositionData(Context context, int id) {
+        String idString = String.valueOf(id);
+        BitcoinDBHelper dbHelper = new BitcoinDBHelper(context);
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+        db.delete(BitcoinDBContract.PositionEntry.TABLE_NAME, BaseColumns._ID+ "=?", new String[]{idString});
+    }
+
+    public static void bulkInsertCoins(Context context, ArrayList<Coin> coins) {
         BitcoinDBHelper dbHelper = new BitcoinDBHelper(context);
         SQLiteDatabase db = dbHelper.getWritableDatabase();
         db.beginTransaction();
@@ -105,7 +148,7 @@ public class BitcoinDBHelper extends SQLiteOpenHelper {
         }
     }
 
-    public static Cursor readDb(Context context, String[] projection, String selection, String[] selectionArgs, String sortOrder) {
+    public static Cursor readDbCoins(Context context, String[] projection, String selection, String[] selectionArgs, String sortOrder) {
         BitcoinDBHelper dbHelper = new BitcoinDBHelper(context);
         SQLiteDatabase db = dbHelper.getReadableDatabase();
         Cursor cursor = db.query(
@@ -120,7 +163,7 @@ public class BitcoinDBHelper extends SQLiteOpenHelper {
         return cursor;
     }
 
-    public static Cursor querySimilar(Context context, String term) {
+    public static Cursor querySimilarCoins(Context context, String term) {
         BitcoinDBHelper dbHelper = new BitcoinDBHelper(context);
         SQLiteDatabase db = dbHelper.getReadableDatabase();
         String[] args = new String[1];
@@ -130,7 +173,7 @@ public class BitcoinDBHelper extends SQLiteOpenHelper {
         return db.rawQuery(query, args);
     }
 
-    public static Cursor rawQuery(Context context, String[] selectionArgs) {
+    public static Cursor rawQueryCoins(Context context, String[] selectionArgs) {
         BitcoinDBHelper dbHelper = new BitcoinDBHelper(context);
         SQLiteDatabase db = dbHelper.getReadableDatabase();
         String query = "SELECT * FROM " + BitcoinDBContract.BitcoinEntry.TABLE_NAME

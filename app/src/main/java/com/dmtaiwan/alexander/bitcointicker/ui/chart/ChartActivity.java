@@ -110,7 +110,7 @@ public class ChartActivity extends AppCompatActivity implements View.OnClickList
         //Fetch data
         String coinId = getIntent().getStringExtra(KEY_COIN_ID);
         String[] selectionArgs = new String[]{coinId};
-        Cursor cursor = BitcoinDBHelper.readDb(this, null, BitcoinDBContract.BitcoinEntry.COLUMN_COIN_ID + "=?", selectionArgs, null);
+        Cursor cursor = BitcoinDBHelper.readDbCoins(this, null, BitcoinDBContract.BitcoinEntry.COLUMN_COIN_ID + "=?", selectionArgs, null);
         cursor.moveToFirst();
 
         //bind data from cursor

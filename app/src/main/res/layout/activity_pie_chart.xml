@@ -9,7 +9,7 @@
     >
 
     <android.support.constraint.Guideline
-        android:id="@+id/guideline3"
+        android:id="@+id/guideline50"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
@@ -27,7 +27,7 @@
         android:textSize="@dimen/text_size_heading"
         app:layout_constraintHorizontal_weight="1"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toLeftOf="@+id/guideline3"
+        app:layout_constraintRight_toLeftOf="@+id/guideline50"
         app:layout_constraintTop_toTopOf="parent"
         tools:text="3000.00 USD"/>
 
@@ -38,7 +38,7 @@
         android:textSize="@dimen/text_size_subheading"
         app:layout_constraintHorizontal_weight="1"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toLeftOf="@+id/guideline3"
+        app:layout_constraintRight_toLeftOf="@+id/guideline50"
         app:layout_constraintTop_toBottomOf="@+id/text_view_detail_price_usd"
         tools:text="6000 CAD"/>
 
@@ -49,7 +49,7 @@
         android:textSize="@dimen/text_size_subheading"
         app:layout_constraintHorizontal_weight="1"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toLeftOf="@+id/guideline3"
+        app:layout_constraintRight_toLeftOf="@+id/guideline50"
         app:layout_constraintTop_toBottomOf="@+id/text_view_detail_price_secondary"
         tools:text="1 BTC"/>
 
@@ -60,7 +60,7 @@
         android:textSize="@dimen/text_size_subheading"
         app:layout_constraintHorizontal_weight="1"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toLeftOf="@+id/guideline3"
+        app:layout_constraintRight_toLeftOf="@+id/guideline50"
         app:layout_constraintTop_toBottomOf="@+id/text_view_detail_price_btc"
         tools:text="Bitcoin"/>
 
@@ -95,7 +95,7 @@
         app:layout_constraintHorizontal_weight="1"
         app:layout_constraintRight_toLeftOf="@+id/guideline75"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintLeft_toLeftOf="@+id/guideline3"/>
+        app:layout_constraintLeft_toLeftOf="@+id/guideline50"/>
 
     <TextView
         android:id="@+id/text_view_detail_percent_change_one_hour"
@@ -116,7 +116,7 @@
         app:layout_constraintHorizontal_weight="1"
         app:layout_constraintRight_toLeftOf="@+id/guideline75"
         app:layout_constraintTop_toBottomOf="@+id/text_view_detail_percent_change_one_hour"
-        app:layout_constraintLeft_toLeftOf="@+id/guideline3"/>
+        app:layout_constraintLeft_toLeftOf="@+id/guideline50"/>
 
     <TextView
         android:id="@+id/text_view_detail_percent_change_24_hour"
@@ -136,7 +136,7 @@
         app:layout_constraintHorizontal_weight="1"
         app:layout_constraintRight_toLeftOf="@+id/guideline75"
         app:layout_constraintTop_toBottomOf="@+id/text_view_detail_percent_change_24_hour"
-        app:layout_constraintLeft_toLeftOf="@+id/guideline3"/>
+        app:layout_constraintLeft_toLeftOf="@+id/guideline50"/>
 
     <TextView
         android:id="@+id/text_view_detail_percent_change_seven_day"

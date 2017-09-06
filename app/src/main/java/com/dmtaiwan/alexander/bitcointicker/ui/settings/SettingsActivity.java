@@ -43,7 +43,7 @@ public class SettingsActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(llm);
 
         //Default query to populate:
-        Cursor cursor = BitcoinDBHelper.readDb(this, PROJECTION, null, null, null);
+        Cursor cursor = BitcoinDBHelper.readDbCoins(this, PROJECTION, null, null, null);
         settingsAdapter = new SettingsAdapter(this, cursor);
         recyclerView.setAdapter(settingsAdapter);
 
@@ -57,7 +57,7 @@ public class SettingsActivity extends AppCompatActivity {
 
             @Override
             public boolean onQueryTextChange(String coinTerm) {
-                Cursor cursor = BitcoinDBHelper.querySimilar(SettingsActivity.this, coinTerm);
+                Cursor cursor = BitcoinDBHelper.querySimilarCoins(SettingsActivity.this, coinTerm);
                 settingsAdapter.swapCursor(cursor);
                 return false;
             }

@@ -4,11 +4,13 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.preference.PreferenceManager;
+import android.provider.BaseColumns;
 
 import com.dmtaiwan.alexander.bitcointicker.R;
 import com.dmtaiwan.alexander.bitcointicker.data.BitcoinDBContract;
 import com.dmtaiwan.alexander.bitcointicker.model.Coin;
 import com.dmtaiwan.alexander.bitcointicker.model.HistoricalData;
+import com.dmtaiwan.alexander.bitcointicker.model.Position;
 import com.dmtaiwan.alexander.bitcointicker.ui.settings.SettingsActivity;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
@@ -139,6 +141,19 @@ public class Utils {
             coinList.add(coin);
         }
         return coinList;
+    }
+
+    public static ArrayList<Position> extractPositionsFromCursor(Cursor cursor) {
+        ArrayList<Position> positions = new ArrayList<>();
+        while (cursor.moveToNext()) {
+            int id = cursor.getInt(cursor.getColumnIndex(BaseColumns._ID));
+            String symbol = cursor.getString(cursor.getColumnIndex(BitcoinDBContract.PositionEntry.COLUMN_SYMBOL));
+            String positionFloat = cursor.getString(cursor.getColumnIndex(BitcoinDBContract.PositionEntry.COLUMN_POSITION));
+            String priceFloat = cursor.getString(cursor.getColumnIndex(BitcoinDBContract.PositionEntry.COLUMN_PRICE));
+            Position position = new Position(id, symbol, positionFloat, priceFloat);
+            positions.add(position);
+        }
+        return positions;
     }
 
     //Get array list of coin names user has selected

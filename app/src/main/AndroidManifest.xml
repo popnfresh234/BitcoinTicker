@@ -19,6 +19,7 @@
         <activity android:name=".ui.settings.SettingsActivity"/>
         <activity android:name=".ui.chart.ChartActivity"/>
         <activity android:name=".ui.piechart.PieChartActivity"/>
+        <activity android:name=".ui.positions.PositionsActivity"/>
     </application>
 
 </manifest>
