@@ -34,7 +34,7 @@ import static com.dmtaiwan.alexander.bitcointicker.ui.chart.ChartActivity.USD_ST
 public class PositionsActivity extends AppCompatActivity implements PositionRecyclerAdapter.AdapterCallback{
 
     private PositionRecyclerAdapter positionRecyclerAdapter;
-    private int secondaryCurrency;
+    private String secondaryCurrency;
     private String symbol;
     private float secondaryCurrencyFloat;
 
@@ -54,17 +54,17 @@ public class PositionsActivity extends AppCompatActivity implements PositionRecy
 
         //Get preferred secondary currency
         final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(PositionsActivity.this);
-        secondaryCurrency = prefs.getInt(SettingsActivity.KEY_PREF_CURRENCY, SettingsActivity.USD);
+        secondaryCurrency = prefs.getString(SettingsActivity.KEY_PREF_CURRENCY, SettingsActivity.USD);
 
 
         //setup views
-        priceUSD = (TextView) findViewById(R.id.text_view_detail_price_usd);
-        priceSecondary = (TextView) findViewById(R.id.text_view_detail_price_secondary);
-        priceBTC = (TextView) findViewById(R.id.text_view_detail_price_btc);
-        coinName = (TextView) findViewById(R.id.text_view_detail_coin_name);
-        percentChange1H = (TextView) findViewById(R.id.text_view_detail_percent_change_one_hour);
-        percentChange24H = (TextView) findViewById(R.id.text_view_detail_percent_change_24_hour);
-        percentChange7D = (TextView) findViewById(R.id.text_view_detail_percent_change_seven_day);
+        priceUSD = (TextView) findViewById(R.id.text_view_pie_usd);
+        priceSecondary = (TextView) findViewById(R.id.text_view_pie_secondary);
+        priceBTC = (TextView) findViewById(R.id.text_view_pie_btc);
+        coinName = (TextView) findViewById(R.id.text_view_ppie_coin_name);
+        percentChange1H = (TextView) findViewById(R.id.text_view_pie_percent_change_one_hour);
+        percentChange24H = (TextView) findViewById(R.id.text_view_pie_percent_change_24_hour);
+        percentChange7D = (TextView) findViewById(R.id.text_view_pie_percent_change_seven_day);
         profitTextView = (TextView) findViewById(R.id.text_view_position_profit);
         RecyclerView positionRecyclerView = (RecyclerView) findViewById(R.id.recycler_view_position);
 

@@ -61,7 +61,7 @@ public class CoinRecyclerAdapter extends RecyclerView.Adapter<CoinRecyclerAdapte
 
         //Get secondary currency
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
-        int secondaryCurrency = prefs.getInt(SettingsActivity.KEY_PREF_CURRENCY, SettingsActivity.USD);
+        String secondaryCurrency = prefs.getString(SettingsActivity.KEY_PREF_CURRENCY, SettingsActivity.USD);
 
         //Get coin
         final Coin coin = coins.get(position);

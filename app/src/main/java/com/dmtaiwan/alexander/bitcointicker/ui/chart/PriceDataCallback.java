@@ -7,5 +7,5 @@ import com.dmtaiwan.alexander.bitcointicker.model.Price;
  */
 
 public interface PriceDataCallback {
-    void returnPriceData(Price price);
+    void returnPriceData(Price price, String currency);
 }

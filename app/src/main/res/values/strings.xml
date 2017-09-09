@@ -21,7 +21,6 @@
     <string name="percent_change_7d">Percent Change 7D:</string>
 
 
-
     <string name="price_cad">Price CAD:</string>
     <string name="twenty_four_hour_volume_cad">24H Volume CAD:</string>
     <string name="market_cap_cad">Market Cap CAD:</string>
@@ -39,5 +38,81 @@
         <item>USD</item>
         <item>CAD</item>
         <item>EUR</item>
+    </string-array>
+
+    <string-array name="exchange_array">
+        <item>CCCAGG</item>
+        <item>ANXBTC</item>
+        <item>Binance</item>
+        <item>Bit2C</item>
+        <item>BitBay</item>
+        <item>BitcoinDE</item>
+        <item>Bitfinex</item>
+        <item>bitFlyer</item>
+        <item>bitFlyerFX</item>
+        <item>Bithumb</item>
+        <item>BitMarket</item>
+        <item>Bitso</item>
+        <item>BitSquare</item>
+        <item>Bitstamp</item>
+        <item>BitTrex</item>
+        <item>Bleutrade</item>
+        <item>BTC38</item>
+        <item>BTCChina</item>
+        <item>BTCE</item>
+        <item>BTCMarkets</item>
+        <item>btcXchange</item>
+        <item>BTCXIndia</item>
+        <item>BTER</item>
+        <item>CCEDK</item>
+        <item>CCEX</item>
+        <item>Cexio</item>
+        <item>CHBTC</item>
+        <item>Coinbase</item>
+        <item>Coincheck</item>
+        <item>CoinExchange</item>
+        <item>Coinfloor</item>
+        <item>Coinone</item>
+        <item>Coinse</item>
+        <item>Coinsetter</item>
+        <item>Cryptopia</item>
+        <item>CryptoX</item>
+        <item>Cryptsy</item>
+        <item>EtherDelta</item>
+        <item>EthexIndia</item>
+        <item>Exmo</item>
+        <item>Gatecoin</item>
+        <item>Gemini</item>
+        <item>HitBTC</item>
+        <item>Huobi</item>
+        <item>itBit</item>
+        <item>Jubi</item>
+        <item>Korbit</item>
+        <item>Kraken</item>
+        <item>LakeBTC</item>
+        <item>Liqui</item>
+        <item>LiveCoin</item>
+        <item>LocalBitcoins</item>
+        <item>Luno</item>
+        <item>MercadoBitcoin</item>
+        <item>MonetaGo</item>
+        <item>MtGox</item>
+        <item>Novaexchange</item>
+        <item>OKCoin</item>
+        <item>Paymium</item>
+        <item>Poloniex</item>
+        <item>QuadrigaCX</item>
+        <item>Quoine</item>
+        <item>TheRockTrading</item>
+        <item>Tidex</item>
+        <item>TuxExchange</item>
+        <item>Unocoin</item>
+        <item>Vaultoro</item>
+        <item>ViaBTC</item>
+        <item>WavesDEX</item>
+        <item>Yacuna</item>
+        <item>Yobit</item>
+        <item>Yunbi</item>
+        <item>Zaif</item>
     </string-array>
 </resources>

@@ -16,7 +16,6 @@ import com.dmtaiwan.alexander.bitcointicker.model.HistoricalData;
 import com.dmtaiwan.alexander.bitcointicker.model.Price;
 import com.dmtaiwan.alexander.bitcointicker.networking.CryptoCompareApiController;
 import com.dmtaiwan.alexander.bitcointicker.ui.settings.SettingsActivity;
-import com.dmtaiwan.alexander.bitcointicker.utility.Utils;
 import com.dmtaiwan.alexander.bitcointicker.utility.LineChartXAxisValueFormatter;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.Description;
@@ -52,15 +51,13 @@ public class ChartActivity extends AppCompatActivity implements View.OnClickList
     private String symbol;
     private CryptoCompareApiController cryptoCompareApiController;
     private ArrayList<TextView> chartTextViews = new ArrayList<>();
-    private int secondaryCurrency;
 
-    private TextView priceUSD;
+    private String secondaryCurrency;
+    private String exchange;
+
     private TextView priceSecondary;
-    private TextView priceBTC;
     private TextView coinName;
-    private TextView percentChange1H;
-    private TextView percentChange24H;
-    private TextView percentChange7D;
+
     private LineChart chartView;
     private SpinKitView loadingViewChart;
     private SpinKitView loadingViewInfo;
@@ -71,6 +68,11 @@ public class ChartActivity extends AppCompatActivity implements View.OnClickList
     private TextView oneMonthChart;
     private TextView oneWeekChart;
 
+    //buttons for currency
+    private TextView usdCurrencyButton;
+    private TextView secondaryCurrencyButton;
+
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -78,21 +80,18 @@ public class ChartActivity extends AppCompatActivity implements View.OnClickList
 
         //Get preferred secondary currency
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ChartActivity.this);
-        secondaryCurrency = prefs.getInt(SettingsActivity.KEY_PREF_CURRENCY, SettingsActivity.USD);
+        secondaryCurrency = prefs.getString(SettingsActivity.KEY_PREF_CURRENCY, SettingsActivity.USD);
+        exchange = prefs.getString(SettingsActivity.KEY_PREF_EXCHANGE, SettingsActivity.CCCAGG);
 
 
         //setup views
-        priceUSD = (TextView) findViewById(R.id.text_view_detail_price_usd);
-        priceSecondary = (TextView) findViewById(R.id.text_view_detail_price_secondary);
-        priceBTC = (TextView) findViewById(R.id.text_view_detail_price_btc);
+        priceSecondary = (TextView) findViewById(R.id.text_view_detail_secondary);
         coinName = (TextView) findViewById(R.id.text_view_detail_coin_name);
-        percentChange1H = (TextView) findViewById(R.id.text_view_detail_percent_change_one_hour);
-        percentChange24H = (TextView) findViewById(R.id.text_view_detail_percent_change_24_hour);
-        percentChange7D = (TextView) findViewById(R.id.text_view_detail_percent_change_seven_day);
+
 
         //setup TextViews for selecting charts
-        oneYearChart = (TextView) findViewById(R.id.text_view_detail_show_small_cap);
-        sixMonthsChart = (TextView) findViewById(R.id.text_view_detail_hide_small_cap);
+        oneYearChart = (TextView) findViewById(R.id.text_view_detail_1Y);
+        sixMonthsChart = (TextView) findViewById(R.id.text_view_detail_6M);
         threeMonthsChart = (TextView) findViewById(R.id.text_view_detail_3M);
         oneMonthChart = (TextView) findViewById(R.id.text_view_detail_1M);
         oneWeekChart = (TextView) findViewById(R.id.text_view_detail_1W);
@@ -106,6 +105,12 @@ public class ChartActivity extends AppCompatActivity implements View.OnClickList
         chartTextViews.add(oneMonthChart);
         chartTextViews.add(oneWeekChart);
 
+        //Setup buttons for USD/Secondary Currency
+        usdCurrencyButton = (TextView) findViewById(R.id.text_view_detail_USD_button);
+        secondaryCurrencyButton = (TextView) findViewById(R.id.text_view_detail_secondary_currency_button);
+        secondaryCurrencyButton.setText(secondaryCurrency);
+        usdCurrencyButton.setOnClickListener(this);
+        secondaryCurrencyButton.setOnClickListener(this);
 
         //Fetch data
         String coinId = getIntent().getStringExtra(KEY_COIN_ID);
@@ -113,23 +118,18 @@ public class ChartActivity extends AppCompatActivity implements View.OnClickList
         Cursor cursor = BitcoinDBHelper.readDbCoins(this, null, BitcoinDBContract.BitcoinEntry.COLUMN_COIN_ID + "=?", selectionArgs, null);
         cursor.moveToFirst();
 
-        //bind data from cursor
-        coinName.setText(cursor.getString(cursor.getColumnIndex(BitcoinDBContract.BitcoinEntry.COLUMN_NAME)));
-        percentChange1H.setText(Utils.formatPercentage(cursor.getString(cursor.getColumnIndex(BitcoinDBContract.BitcoinEntry.COLUMN_PERCENT_CHANGE_1H))));
-        percentChange24H.setText(Utils.formatPercentage(cursor.getString(cursor.getColumnIndex(BitcoinDBContract.BitcoinEntry.COLUMN_PERCENT_CHANGE_24H))));
-        percentChange7D.setText(Utils.formatPercentage(cursor.getString(cursor.getColumnIndex(BitcoinDBContract.BitcoinEntry.COLUMN_PERCENT_CHANGE_7D))));
-
         //Grab symbol from cursor, finished with cursor now;
         symbol = cursor.getString(cursor.getColumnIndex(BitcoinDBContract.BitcoinEntry.COLUMN_SYMBOL));
+        coinName.setText(cursor.getString(cursor.getColumnIndex(BitcoinDBContract.BitcoinEntry.COLUMN_NAME)));
+
         cursor.close();
 
         //fetch price data for default chart:
         cryptoCompareApiController = new CryptoCompareApiController();
-        String currencies = BTC_STRING + "," + USD_STRING + "," + CAD_STRING + "," + EUR_STRING;
-        cryptoCompareApiController.getPriceData(this, symbol, currencies);
-        toggleInfoLoadingOn();
-        cryptoCompareApiController.getHistoricalData(this, symbol, PERIOD_1W, secondaryCurrency);
-        toggleChartLoadingOn();
+
+        //Get data from API
+        loadData(secondaryCurrency);
+
         oneWeekChart.setTextColor(getResources().getColor(R.color.colorAccentYellow));
 
         //Setup listeners for chart selection TextViews:
@@ -140,37 +140,50 @@ public class ChartActivity extends AppCompatActivity implements View.OnClickList
 
     }
 
+    private void loadData(String currency) {
+        cryptoCompareApiController.getPriceData(this, symbol, currency, exchange);
+        toggleInfoLoadingOn();
+        cryptoCompareApiController.getHistoricalData(this, symbol, PERIOD_1W, currency, exchange);
+        toggleChartLoadingOn();
+    }
+
     @Override
-    public void returnPriceData(Price price) {
+    public void returnPriceData(Price price, String currency) {
         toggleInfoLoadingOff();
-        //Pass USD_STRING constant here for preferred currency since this will always display USD_STRING
-        priceUSD.setText(Utils.formatCurrency(price.getUSD(), SettingsActivity.USD) +  " " + USD_STRING);
-        switch (secondaryCurrency) {
+        switch (currency) {
             case SettingsActivity.USD:
-                priceSecondary.setText(Utils.formatCurrency(price.getUSD(), secondaryCurrency) + " " + USD_STRING);
+                priceSecondary.setText(price.getUSD());
+                usdCurrencyButton.setTextColor(getResources().getColor(R.color.colorAccentYellow));
+                secondaryCurrencyButton.setTextColor(getResources().getColor(R.color.primaryTextColor));
                 break;
             case SettingsActivity.CAD:
-                priceSecondary.setText(Utils.formatCurrency(price.getCAD(), secondaryCurrency) + " " + CAD_STRING);
+                priceSecondary.setText(price.getCAD());
+                secondaryCurrencyButton.setTextColor(getResources().getColor(R.color.colorAccentYellow));
+                usdCurrencyButton.setTextColor(getResources().getColor(R.color.primaryTextColor));
                 break;
             case SettingsActivity.EUR:
-                priceSecondary.setText(Utils.formatCurrency(price.getEUR(), secondaryCurrency) + " " + EUR_STRING);
+                priceSecondary.setText(price.getEUR());
+                secondaryCurrencyButton.setTextColor(getResources().getColor(R.color.colorAccentYellow));
+                usdCurrencyButton.setTextColor(getResources().getColor(R.color.primaryTextColor));
                 break;
             default:
-                priceSecondary.setText(Utils.formatCurrency(price.getUSD(), SettingsActivity.USD) + " " + USD_STRING);
-
+                priceSecondary.setText(price.getUSD());
+                usdCurrencyButton.setTextColor(getResources().getColor(R.color.colorAccentYellow));
+                secondaryCurrencyButton.setTextColor(getResources().getColor(R.color.primaryTextColor));
         }
-        priceBTC.setText(price.getBTC() + " BTC");
     }
 
     @Override
     public void returnHistoricalData(HistoricalData historicalData, int period) {
         toggleChartLoadingOff();
 
-        //Create chart data
-        LineData lineData = createChartLineData(ChartActivity.this, historicalData, symbol);
+        if (!historicalData.getResponse().equals("Error")) {
+            //Create chart data
+            LineData lineData = createChartLineData(ChartActivity.this, historicalData, symbol);
+            //Set data to chart and format general chart
+            setupChart(lineData);
+        }else chartView.setNoDataText("No data available for selected currency");
 
-        //Set data to chart and format general chart
-        setupChart(lineData);
 
         //set chart selector TextView colors based on period user selected:
         resetTextColors();
@@ -200,20 +213,28 @@ public class ChartActivity extends AppCompatActivity implements View.OnClickList
         toggleChartLoadingOn();
 
         switch (v.getId()) {
-            case R.id.text_view_detail_show_small_cap:
-                cryptoCompareApiController.getHistoricalData(this, symbol, PERIOD_1Y, secondaryCurrency);
+            case R.id.text_view_detail_1Y:
+                cryptoCompareApiController.getHistoricalData(this, symbol, PERIOD_1Y, secondaryCurrency, exchange);
                 break;
-            case R.id.text_view_detail_hide_small_cap:
-                cryptoCompareApiController.getHistoricalData(this, symbol, PERIOD_6M, secondaryCurrency);
+            case R.id.text_view_detail_6M:
+                cryptoCompareApiController.getHistoricalData(this, symbol, PERIOD_6M, secondaryCurrency, exchange);
                 break;
             case R.id.text_view_detail_3M:
-                cryptoCompareApiController.getHistoricalData(this, symbol, PERIOD_3M, secondaryCurrency);
+                cryptoCompareApiController.getHistoricalData(this, symbol, PERIOD_3M, secondaryCurrency, exchange);
                 break;
             case R.id.text_view_detail_1M:
-                cryptoCompareApiController.getHistoricalData(this, symbol, PERIOD_1M, secondaryCurrency);
+                cryptoCompareApiController.getHistoricalData(this, symbol, PERIOD_1M, secondaryCurrency, exchange);
                 break;
             case R.id.text_view_detail_1W:
-                cryptoCompareApiController.getHistoricalData(this, symbol, PERIOD_1W, secondaryCurrency);
+                cryptoCompareApiController.getHistoricalData(this, symbol, PERIOD_1W, secondaryCurrency, exchange);
+                break;
+
+            //handle Currency buttons
+            case R.id.text_view_detail_USD_button:
+                loadData(SettingsActivity.USD);
+                break;
+            case R.id.text_view_detail_secondary_currency_button:
+                loadData(secondaryCurrency);
                 break;
         }
     }

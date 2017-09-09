@@ -23,10 +23,10 @@ public class PositionRecyclerAdapter extends RecyclerView.Adapter<PositionRecycl
 
     private Context context;
     private ArrayList<Position> positions;
-    private int secondaryCurrency;
+    private String secondaryCurrency;
     private AdapterCallback callback;
 
-    public PositionRecyclerAdapter(Context context, ArrayList<Position> positions, int secondaryCurrency, AdapterCallback callback) {
+    public PositionRecyclerAdapter(Context context, ArrayList<Position> positions, String secondaryCurrency, AdapterCallback callback) {
         this.context = context;
         this.positions = positions;
         this.secondaryCurrency = secondaryCurrency;

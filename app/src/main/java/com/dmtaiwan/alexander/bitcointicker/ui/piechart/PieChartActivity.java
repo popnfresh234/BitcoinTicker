@@ -50,7 +50,7 @@ public class PieChartActivity extends AppCompatActivity {
     private TextView showSmallCap;
     private TextView hideSmallCap;
 
-    private int secondaryCurrency;
+    private String secondaryCurrency;
 
 
     @Override
@@ -59,22 +59,22 @@ public class PieChartActivity extends AppCompatActivity {
         setContentView(R.layout.activity_pie_chart);
         //Get preferred secondary currency
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(PieChartActivity.this);
-        secondaryCurrency = prefs.getInt(SettingsActivity.KEY_PREF_CURRENCY, SettingsActivity.USD);
+        secondaryCurrency = prefs.getString(SettingsActivity.KEY_PREF_CURRENCY, SettingsActivity.USD);
 
 
 
 
         //setup views
-        priceUSD = (TextView) findViewById(R.id.text_view_detail_price_usd);
-        priceSecondary = (TextView) findViewById(R.id.text_view_detail_price_secondary);
-        priceBTC = (TextView) findViewById(R.id.text_view_detail_price_btc);
-        coinName = (TextView) findViewById(R.id.text_view_detail_coin_name);
-        percentChange1H = (TextView) findViewById(R.id.text_view_detail_percent_change_one_hour);
-        percentChange24H = (TextView) findViewById(R.id.text_view_detail_percent_change_24_hour);
-        percentChange7D = (TextView) findViewById(R.id.text_view_detail_percent_change_seven_day);
+        priceUSD = (TextView) findViewById(R.id.text_view_pie_usd);
+        priceSecondary = (TextView) findViewById(R.id.text_view_pie_secondary);
+        priceBTC = (TextView) findViewById(R.id.text_view_pie_btc);
+        coinName = (TextView) findViewById(R.id.text_view_ppie_coin_name);
+        percentChange1H = (TextView) findViewById(R.id.text_view_pie_percent_change_one_hour);
+        percentChange24H = (TextView) findViewById(R.id.text_view_pie_percent_change_24_hour);
+        percentChange7D = (TextView) findViewById(R.id.text_view_pie_percent_change_seven_day);
         pieChart = (PieChart) findViewById(R.id.pie_chart);
-        showSmallCap = (TextView) findViewById(R.id.text_view_detail_show_small_cap);
-        hideSmallCap = (TextView) findViewById(R.id.text_view_detail_hide_small_cap);
+        showSmallCap = (TextView) findViewById(R.id.text_view_pie_show_small_cap);
+        hideSmallCap = (TextView) findViewById(R.id.text_view_pie_hide_small_cap);
 
         //Setup listeners for show/hide small cap
         showSmallCap.setOnClickListener(new View.OnClickListener() {

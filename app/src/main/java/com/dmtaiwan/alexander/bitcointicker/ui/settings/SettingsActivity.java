@@ -26,9 +26,11 @@ import com.dmtaiwan.alexander.bitcointicker.data.BitcoinDBHelper;
 public class SettingsActivity extends AppCompatActivity {
 
     public static final String KEY_PREF_CURRENCY = "com.dmtaiwan.alexander.bitcointicker.key_pref_currency";
-    public static final int USD = 0;
-    public static final int CAD = 1;
-    public static final int EUR = 2;
+    public static final String KEY_PREF_EXCHANGE = "com.dmtaiwan.alexander.bitconticker.key_pref_exchange";
+    public static final String USD = "USD";
+    public static final String CAD = "CAD";
+    public static final String EUR = "EUR";
+    public static final String CCCAGG = "CCCAGG";
     private static final String[] PROJECTION = new String[]{BitcoinDBContract.BitcoinEntry.COLUMN_NAME, BitcoinDBContract.BitcoinEntry.COLUMN_COIN_ID};
     private SettingsAdapter settingsAdapter;
 
@@ -75,20 +77,47 @@ public class SettingsActivity extends AppCompatActivity {
             }
         });
 
+        //Setup exchange spinner
+        Spinner exchangeSpinner = (Spinner) findViewById(R.id.exchange_spinner);
+        final ArrayAdapter<CharSequence> exchangeAdapter = ArrayAdapter.createFromResource(this, R.array.exchange_array, android.R.layout.simple_spinner_item);
+        exchangeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        exchangeSpinner.setAdapter(exchangeAdapter);
+        //get set position
+        String exchangeString = prefs.getString(KEY_PREF_EXCHANGE, CCCAGG);
+        int exchangePosition = 0;
+        exchangePosition = exchangeAdapter.getPosition(exchangeString);
+        exchangeSpinner.setSelection(exchangePosition);
+        exchangeSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+
+                SharedPreferences.Editor editor = prefs.edit();
+                editor.putString(KEY_PREF_EXCHANGE, exchangeAdapter.getItem(position).toString()).commit();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
+
         //Setup currency spinner
         Spinner currencySpinner = (Spinner) findViewById(R.id.currency_spinner);
-        ArrayAdapter<CharSequence> currencyAdapter = ArrayAdapter.createFromResource(this, R.array.currency_array, android.R.layout.simple_spinner_item);
+        final ArrayAdapter<CharSequence> currencyAdapter = ArrayAdapter.createFromResource(this, R.array.currency_array, android.R.layout.simple_spinner_item);
         currencyAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         currencySpinner.setAdapter(currencyAdapter);
         //get set position
-        int setPosition = prefs.getInt(KEY_PREF_CURRENCY, USD);
-        currencySpinner.setSelection(setPosition);
+        String currencyString = prefs.getString(KEY_PREF_CURRENCY, USD);
+        int currencyPosition = 0;
+        currencyPosition = currencyAdapter.getPosition(currencyString);
+        currencySpinner.setSelection(currencyPosition);
         currencySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
 
                 SharedPreferences.Editor editor = prefs.edit();
-                editor.putInt(KEY_PREF_CURRENCY, position).commit();
+                editor.putString(KEY_PREF_CURRENCY, currencyAdapter.getItem(position).toString()).commit();
             }
 
             @Override

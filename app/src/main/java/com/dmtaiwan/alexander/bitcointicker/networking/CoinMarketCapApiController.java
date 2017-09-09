@@ -32,8 +32,8 @@ public class CoinMarketCapApiController{
     private TickerCallback tickerListener;
     private GlobalDataCallback globalDataListener;
 
-    public void getTickerData(TickerCallback tickerCallback, int preferredCurrency) {
-        String currency = getPreferredCurrencyString(preferredCurrency);
+    public void getTickerData(TickerCallback tickerCallback, String preferredCurrency) {
+
 
         this.tickerListener = tickerCallback;
         Gson gson = new GsonBuilder()
@@ -45,7 +45,7 @@ public class CoinMarketCapApiController{
                 .addConverterFactory(GsonConverterFactory.create(gson))
                 .build();
         CoinMarketCapApi coinMarketCapApi = retrofit.create(CoinMarketCapApi.class);
-        Call<ArrayList<Coin>> call = coinMarketCapApi.getCoins(currency);
+        Call<ArrayList<Coin>> call = coinMarketCapApi.getCoins(preferredCurrency);
         call.enqueue(new Callback<ArrayList<Coin>>() {
             @Override
             public void onResponse(Call<ArrayList<Coin>> call, Response<ArrayList<Coin>> response) {
@@ -60,9 +60,8 @@ public class CoinMarketCapApiController{
 
     }
 
-    public void getGlobalData(GlobalDataCallback globalDataCallback, int preferredCurrency) {
+    public void getGlobalData(GlobalDataCallback globalDataCallback, String preferredCurrency) {
         this.globalDataListener = globalDataCallback;
-        String currency = getPreferredCurrencyString(preferredCurrency);
         Gson gson = new GsonBuilder()
                 .setLenient()
                 .create();
@@ -72,7 +71,7 @@ public class CoinMarketCapApiController{
                 .addConverterFactory(GsonConverterFactory.create(gson))
                 .build();
         CoinMarketCapApi coinMarketCapApi = retrofit.create(CoinMarketCapApi.class);
-        Call<GlobalData> call = coinMarketCapApi.getGlobalData(currency);
+        Call<GlobalData> call = coinMarketCapApi.getGlobalData(preferredCurrency);
         call.enqueue(new Callback<GlobalData>() {
             @Override
             public void onResponse(Call<GlobalData> call, Response<GlobalData> response) {
@@ -90,7 +89,7 @@ public class CoinMarketCapApiController{
 
 
 
-    public String getPreferredCurrencyString(int preferredCurrency) {
+    public String getPreferredCurrencyString(String preferredCurrency) {
         String currency;
         switch (preferredCurrency) {
             case SettingsActivity.USD:

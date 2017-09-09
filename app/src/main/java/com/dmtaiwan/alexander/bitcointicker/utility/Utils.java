@@ -3,8 +3,10 @@ package com.dmtaiwan.alexander.bitcointicker.utility;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.database.Cursor;
+import android.graphics.drawable.Drawable;
 import android.preference.PreferenceManager;
 import android.provider.BaseColumns;
+import android.support.v4.content.ContextCompat;
 
 import com.dmtaiwan.alexander.bitcointicker.R;
 import com.dmtaiwan.alexander.bitcointicker.data.BitcoinDBContract;
@@ -48,7 +50,7 @@ public class Utils {
     }
 
 
-    public static String formatCurrency(String input, int preferredCurrency) {
+    public static String formatCurrency(String input, String preferredCurrency) {
         if (input == null) {
             return "";
         }
@@ -65,7 +67,7 @@ public class Utils {
         return formatter.format(floatPrice);
     }
 
-    public static String formatCurrencyVolumeOrCap(String input, int preferredCurrency) {
+    public static String formatCurrencyVolumeOrCap(String input, String preferredCurrency) {
         if (input == null) {
             return "";
         }
@@ -190,8 +192,20 @@ public class Utils {
         dataSet.setDrawCircles(false);
         dataSet.setValueTextColor(context.getResources().getColor(R.color.primaryTextColor));
         dataSet.setDrawFilled(true);
-        dataSet.setFillColor(context.getResources().getColor(R.color.colorAccentYellow));
+        if (com.github.mikephil.charting.utils.Utils.getSDKInt() >= 18) {
+            Drawable drawable = ContextCompat.getDrawable(context, R.drawable.fade_yellow);
+            dataSet.setFillDrawable(drawable);
+        } else {
+            dataSet.setFillColor(ContextCompat.getColor(context, R.color.colorAccentYellow));
+        }
+
         LineData lineData = new LineData(dataSet);
         return lineData;
+    }
+
+    public static boolean isEmpty(String string) {
+        if (string == null || string.equals("")) {
+            return true;
+        } else return false;
     }
 }

@@ -18,7 +18,7 @@
 
 
     <TextView
-        android:id="@+id/text_view_detail_price_usd"
+        android:id="@+id/text_view_pie_usd"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:gravity="top"
@@ -30,41 +30,41 @@
         tools:text="3000.00 USD"/>
 
     <TextView
-        android:id="@+id/text_view_detail_price_secondary"
+        android:id="@+id/text_view_pie_secondary"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:textSize="@dimen/text_size_subheading"
         app:layout_constraintHorizontal_weight="1"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toLeftOf="@id/guideline50"
-        app:layout_constraintTop_toBottomOf="@+id/text_view_detail_price_usd"
+        app:layout_constraintTop_toBottomOf="@+id/text_view_pie_usd"
         tools:text="6000 CAD"/>
 
     <TextView
-        android:id="@+id/text_view_detail_price_btc"
+        android:id="@+id/text_view_pie_btc"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:textSize="@dimen/text_size_subheading"
         app:layout_constraintHorizontal_weight="1"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toLeftOf="@id/guideline50"
-        app:layout_constraintTop_toBottomOf="@+id/text_view_detail_price_secondary"
+        app:layout_constraintTop_toBottomOf="@+id/text_view_pie_secondary"
         tools:text="1 BTC"/>
 
     <TextView
-        android:id="@+id/text_view_detail_coin_name"
+        android:id="@+id/text_view_ppie_coin_name"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:textSize="@dimen/text_size_subheading"
         app:layout_constraintHorizontal_weight="1"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toLeftOf="@id/guideline50"
-        app:layout_constraintTop_toBottomOf="@+id/text_view_detail_price_btc"
+        app:layout_constraintTop_toBottomOf="@+id/text_view_pie_btc"
         tools:text="Bitcoin"/>
 
 
     <TextView
-        android:id="@+id/text_view_detail_percent_change_one_hour_label"
+        android:id="@+id/text_view_pie_percent_change_one_hour_label"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="4dp"
@@ -75,54 +75,54 @@
         app:layout_constraintTop_toTopOf="parent"/>
 
     <TextView
-        android:id="@+id/text_view_detail_percent_change_one_hour"
+        android:id="@+id/text_view_pie_percent_change_one_hour"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="4dp"
         app:layout_constraintHorizontal_weight="1"
-        app:layout_constraintLeft_toRightOf="@+id/text_view_detail_percent_change_one_hour_label"
+        app:layout_constraintLeft_toRightOf="@+id/text_view_pie_percent_change_one_hour_label"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         tools:text="1%"/>
 
     <TextView
-        android:id="@+id/text_view_detail_percent_change_twenty_four_hour_label"
+        android:id="@+id/text_view_pie_percent_change_twenty_four_hour_label"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:text="24H change: "
         app:layout_constraintHorizontal_weight="1"
         app:layout_constraintLeft_toLeftOf="@+id/guideline50"
         app:layout_constraintRight_toLeftOf="@+id/guideline75"
-        app:layout_constraintTop_toBottomOf="@+id/text_view_detail_percent_change_one_hour"/>
+        app:layout_constraintTop_toBottomOf="@+id/text_view_pie_percent_change_one_hour"/>
 
     <TextView
-        android:id="@+id/text_view_detail_percent_change_24_hour"
+        android:id="@+id/text_view_pie_percent_change_24_hour"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         app:layout_constraintHorizontal_weight="1"
-        app:layout_constraintLeft_toRightOf="@+id/text_view_detail_percent_change_twenty_four_hour_label"
+        app:layout_constraintLeft_toRightOf="@+id/text_view_pie_percent_change_twenty_four_hour_label"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/text_view_detail_percent_change_one_hour"
+        app:layout_constraintTop_toBottomOf="@+id/text_view_pie_percent_change_one_hour"
         tools:text="2%"/>
 
     <TextView
-        android:id="@+id/text_view_detail_percent_change_seven_day_label"
+        android:id="@+id/text_view_pie_percent_change_seven_day_label"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:text="7D change: "
         app:layout_constraintHorizontal_weight="1"
         app:layout_constraintLeft_toLeftOf="@+id/guideline50"
         app:layout_constraintRight_toLeftOf="@+id/guideline75"
-        app:layout_constraintTop_toBottomOf="@+id/text_view_detail_percent_change_24_hour"/>
+        app:layout_constraintTop_toBottomOf="@+id/text_view_pie_percent_change_24_hour"/>
 
     <TextView
-        android:id="@+id/text_view_detail_percent_change_seven_day"
+        android:id="@+id/text_view_pie_percent_change_seven_day"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         app:layout_constraintHorizontal_weight="1"
-        app:layout_constraintLeft_toRightOf="@+id/text_view_detail_percent_change_seven_day_label"
+        app:layout_constraintLeft_toRightOf="@+id/text_view_pie_percent_change_seven_day_label"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/text_view_detail_percent_change_24_hour"
+        app:layout_constraintTop_toBottomOf="@+id/text_view_pie_percent_change_24_hour"
         tools:text="3%"
         android:layout_marginTop="0dp"
         app:layout_constraintHorizontal_bias="0.0"/>
@@ -136,7 +136,7 @@
         app:layout_constraintHorizontal_weight="1"
         app:layout_constraintLeft_toLeftOf="@+id/guideline50"
         app:layout_constraintRight_toLeftOf="@+id/guideline75"
-        app:layout_constraintTop_toBottomOf="@+id/text_view_detail_percent_change_seven_day"/>
+        app:layout_constraintTop_toBottomOf="@+id/text_view_pie_percent_change_seven_day"/>
 
     <TextView
         android:id="@+id/text_view_position_profit"
@@ -145,7 +145,7 @@
         app:layout_constraintHorizontal_weight="1"
         app:layout_constraintLeft_toRightOf="@+id/text_view_position_profit_label"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/text_view_detail_percent_change_seven_day"
+        app:layout_constraintTop_toBottomOf="@+id/text_view_pie_percent_change_seven_day"
         tools:text="50000"
         android:layout_marginTop="0dp"/>
 
@@ -156,7 +156,7 @@
         android:text="Position"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toLeftOf="@+id/guideline33"
-        app:layout_constraintTop_toBottomOf="@id/text_view_detail_coin_name"/>
+        app:layout_constraintTop_toBottomOf="@id/text_view_ppie_coin_name"/>
 
     <TextView
         android:id="@+id/text_view_position_price_label"
@@ -166,7 +166,7 @@
         android:text="Price"
         app:layout_constraintLeft_toLeftOf="@+id/guideline33"
         app:layout_constraintRight_toLeftOf="@+id/guideline66"
-        app:layout_constraintTop_toBottomOf="@id/text_view_detail_coin_name"/>
+        app:layout_constraintTop_toBottomOf="@id/text_view_ppie_coin_name"/>
 
     <EditText
         android:id="@+id/edit_text_position_position"

@@ -39,6 +39,31 @@
             android:textColor="@color/colorAccentYellow"/>
 
         <Spinner
+            android:id="@+id/exchange_spinner"
+            android:gravity="right"
+            android:layout_width="wrap_content"
+            android:popupTheme="@android:style/ThemeOverlay.Material.Dark"
+            android:layout_height="wrap_content" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingTop="8dp"
+        android:paddingLeft="8dp"
+        android:paddingStart="8dp"
+        android:paddingBottom="8dp">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Secondary Currency"
+            android:textColor="@color/colorAccentYellow"/>
+
+        <Spinner
             android:id="@+id/currency_spinner"
             android:layout_width="wrap_content"
             android:popupTheme="@android:style/ThemeOverlay.Material.Dark"

@@ -147,7 +147,7 @@ public class MainActivity extends AppCompatActivity implements TickerCallback, C
     private void startLoading() {
         //Get preferred secondary currency
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(MainActivity.this);
-        int secondaryCurrency = prefs.getInt(SettingsActivity.KEY_PREF_CURRENCY, SettingsActivity.USD);
+        String secondaryCurrency = prefs.getString(SettingsActivity.KEY_PREF_CURRENCY, SettingsActivity.USD);
         spinKitView.setVisibility(View.VISIBLE);
         coinMarketCapApiController.getTickerData(this, secondaryCurrency);
     }

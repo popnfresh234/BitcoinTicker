@@ -4,16 +4,16 @@ import android.util.Log;
 
 import com.dmtaiwan.alexander.bitcointicker.model.HistoricalData;
 import com.dmtaiwan.alexander.bitcointicker.model.Price;
-import com.dmtaiwan.alexander.bitcointicker.ui.chart.ChartActivity;
 import com.dmtaiwan.alexander.bitcointicker.ui.chart.HistoricalDataCallback;
 import com.dmtaiwan.alexander.bitcointicker.ui.chart.PriceDataCallback;
-import com.dmtaiwan.alexander.bitcointicker.ui.settings.SettingsActivity;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import java.util.HashMap;
 import java.util.Map;
 
+import okhttp3.OkHttpClient;
+import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -28,28 +28,15 @@ public class CryptoCompareApiController{
     private static final String BASE_URL = "https://min-api.cryptocompare.com/data/";
 
 
-    public void getHistoricalData(final HistoricalDataCallback historicalDataCallback, String symbol, final int periodInDays, int preferredCurrency) {
+    public void getHistoricalData(final HistoricalDataCallback historicalDataCallback, String symbol, final int periodInDays, String preferredCurrency, String exchange) {
 
-        String secondaryCurrencyString;
-        switch (preferredCurrency) {
-            case SettingsActivity.USD:
-                secondaryCurrencyString = ChartActivity.USD_STRING;
-                break;
-            case SettingsActivity.CAD:
-                secondaryCurrencyString = ChartActivity.CAD_STRING;
-                break;
-            case SettingsActivity.EUR:
-                secondaryCurrencyString = ChartActivity.EUR_STRING;
-                break;
-            default:
-                secondaryCurrencyString = ChartActivity.USD_STRING;
-        }
+
 
         CryptoCompareApi cryptoCompareApi = buildRetrofitClient();
         Map<String, String> params = new HashMap<String, String>();
         params.put("fsym", symbol);
-        //TODO implement currency selection
-        params.put("tsym", secondaryCurrencyString);
+        params.put("tsym", preferredCurrency);
+        params.put("e", exchange);
 
         //Convert int to String
         String periodString = String.valueOf(periodInDays);
@@ -82,16 +69,18 @@ public class CryptoCompareApiController{
     }
 
 
-    public void getPriceData(final PriceDataCallback priceDataCallback, String symbol, String currencies) {
+    public void getPriceData(final PriceDataCallback priceDataCallback, String symbol, final String currencies, String exchange) {
         CryptoCompareApi cryptoCompareApi = buildRetrofitClient();
         Map<String, String> params = new HashMap<>();
+        params.put("e", exchange);
         params.put("fsym", symbol);
         params.put("tsyms", currencies);
+
         Call<Price> call = cryptoCompareApi.getPrice(params);
         call.enqueue(new Callback<Price>() {
             @Override
             public void onResponse(Call<Price> call, Response<Price> response) {
-                priceDataCallback.returnPriceData(response.body());
+                priceDataCallback.returnPriceData(response.body(), currencies);
             }
 
             @Override
@@ -106,9 +95,14 @@ public class CryptoCompareApiController{
                 .setLenient()
                 .create();
 
+        HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
+        interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
+        OkHttpClient client = new OkHttpClient.Builder().addInterceptor(interceptor).build();
+
 
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(BASE_URL)
+                .client(client)
                 .addConverterFactory(GsonConverterFactory.create(gson))
                 .build();
         return retrofit.create(CryptoCompareApi.class);
