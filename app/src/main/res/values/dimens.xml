@@ -4,4 +4,5 @@
     <dimen name="text_size_subheading">16sp</dimen>
     <dimen name="text_size_line_chart_values">2sp</dimen>
     <dimen name="text_size_pie_chart_values">4sp</dimen>
+    <dimen name="spinner_width">150dp</dimen>
 </resources>
