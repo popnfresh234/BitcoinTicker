@@ -59,9 +59,10 @@ public class CoinRecyclerAdapter extends RecyclerView.Adapter<CoinRecyclerAdapte
     @Override
     public void onBindViewHolder(final CoinHolder holder, final int position) {
 
-        //Get secondary currency
+        //Get secondary currency and timezone
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
         String secondaryCurrency = prefs.getString(SettingsActivity.KEY_PREF_CURRENCY, SettingsActivity.USD);
+        String timeZone = prefs.getString(SettingsActivity.KEY_PREF_TIMEZONE, SettingsActivity.DEFAULT_TIMEZONE);
 
         //Get coin
         final Coin coin = coins.get(position);
@@ -170,7 +171,7 @@ public class CoinRecyclerAdapter extends RecyclerView.Adapter<CoinRecyclerAdapte
 
         //Parse date
         Long date = Long.parseLong(coin.getLast_updated());
-        holder.lastUpdated.setText(getDate(date));
+        holder.lastUpdated.setText(getDate(date, timeZone));
 
         //Parse priceSecondaryCurrency
         String priceSecondaryString;

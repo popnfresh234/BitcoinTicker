@@ -9,11 +9,18 @@ import com.github.mikephil.charting.formatter.IAxisValueFormatter;
 
 public class LineChartXAxisValueFormatter implements IAxisValueFormatter {
 
+    private String timeZone;
+
+    public LineChartXAxisValueFormatter(String timeZone) {
+        this.timeZone = timeZone;
+    }
+
 
     @Override
     public String getFormattedValue(float value, AxisBase axis) {
 
-        String date = Utils.getDateForChart((long) value);
+        //TODO implement timezone
+        String date = Utils.getDateForChart((long) value, "America/Vancouver");
         return date;
     }
 }

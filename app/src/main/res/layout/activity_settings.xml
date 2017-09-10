@@ -35,14 +35,40 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Secondary Currency"
+            android:text="Exchange"
             android:textColor="@color/colorAccentYellow"/>
 
         <Spinner
             android:id="@+id/exchange_spinner"
             android:gravity="right"
             android:layout_width="wrap_content"
-            android:dropDownWidth="@dimen/spinner_width"
+            android:dropDownWidth="@dimen/exchange_spinner_width"
+            android:popupTheme="@android:style/ThemeOverlay.Material.Dark"
+            android:layout_height="wrap_content" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingTop="8dp"
+        android:paddingLeft="8dp"
+        android:paddingStart="8dp"
+        android:paddingBottom="8dp">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Timezone"
+            android:textColor="@color/colorAccentYellow"/>
+
+        <Spinner
+            android:id="@+id/timzone_spinner"
+            android:gravity="right"
+            android:layout_width="wrap_content"
+            android:dropDownWidth="@dimen/timezone_spinner_width"
             android:popupTheme="@android:style/ThemeOverlay.Material.Dark"
             android:layout_height="wrap_content" />
 

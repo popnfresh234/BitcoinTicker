@@ -52,8 +52,10 @@ public class ChartActivity extends AppCompatActivity implements View.OnClickList
     private CryptoCompareApiController cryptoCompareApiController;
     private ArrayList<TextView> chartTextViews = new ArrayList<>();
 
+    //Preferred values
     private String secondaryCurrency;
     private String exchange;
+    private String timeZone;
 
     private TextView priceSecondary;
     private TextView coinName;
@@ -82,6 +84,7 @@ public class ChartActivity extends AppCompatActivity implements View.OnClickList
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ChartActivity.this);
         secondaryCurrency = prefs.getString(SettingsActivity.KEY_PREF_CURRENCY, SettingsActivity.USD);
         exchange = prefs.getString(SettingsActivity.KEY_PREF_EXCHANGE, SettingsActivity.CCCAGG);
+        timeZone = prefs.getString(SettingsActivity.KEY_PREF_TIMEZONE, SettingsActivity.DEFAULT_TIMEZONE);
 
 
         //setup views
@@ -273,7 +276,7 @@ public class ChartActivity extends AppCompatActivity implements View.OnClickList
 
         //Format xAxis
         XAxis xAxis = chartView.getXAxis();
-        xAxis.setValueFormatter(new LineChartXAxisValueFormatter());
+        xAxis.setValueFormatter(new LineChartXAxisValueFormatter(timeZone));
         xAxis.setLabelCount(7, true);
         xAxis.setTextColor(getResources().getColor(R.color.primaryTextColor));
 

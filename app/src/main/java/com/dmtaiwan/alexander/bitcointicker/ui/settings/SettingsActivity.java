@@ -26,7 +26,9 @@ import com.dmtaiwan.alexander.bitcointicker.data.BitcoinDBHelper;
 public class SettingsActivity extends AppCompatActivity {
 
     public static final String KEY_PREF_CURRENCY = "com.dmtaiwan.alexander.bitcointicker.key_pref_currency";
-    public static final String KEY_PREF_EXCHANGE = "com.dmtaiwan.alexander.bitconticker.key_pref_exchange";
+    public static final String KEY_PREF_EXCHANGE = "com.dmtaiwan.alexander.bitcointicker.key_pref_exchange";
+    public static final String KEY_PREF_TIMEZONE = "com.dmtaiwan.alexander.bitcointicker.key_time_zone";
+    public static final String DEFAULT_TIMEZONE = "America/Vancouver";
     public static final String USD = "USD";
     public static final String CAD = "CAD";
     public static final String EUR = "EUR";
@@ -100,6 +102,31 @@ public class SettingsActivity extends AppCompatActivity {
 
             }
         });
+
+        //Setup exchange spinner
+        Spinner timezoneSpinner = (Spinner) findViewById(R.id.timzone_spinner);
+        final ArrayAdapter<CharSequence> timezoneAdapter = ArrayAdapter.createFromResource(this, R.array.timezone_array, android.R.layout.simple_spinner_item);
+        timezoneAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        timezoneSpinner.setAdapter(timezoneAdapter);
+        //get set position
+        String timezoneString = prefs.getString(KEY_PREF_TIMEZONE, CCCAGG);
+        int timezonePosition = 0;
+        timezonePosition = timezoneAdapter.getPosition(timezoneString);
+        timezoneSpinner.setSelection(timezonePosition);
+        timezoneSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+
+                SharedPreferences.Editor editor = prefs.edit();
+                editor.putString(KEY_PREF_TIMEZONE, timezoneAdapter.getItem(position).toString()).commit();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
 
 
         //Setup currency spinner

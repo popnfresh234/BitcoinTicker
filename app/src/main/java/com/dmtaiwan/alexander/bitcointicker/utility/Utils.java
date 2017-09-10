@@ -33,18 +33,18 @@ import java.util.TimeZone;
 
 public class Utils {
 
-    public static String getDate(long time) {
+    public static String getDate(long time, String timeZone) {
         Date date = new Date(time * 1000L);
         SimpleDateFormat sdf = new SimpleDateFormat("H:mm:ss a");
-        sdf.setTimeZone(TimeZone.getTimeZone("America/Vancouver"));
+        sdf.setTimeZone(TimeZone.getTimeZone(timeZone));
         String formattedTime = sdf.format(date);
         return formattedTime;
     }
 
-    public static String getDateForChart(long time) {
+    public static String getDateForChart(long time, String timeZone) {
         Date date = new Date(time * 1000L);
         SimpleDateFormat sdf = new SimpleDateFormat("MM/dd");
-        sdf.setTimeZone(TimeZone.getTimeZone("America/Vancouver"));
+        sdf.setTimeZone(TimeZone.getTimeZone(timeZone));
         String formattedTime = sdf.format(date);
         return formattedTime;
     }
