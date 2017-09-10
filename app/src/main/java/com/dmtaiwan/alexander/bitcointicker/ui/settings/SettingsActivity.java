@@ -19,6 +19,8 @@ import com.dmtaiwan.alexander.bitcointicker.R;
 import com.dmtaiwan.alexander.bitcointicker.data.BitcoinDBContract;
 import com.dmtaiwan.alexander.bitcointicker.data.BitcoinDBHelper;
 
+import java.util.Map;
+
 /**
  * Created by Alexander on 8/25/2017.
  */
@@ -29,10 +31,11 @@ public class SettingsActivity extends AppCompatActivity {
     public static final String KEY_PREF_EXCHANGE = "com.dmtaiwan.alexander.bitcointicker.key_pref_exchange";
     public static final String KEY_PREF_TIMEZONE = "com.dmtaiwan.alexander.bitcointicker.key_time_zone";
     public static final String DEFAULT_TIMEZONE = "America/Vancouver";
+    public static final String DEFAULT_EXCHANGE = "CCCAGG";
     public static final String USD = "USD";
     public static final String CAD = "CAD";
     public static final String EUR = "EUR";
-    public static final String CCCAGG = "CCCAGG";
+
     private static final String[] PROJECTION = new String[]{BitcoinDBContract.BitcoinEntry.COLUMN_NAME, BitcoinDBContract.BitcoinEntry.COLUMN_COIN_ID};
     private SettingsAdapter settingsAdapter;
 
@@ -67,15 +70,26 @@ public class SettingsActivity extends AppCompatActivity {
             }
         });
         final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(SettingsActivity.this);
+
         //Set up clear button
         ImageView clearPrefs = (ImageView) findViewById(R.id.image_view_clear_prefs);
         clearPrefs.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
+                //Remove all coin selections by removing all keys that are not one of the other preferences
+                Map<String, ?> keys = prefs.getAll();
                 SharedPreferences.Editor editor = prefs.edit();
-                editor.clear().commit();
+                for (Map.Entry<String, ?> entry : keys.entrySet()) {
+                    if (entry.getKey().equals(KEY_PREF_CURRENCY) || entry.getKey().equals(KEY_PREF_EXCHANGE) || entry.getKey().equals(KEY_PREF_TIMEZONE)) {
+
+                    } else {
+                        editor.remove(entry.getKey()).commit();
+
+                    }
+                }
                 settingsAdapter.notifyDataSetChanged();
+
             }
         });
 
@@ -85,7 +99,7 @@ public class SettingsActivity extends AppCompatActivity {
         exchangeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         exchangeSpinner.setAdapter(exchangeAdapter);
         //get set position
-        String exchangeString = prefs.getString(KEY_PREF_EXCHANGE, CCCAGG);
+        String exchangeString = prefs.getString(KEY_PREF_EXCHANGE, DEFAULT_EXCHANGE);
         int exchangePosition = 0;
         exchangePosition = exchangeAdapter.getPosition(exchangeString);
         exchangeSpinner.setSelection(exchangePosition);
@@ -103,13 +117,13 @@ public class SettingsActivity extends AppCompatActivity {
             }
         });
 
-        //Setup exchange spinner
+        //Setup timezone spinner
         Spinner timezoneSpinner = (Spinner) findViewById(R.id.timzone_spinner);
         final ArrayAdapter<CharSequence> timezoneAdapter = ArrayAdapter.createFromResource(this, R.array.timezone_array, android.R.layout.simple_spinner_item);
         timezoneAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         timezoneSpinner.setAdapter(timezoneAdapter);
         //get set position
-        String timezoneString = prefs.getString(KEY_PREF_TIMEZONE, CCCAGG);
+        String timezoneString = prefs.getString(KEY_PREF_TIMEZONE, DEFAULT_EXCHANGE);
         int timezonePosition = 0;
         timezonePosition = timezoneAdapter.getPosition(timezoneString);
         timezoneSpinner.setSelection(timezonePosition);
@@ -126,7 +140,6 @@ public class SettingsActivity extends AppCompatActivity {
 
             }
         });
-
 
 
         //Setup currency spinner

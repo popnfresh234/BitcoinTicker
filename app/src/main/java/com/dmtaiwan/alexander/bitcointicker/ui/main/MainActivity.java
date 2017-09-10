@@ -35,7 +35,7 @@ public class MainActivity extends AppCompatActivity implements TickerCallback, C
     private CoinMarketCapApiController coinMarketCapApiController;
     private SpinKitView spinKitView;
     private ArrayList<Coin> coins;
-    private int currencyCount;
+    private boolean updateSettings = false;
 
     private static final String SORT_ORDER = BitcoinDBContract.BitcoinEntry.COLUMN_NAME + " ASC";
 
@@ -73,6 +73,9 @@ public class MainActivity extends AppCompatActivity implements TickerCallback, C
     @Override
     protected void onResume() {
         super.onResume();
+        if (updateSettings) {
+            startLoading();
+        }
 
     }
 
@@ -150,6 +153,7 @@ public class MainActivity extends AppCompatActivity implements TickerCallback, C
         String secondaryCurrency = prefs.getString(SettingsActivity.KEY_PREF_CURRENCY, SettingsActivity.USD);
         spinKitView.setVisibility(View.VISIBLE);
         coinMarketCapApiController.getTickerData(this, secondaryCurrency);
+        updateSettings = false;
     }
 
     @Override
@@ -160,7 +164,7 @@ public class MainActivity extends AppCompatActivity implements TickerCallback, C
 
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-        startLoading();
+        updateSettings = true;
     }
 
     @Override

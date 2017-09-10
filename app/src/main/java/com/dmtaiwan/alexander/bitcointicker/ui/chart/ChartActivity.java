@@ -83,7 +83,7 @@ public class ChartActivity extends AppCompatActivity implements View.OnClickList
         //Get preferred secondary currency
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ChartActivity.this);
         secondaryCurrency = prefs.getString(SettingsActivity.KEY_PREF_CURRENCY, SettingsActivity.USD);
-        exchange = prefs.getString(SettingsActivity.KEY_PREF_EXCHANGE, SettingsActivity.CCCAGG);
+        exchange = prefs.getString(SettingsActivity.KEY_PREF_EXCHANGE, SettingsActivity.DEFAULT_EXCHANGE);
         timeZone = prefs.getString(SettingsActivity.KEY_PREF_TIMEZONE, SettingsActivity.DEFAULT_TIMEZONE);
 
 
