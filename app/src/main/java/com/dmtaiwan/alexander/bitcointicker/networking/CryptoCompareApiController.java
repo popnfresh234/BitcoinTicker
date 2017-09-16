@@ -28,7 +28,7 @@ public class CryptoCompareApiController{
     private static final String BASE_URL = "https://min-api.cryptocompare.com/data/";
 
 
-    public void getHistoricalData(final HistoricalDataCallback historicalDataCallback, String symbol, final int periodInDays, String preferredCurrency, String exchange) {
+    public void getHistoricalData(final HistoricalDataCallback historicalDataCallback, String symbol, final int periodInDays, final String preferredCurrency, String exchange) {
 
 
 
@@ -45,7 +45,7 @@ public class CryptoCompareApiController{
         call.enqueue(new Callback<HistoricalData>() {
             @Override
             public void onResponse(Call<HistoricalData> call, Response<HistoricalData> response) {
-                historicalDataCallback.returnHistoricalData(response.body(), periodInDays);
+                historicalDataCallback.returnHistoricalData(response.body(), periodInDays, preferredCurrency);
             }
 
             @Override

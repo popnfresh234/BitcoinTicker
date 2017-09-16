@@ -17,6 +17,7 @@ import com.dmtaiwan.alexander.bitcointicker.model.Price;
 import com.dmtaiwan.alexander.bitcointicker.networking.CryptoCompareApiController;
 import com.dmtaiwan.alexander.bitcointicker.ui.settings.SettingsActivity;
 import com.dmtaiwan.alexander.bitcointicker.utility.LineChartXAxisValueFormatter;
+import com.dmtaiwan.alexander.bitcointicker.utility.LineChartMarkerView;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.Description;
 import com.github.mikephil.charting.components.XAxis;
@@ -177,14 +178,14 @@ public class ChartActivity extends AppCompatActivity implements View.OnClickList
     }
 
     @Override
-    public void returnHistoricalData(HistoricalData historicalData, int period) {
+    public void returnHistoricalData(HistoricalData historicalData, int period, String selectedCurrency) {
         toggleChartLoadingOff();
 
         if (!historicalData.getResponse().equals("Error")) {
             //Create chart data
             LineData lineData = createChartLineData(ChartActivity.this, historicalData, symbol);
             //Set data to chart and format general chart
-            setupChart(lineData);
+            setupChart(lineData, selectedCurrency);
         }else chartView.setNoDataText("No data available for selected currency");
 
 
@@ -196,7 +197,6 @@ public class ChartActivity extends AppCompatActivity implements View.OnClickList
                 break;
             case PERIOD_6M:
                 sixMonthsChart.setTextColor(getResources().getColor(R.color.colorAccentYellow));
-
                 break;
             case PERIOD_3M:
                 threeMonthsChart.setTextColor(getResources().getColor(R.color.colorAccentYellow));
@@ -266,13 +266,18 @@ public class ChartActivity extends AppCompatActivity implements View.OnClickList
         loadingViewInfo.setVisibility(View.GONE);
     }
 
-    private void setupChart(LineData lineData) {
+    private void setupChart(LineData lineData, String selectedCurrency) {
         chartView.setData(lineData);
         chartView.getLegend().setTextColor(getResources().getColor(R.color.primaryTextColor));
         Description description = new Description();
-        description.setText("7D Price History for " + symbol);
+        description.setText("Price History for " + symbol);
         description.setTextColor(getResources().getColor(R.color.primaryTextColor));
         chartView.setDescription(description);
+
+        //Setup markers
+        LineChartMarkerView markerView = new LineChartMarkerView(this, R.layout.marker_view, selectedCurrency);
+        markerView.setChartView(chartView);
+        chartView.setMarker(markerView);
 
         //Format xAxis
         XAxis xAxis = chartView.getXAxis();

@@ -27,6 +27,7 @@ import java.util.Map;
 
 public class SettingsActivity extends AppCompatActivity {
 
+    public static final String SORT_ORDER = BitcoinDBContract.BitcoinEntry.COLUMN_RANK + " ASC";
     public static final String KEY_PREF_CURRENCY = "com.dmtaiwan.alexander.bitcointicker.key_pref_currency";
     public static final String KEY_PREF_EXCHANGE = "com.dmtaiwan.alexander.bitcointicker.key_pref_exchange";
     public static final String KEY_PREF_TIMEZONE = "com.dmtaiwan.alexander.bitcointicker.key_time_zone";
@@ -50,7 +51,8 @@ public class SettingsActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(llm);
 
         //Default query to populate:
-        Cursor cursor = BitcoinDBHelper.readDbCoins(this, PROJECTION, null, null, null);
+
+        Cursor cursor = BitcoinDBHelper.readDbCoins(this, PROJECTION, null, null, SORT_ORDER);
         settingsAdapter = new SettingsAdapter(this, cursor);
         recyclerView.setAdapter(settingsAdapter);
 

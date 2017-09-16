@@ -200,6 +200,8 @@ public class Utils {
         }
 
         LineData lineData = new LineData(dataSet);
+        //Hide values
+        lineData.setDrawValues(false);
         return lineData;
     }
 

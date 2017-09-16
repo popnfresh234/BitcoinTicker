@@ -31,13 +31,14 @@ import static com.dmtaiwan.alexander.bitcointicker.utility.Utils.stripCursor;
 
 public class MainActivity extends AppCompatActivity implements TickerCallback, CoinRecyclerAdapter.AdapterCallback, SharedPreferences.OnSharedPreferenceChangeListener {
 
+    public static final String SORT_ORDER = BitcoinDBContract.BitcoinEntry.COLUMN_RANK + " ASC";
+
     private CoinRecyclerAdapter adapter;
     private CoinMarketCapApiController coinMarketCapApiController;
     private SpinKitView spinKitView;
     private ArrayList<Coin> coins;
     private boolean updateSettings = false;
 
-    private static final String SORT_ORDER = BitcoinDBContract.BitcoinEntry.COLUMN_NAME + " ASC";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -137,7 +138,7 @@ public class MainActivity extends AppCompatActivity implements TickerCallback, C
 
         //otherwise query for everything
         else{
-            Cursor cursor = BitcoinDBHelper.readDbCoins(this, null, null, selectionArgs, null);
+            Cursor cursor = BitcoinDBHelper.readDbCoins(this, null, null, selectionArgs, SORT_ORDER);
             //extract list of coins from cursor
             coins = stripCursor(cursor);
             cursor.close();

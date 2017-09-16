@@ -7,5 +7,5 @@ package com.dmtaiwan.alexander.bitcointicker.ui.chart;
  */
 
 public interface HistoricalDataCallback {
-    void returnHistoricalData(HistoricalData historicalData, int period);
+    void returnHistoricalData(HistoricalData historicalData, int period, String currency);
 }

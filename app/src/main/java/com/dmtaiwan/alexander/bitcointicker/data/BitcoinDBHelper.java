@@ -19,7 +19,7 @@ import java.util.ArrayList;
 public class BitcoinDBHelper extends SQLiteOpenHelper {
 
     private static final String DB_NAME = "bitcoin_ticker.db";
-    private static final int DB_VERSION = 4;
+    private static final int DB_VERSION = 5;
 
     public BitcoinDBHelper(Context context) {
         super(context, DB_NAME, null, DB_VERSION);
@@ -32,7 +32,7 @@ public class BitcoinDBHelper extends SQLiteOpenHelper {
                 + BitcoinDBContract.BitcoinEntry.COLUMN_COIN_ID + " TEXT, "
                 + BitcoinDBContract.BitcoinEntry.COLUMN_NAME + " TEXT, "
                 + BitcoinDBContract.BitcoinEntry.COLUMN_SYMBOL + " TEXT, "
-                + BitcoinDBContract.BitcoinEntry.COLUMN_RANK + " TEXT, "
+                + BitcoinDBContract.BitcoinEntry.COLUMN_RANK + " INTEGER, "
                 + BitcoinDBContract.BitcoinEntry.COLUMN_PRICE_USD + " TEXT, "
                 + BitcoinDBContract.BitcoinEntry.COLUMN_PRICE_BTC + " TEXT, "
                 + BitcoinDBContract.BitcoinEntry.COLUMN_24H_VOLUME_USD + " TEXT, "
